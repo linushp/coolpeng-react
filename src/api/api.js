@@ -1,45 +1,65 @@
-import superagent from 'superagent';
+import 'whatwg-fetch';
+import {toQueryParam} from '../utils';
+var fetch = self.fetch;
 
 const methods = [
-  'get',
-  'head',
-  'post',
-  'put',
-  'del',
-  'options',
-  'patch'
+    'get',
+    'head',
+    'post',
+    'put',
+    'del',
+    'options',
+    'patch'
 ];
+
+function doFetch(path,method,opts,data) {
+    return fetch(opts.baseURI + path, {
+        method: method,
+        headers: opts.headers,
+        body: JSON.stringify(data)
+    });
+}
 
 class _Api {
 
-  constructor(opts) {
+    constructor(opts) {
 
-    this.opts = opts || {};
+        this.opts = opts || {};
 
-    if (!this.opts.baseURI)
-      throw new Error('baseURI option is required');
+        if (!this.opts.baseURI)
+            throw new Error('baseURI option is required');
 
-    methods.forEach(method =>
-      this[method] = (path, { params, data } = {}) => new Promise((resolve, reject) => {
-        const request = superagent[method](this.opts.baseURI + path);
+        var that = this;
+        methods.forEach(function (method) {
+            this[method] = function (path, m) {
 
-        if (params) {
-          request.query(params);
-        }
+                var { params, data } =  m ||{};
 
-        if (this.opts.headers) {
-          request.set(this.opts.headers);
-        }
+                if(params){
+                    var query = toQueryParam(params);
+                    path  = path + query;
+                }
 
-        if (data) {
-          request.send(data);
-        }
-
-        request.end((err, { body } = {}) => err ? reject(body || err) : resolve(body));
-      })
-    );
-
-  }
+                return new Promise(function (resolve, reject) {
+                    doFetch(path,method,opts,data).then(function(res) {
+                        // res instanceof Response == true.
+                        if (res.ok) {
+                            res.json().then(function(data) {
+                                console.log('response success:',data);
+                                resolve(data);
+                            });
+                        } else {
+                            console.log("Looks like the response wasn't perfect, got status", res.status);
+                            reject(res);
+                        }
+                    }, function(e) {
+                        console.log("Fetch failed!", e);
+                        reject(e);
+                    });
+                });
+            }
+        }.bind(that));
+    }
 
 }
 
