@@ -6,8 +6,8 @@
   "scripts": {
     "test": "mocha tests/.setup.js tests/**/*-test.js --compilers css:mocha-compiler.js",
     "start": "node server",
-    "build-min": "NODE_ENV=production webpack -p ",
-    "build": "NODE_ENV=development webpack"
+    "build": "webpack --config ./webpack.release.js",
+    "watch": "webpack"
   },
   "author": "fireyy",
   "license": "WTFPL",
