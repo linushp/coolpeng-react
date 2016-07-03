@@ -1,42 +1,37 @@
 import React from 'react'
-import { Row, Col, Icon, Menu, Dropdown } from 'antd'
 import './index.less'
-import { Link } from 'react-router'
-
-const SubMenu = Menu.SubMenu;
-const MenuItemGroup = Menu.ItemGroup;
+import {Link} from 'react-router'
 
 export default class Header extends React.Component {
-  constructor () {
-    super()
-  }
+    constructor() {
+        super()
+    }
 
-  handleClick () {
+    handleClick() {
 
-  }
+    }
 
-  render () {
-    const {user} = this.props;
-    return (
-      <div className='ant-layout-header'>
+    render() {
+        const {user} = this.props;
+        return (
+            <div className='ant-layout-header'>
 
-        <div className='page-content'>
+                <div className='page-content'>
+                    <h1 className="my-logo float-l" >
+                        <a href="/">
+                            <span className="text">coolpeng</span>
+                        </a>
+                    </h1>
+                    <div className="float-l">
+                        
+                    </div>
+                    <div className="float-r login-btn">
+                        <span>注册&nbsp;/&nbsp;登录</span>
+                    </div>
+                    <div className="clear"></div>
+                </div>
 
-          <Menu className="header-menu" onClick={this.handleClick}
-          mode="horizontal">
-            <SubMenu title={<span><Icon type="user" />{user.user || "hello"}</span>}>
-              <Menu.Item key="setting:1">选项1</Menu.Item>
-              <Menu.Item key="setting:2">选项2</Menu.Item>
-              <Menu.Divider />
-              <Menu.Item key="setting:3">注销</Menu.Item>
-            </SubMenu>
-            <Menu.Item key="mail">
-              <Icon type="question" />帮助
-            </Menu.Item>
-          </Menu>
-        </div>
-
-      </div>
-    )
-  }
+            </div>
+        )
+    }
 }

@@ -1,12 +1,44 @@
-@headerHeight:55px;
-
+@headerHeight:50px;
+@headerMenuHeight:47px;
+@headerBackColor:#f2f2f2;
+//http://www.luoo.net/
 .ant-layout-header {
-  background: #fff;
+  background: @headerBackColor;
   width: 100%;
   height: @headerHeight;
+  border-top: 2px solid #dd5862;
+  border-bottom: 1px solid #e9e8e8;
 
-  //.header-menu>li{
-  //  height: @headerHeight;
-  //  line-height: @headerHeight;
-  //}
+  .header-menu>li{
+    height: @headerMenuHeight;
+    line-height: @headerMenuHeight;
+  }
+
+  .ant-menu-horizontal {
+    border-bottom: 1px solid @headerBackColor;
+  }
+
+  .ant-menu {
+    background: @headerBackColor;
+  }
+
+  .my-logo{
+    margin: 0 0;
+    background: url("./imgs/logo.png") no-repeat;
+    background-size: 47px 40px;
+    width: 90px;
+    height: 40px;
+    display: block;
+    margin-top: 4px;
+    span{
+      display: block;
+      text-indent: -9999px;
+    }
+  }
+
+  .login-btn{
+    height: @headerMenuHeight;
+    line-height: @headerMenuHeight;
+  }
+
 }

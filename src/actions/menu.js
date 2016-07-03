@@ -14,7 +14,7 @@ export function updateNavPath(path, key) {
   }
 }
 
-export function getAllMenu() {
+export function getAllMenu(menuId) {
   return {
     type: GET_ALL_MENU,
     payload: {

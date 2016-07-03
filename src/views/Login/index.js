@@ -1,10 +1,8 @@
 import React, { PropTypes } from 'react'
-import { Form, Input, Button, Row, Col, notification } from 'antd'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { login } from '../../actions/user'
 
-const FormItem = Form.Item
 
 import './index.less'
 
@@ -50,40 +48,12 @@ class Login extends React.Component {
   }
 
   handleSubmit (e) {
-    e.preventDefault()
-    const data = this.props.form.getFieldsValue()
-    this.props.login(data.user, data.password)
+    e.preventDefault();
   }
 
   render () {
-    const { getFieldProps } = this.props.form
     return (
-      <Row className="login-row" type="flex" justify="space-around" align="middle">
-        <Col span="8">
-          <Form horizontal onSubmit={this.handleSubmit.bind(this)} className="login-form">
-            <FormItem
-              label='用户名：'
-              labelCol={{ span: 6 }}
-              wrapperCol={{ span: 14 }}
-            >
-              <Input placeholder='admin' {...getFieldProps('user')} />
-            </FormItem>
-            <FormItem
-              label='密码：'
-              labelCol={{ span: 6 }}
-              wrapperCol={{ span: 14 }}
-            >
-              <Input type='password' placeholder='123456' {...getFieldProps('password')} />
-            </FormItem>
-            <Row>
-              <Col span='16' offset='6'>
-                <Button type='primary' htmlType='submit'>确定</Button>
-              </Col>
-            </Row>
-          </Form>
-        </Col>
-      </Row>
-
+        <div></div>
     )
   }
 }
@@ -91,8 +61,6 @@ class Login extends React.Component {
 Login.contextTypes = contextTypes;
 
 Login.propTypes = propTypes;
-
-Login = Form.create()(Login);
 
 function mapStateToProps(state) {
   const {user} = state;
