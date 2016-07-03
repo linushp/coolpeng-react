@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha tests/.setup.js tests/**/*-test.js --compilers css:mocha-compiler.js",
     "start": "node server",
-    "build": ""
+    "build-min": "NODE_ENV=production webpack -p ",
+    "build": "NODE_ENV=development webpack"
   },
   "author": "fireyy",
   "license": "WTFPL",
@@ -44,6 +45,7 @@
     "enzyme": "^2.0.0",
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.5",
+    "html-webpack-plugin": "^2.22.0",
     "jsdom": "^8.0.4",
     "less": "^2.6.0",
     "less-loader": "^2.2.2",
@@ -53,6 +55,7 @@
     "url-loader": "^0.5.7",
     "webpack": "^1.12.14",
     "webpack-dev-middleware": "^1.5.1",
+    "webpack-dev-server": "^1.14.1",
     "webpack-hot-middleware": "^2.7.1"
   }
 }
