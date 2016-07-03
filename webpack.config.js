@@ -31,9 +31,8 @@ if(!isDevelopment()){
 
 module.exports = {
     devtool: isDevelopment()? 'eval-source-map':"",
-    // watch: isDevelopment(),
+    watch: isDevelopment(),
     entry: [
-        'webpack-hot-middleware/client',
         './src/index'
     ],
     output: {
@@ -58,11 +57,16 @@ module.exports = {
                 exclude: /node_modules/,
                 include: __dirname
             },
+            (isDevelopment()?
             {
+                test: /\.less?$/,
+                loaders : [ 'style-loader','css-loader','less-loader?{"sourceMap":true}' ],
+                include: __dirname
+            }:{
                 test: /\.less?$/,
                 loader: ExtractTextPlugin.extract("style-loader", "css-loader!less-loader"),
                 include: __dirname
-            },
+            }),
             {
                 test: /\.(jpe?g|png|gif|svg)$/,
                 loader: 'url',
