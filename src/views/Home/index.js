@@ -4,7 +4,7 @@ const Panel = Collapse.Panel;
 
 import PanelBox from '../../components/PanelBox';
 
-import {Line,Pie,Doughnut} from 'react-chartjs';
+// import {Line,Pie,Doughnut} from 'react-chartjs';
 
 import './index.less'
 
@@ -106,16 +106,15 @@ export default class Home extends React.Component {
           showIcon
         />
         <PanelBox title="最近的数据">
-          <Line data={lineData} options={chartOption} />
+
         </PanelBox>
         <PanelBox title="最近的数据">
           <Row className="home-row" type="flex" justify="space-between">
             <Col span="12">
-              <Pie data={pieData} options={chartOption} />
+
               <h3 className="home-title-x">测试数据1</h3>
             </Col>
             <Col span="12">
-              <Doughnut data={pieData} options={chartOption} />
               <h3 className="home-title-x">测试数据2</h3>
             </Col>
           </Row>

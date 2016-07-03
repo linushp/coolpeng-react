@@ -42,24 +42,24 @@ export default function promiseMiddleware(config = {}) {
        *  3. a resolve/rejected action with the resolve/rejected object as a payload
        */
       action.payload.promise = promise.then(
-        (resolved = {}) => {
-          const resolveAction = getResolveAction();
-          return dispatch(isThunk(resolved) ? resolved.bind(null, resolveAction) : {
-            ...resolveAction,
-            ...isAction(resolved) ? resolved : {
-              ...!!resolved && { payload: resolved }
-            }
-          });
-        },
-        (rejected = {}) => {
-          const resolveAction = getResolveAction(true);
-          return dispatch(isThunk(rejected) ? rejected.bind(null, resolveAction) : {
-            ...resolveAction,
-            ...isAction(rejected) ? rejected : {
-              ...!!rejected && { payload: rejected }
-            }
-          });
-        },
+          (resolved = {}) => {
+            const resolveAction = getResolveAction();
+            return dispatch(isThunk(resolved) ? resolved.bind(null, resolveAction) : {
+              ...resolveAction,
+              ...isAction(resolved) ? resolved : {
+                ...!!resolved && { payload: resolved }
+              }
+            });
+          },
+          (rejected = {}) => {
+            const resolveAction = getResolveAction(true);
+            return dispatch(isThunk(rejected) ? rejected.bind(null, resolveAction) : {
+              ...resolveAction,
+              ...isAction(rejected) ? rejected : {
+                ...!!rejected && { payload: rejected }
+              }
+            });
+          },
       );
 
       return action;

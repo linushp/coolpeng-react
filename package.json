@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha tests/.setup.js tests/**/*-test.js --compilers css:mocha-compiler.js",
-    "start": "node server"
+    "start": "node server",
+    "build": ""
   },
   "author": "fireyy",
   "license": "WTFPL",

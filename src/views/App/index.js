@@ -11,6 +11,7 @@ import {fetchProfile, logout} from '../../actions/user';
 
 import 'antd/style/index.less';
 import './index.less';
+import '../Common/common.less';
 
 class App extends React.Component {
   constructor(props) {
@@ -25,21 +26,38 @@ class App extends React.Component {
   render() {
     const {user, actions} = this.props;
 
+
     return (
-      <div className="ant-layout-aside">
-        <Sidebar />
-        <div className="ant-layout-main">
-          <Header user={user} />
-          <NavPath />
-          <div className="ant-layout-container">
-            <div className="ant-layout-content">
-              {this.props.children}
-            </div>
+        <div className="page-wrapper">
+          <div className="page-header">
+            <Header user={user} />
           </div>
-          <Footer />
+          <div className="page-content">
+            {this.props.children}
+          </div>
+          <div className="page-footer">
+            <Footer />
+          </div>
         </div>
-      </div>
     );
+
+
+
+    // return (
+    //   <div className="ant-layout-aside">
+    //     <Sidebar />
+    //     <div className="ant-layout-main">
+    //       <Header user={user} />
+    //       <NavPath />
+    //       <div className="ant-layout-container">
+    //         <div className="ant-layout-content">
+    //           {this.props.children}
+    //         </div>
+    //       </div>
+    //       <Footer />
+    //     </div>
+    //   </div>
+    // );
   }
 }
 
