@@ -7,7 +7,8 @@
     "test": "mocha tests/.setup.js tests/**/*-test.js --compilers css:mocha-compiler.js",
     "start": "node server",
     "build": "webpack --config ./webpack.release.js",
-    "watch": "webpack"
+    "package":"NODE_ENV=production webpack --progress --profile --colors",
+    "watch": "webpack-dev-server  --hot --inline --progress --colors"
   },
   "author": "fireyy",
   "license": "WTFPL",
