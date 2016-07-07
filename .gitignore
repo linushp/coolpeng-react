@@ -3,3 +3,6 @@ dist/
 npm-debug.log
 .DS_Store
 /dist/
+.idea/workspace.xml
+src/.idea/
+tmp/
