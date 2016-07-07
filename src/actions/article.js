@@ -1,3 +1,16 @@
-/**
- * Created by Administrator on 2016/7/3.
- */
+import api from '../api'
+
+import {getCookie} from '../utils';
+
+export const GET_MODULE_LIST_PENDING = 'GET_MODULE_LIST_PENDING';
+export const GET_MODULE_LIST_SUCCESS = 'GET_MODULE_LIST_SUCCESS';
+export const GET_MODULE_LIST_ERROR   = 'GET_MODULE_LIST_ERROR';
+
+export function getAllModuleList() {
+    return {
+        type: 'GET_MODULE_LIST',
+        payload: {
+            promise: api.post('/app/blog/getAllModuleList.shtml')
+        }
+    }
+}

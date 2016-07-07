@@ -210,8 +210,8 @@ module.exports = {
     contentBase: './',
     historyApiFallback: true,
     proxy: {
-      '/api/v1/*': {
-        target:'http://127.0.0.1:8080',//song zhangxi
+      '/coolpeng/app/*': {
+        target:'http://127.0.0.1:10086',//song zhangxi
         secure: false,
         changeOrigin: true
       },

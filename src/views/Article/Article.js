@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {fetchProfile, logout} from '../../actions/user';
+import {getAllModuleList} from '../../actions/article';
 import ArticleSideBar from './ArticleSideBar';
 import './index.less';
 
@@ -12,7 +12,7 @@ class Article extends React.Component {
 
     componentWillMount() {
         const {actions} = this.props;
-        actions.fetchProfile();
+        actions.getAllModuleList()
     }
 
     render() {
@@ -20,7 +20,7 @@ class Article extends React.Component {
         return (
             <div className="article-page">
                 <div className="article-menu">
-                    <ArticleSideBar data={this.props.articleSideBar}></ArticleSideBar>
+                    <ArticleSideBar data={this.props.article} actions={this.props.actions}></ArticleSideBar>
                 </div>
                 <div className="article-container">
                     {this.props.children}
@@ -42,15 +42,14 @@ Article.contextTypes = {
 };
 
 const mapStateToProps = (state) => {
-    const {user,articleSideBar} = state;
+    const {article} = state;
     return {
-        articleSideBar:articleSideBar ||{},
-        user: user ? user : null,
+        article:article || {}
     };
 };
 
 function mapDispatchToProps(dispatch) {
-    return {actions: bindActionCreators({fetchProfile, logout}, dispatch)};
+    return {actions: bindActionCreators({getAllModuleList}, dispatch)};
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Article);
