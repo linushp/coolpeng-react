@@ -36,7 +36,6 @@
         createAvatarAlbumModel("mx-0001-0188"), //美胸
         createAvatarAlbumModel("ns-0001-0269"), //女生
         createAvatarAlbumModel("xf-0001-0101")  //校服
-
     ];
 
     function calculateIndex() {
@@ -113,8 +112,7 @@
     }
 
     function getRandomNumber(min, max) {
-        var randomNumber = parseInt(Math.random() * max, 10) + min;
-        return randomNumber;
+        return Math.floor(Math.random() * (max - min) + min);
     }
 
 
