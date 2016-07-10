@@ -1,13 +1,14 @@
 {
-  "name": "react-antd-admin",
+  "name": "react-blog",
   "version": "0.1.0",
-  "description": "React Ant.Design Admin UI",
+  "description": "React blog",
   "main": "index.js",
   "scripts": {
     "test": "mocha tests/.setup.js tests/**/*-test.js --compilers css:mocha-compiler.js",
     "start": "node server",
     "build": "webpack --config ./webpack.release.js",
-    "watch": "webpack"
+    "package": "NODE_ENV=production webpack --progress --profile --colors",
+    "watch": "webpack-dev-server  --hot --inline --progress --colors"
   },
   "author": "fireyy",
   "license": "WTFPL",
@@ -17,6 +18,7 @@
     "chart.js": "^1.0.2",
     "express": "^4.13.4",
     "history": "^2.0.0",
+    "immutable": "^3.8.1",
     "lodash": "^4.6.1",
     "react": "^0.14.7",
     "react-chartjs": "^0.7.3",

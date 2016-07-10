@@ -5,8 +5,9 @@ import promiseMiddleware from '../middlewares/promiseMiddleware'
 
 import user from '../reducers/user';
 import menu from '../reducers/menu';
+import article from '../reducers/article';
 
-const reducer = combineReducers({user, menu});
+const reducer = combineReducers({user, menu, article});
 
 const createStoreWithMiddleware = applyMiddleware(
   thunkMiddleware,

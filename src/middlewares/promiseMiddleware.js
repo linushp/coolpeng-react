@@ -59,7 +59,7 @@ export default function promiseMiddleware(config = {}) {
                 ...!!rejected && { payload: rejected }
               }
             });
-          },
+          }
       );
 
       return action;

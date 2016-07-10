@@ -15,27 +15,18 @@ class ArticleSingle extends React.Component {
     }
 
     render() {
-        const {user, actions} = this.props;
-
-
+        const {data, actions} = this.props;
+        var moduleList = data.moduleList || [];
         return (
             <div className="article-sidebar">
-                Sidebar
+                {moduleList.map(function(m){
+                    return <div>{m.moduleName}</div>
+                })}
             </div>
         );
     }
 }
 
 
-const mapStateToProps = (state) => {
-    const {user} = state;
-    return {
-        user: user ? user : null,
-    };
-};
 
-function mapDispatchToProps(dispatch) {
-    return {actions: bindActionCreators({fetchProfile, logout}, dispatch)};
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ArticleSingle);
+export default ArticleSingle;

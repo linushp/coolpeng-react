@@ -7,3 +7,6 @@ npm-debug.log
 workspace.xml
 /.idea/workspace.xml
 *.iml
+.idea/workspace.xml
+src/.idea/
+tmp/
