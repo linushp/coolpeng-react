@@ -8,6 +8,7 @@
     "start": "node server",
     "build": "webpack --config ./webpack.release.js",
     "package": "NODE_ENV=production webpack --progress --profile --colors",
+    "package2": "set NODE_ENV=production && webpack --progress --profile --colors",
     "watch": "webpack-dev-server  --hot --inline --progress --colors"
   },
   "author": "fireyy",
@@ -19,6 +20,7 @@
     "express": "^4.13.4",
     "history": "^2.0.0",
     "immutable": "^3.8.1",
+    "jquery": "^3.1.0",
     "lodash": "^4.6.1",
     "react": "^0.14.7",
     "react-chartjs": "^0.7.3",
