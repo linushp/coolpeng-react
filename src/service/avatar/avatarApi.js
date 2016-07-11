@@ -1,7 +1,10 @@
 import $ from 'jquery';
 
 var ajaxPost = function (url,queryCondition,success,onError) {
-    url = "" + url;
+
+    var urlPrefix = window.coolpengAvatarApiURLPrefix || "";
+
+    url = urlPrefix + "" + url;
     $.ajax({
         type: 'POST',
         url: url ,

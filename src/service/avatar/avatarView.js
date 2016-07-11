@@ -1,6 +1,6 @@
 import $ from 'jquery';
-import avatarURL from './avatarURL';
-import avatarApi from './avatarApi';
+import * as avatarURL from './avatarURL';
+import * as avatarApi from './avatarApi';
 
 
 var viewIdIndex = 0;
@@ -38,7 +38,7 @@ function AvatarView(config) {
 
     function queryAndView() {
         showLoading();
-        avatarApi.getAllModuleList(queryCondition, function (d) {
+        avatarApi.getReplyList(queryCondition, function (d) {
             state.totalCount = d.totalCount;
             state.data = d.data;
             state.pageNo = d.pageNo;
@@ -48,10 +48,17 @@ function AvatarView(config) {
         });
     }
 
+    function getRandomUser(){
+        var m = "http://image.coolpeng.cn/avatar/"+avatarURL.getRandomAvatarURL();
+        return {
+            createAvatar:m
+        };
+    }
 
-    fn
-    
     function renderReplyInput() {
+
+        var m = getRandomUser();
+
         return '' +
             '<div class="mm1621703468">' +
             '   <div class="cp-reply-avatar">' +
@@ -132,12 +139,12 @@ function AvatarView(config) {
     }
 
     function getViewRootDOM() {
-        var id = this.getViewId();
+        var id = getViewId();
         return $("#" + id);
     }
 
     function findDOM(selector) {
-        return this.getViewRootDOM().find(selector);
+        return getViewRootDOM().find(selector);
     }
 
 
@@ -148,8 +155,10 @@ function AvatarView(config) {
 }
 
 
+
+if(window){
+    window.coolpengAvatarView = AvatarView;
+}
 if (typeof module === "object" && typeof module.exports === "object") {
     module.exports = AvatarView;
-} else {
-    window.coolpengAvatarView = AvatarView;
 }

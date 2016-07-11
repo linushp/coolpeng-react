@@ -138,12 +138,12 @@
     };
 
 
-
+    if (window){
+        window.coolpengAvatarService = window.coolpengAvatarService || {};
+        Object.assign(window.coolpengAvatarService, willExport);
+    }
     if (typeof module === "object" && typeof module.exports === "object") {
         module.exports = willExport;
-    } else {
-        window.coolpengAvatarService = window.coolpengAvatarService || {};
-        Object.assign(window.coolpengAvatarService, willExport)
     }
 
 })();
