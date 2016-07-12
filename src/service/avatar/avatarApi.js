@@ -1,10 +1,18 @@
 import $ from 'jquery';
 
-var ajaxPost = function (url,queryCondition,success,onError) {
+
+function ajaxPost(userInfoGetter,url,queryCondition,success,onError) {
 
     var urlPrefix = window.coolpengAvatarApiURLPrefix || "";
-
     url = urlPrefix + "" + url;
+
+    var userInfo = userInfoGetter();
+
+    queryCondition = queryCondition || {};
+    queryCondition["TMS_APP_COMMON__TOKEN_ID"] = userInfo.tokenId;
+    queryCondition["TMS_APP_COMMON__DEVICE_PLATFORM"] = userInfo.devicePlatform;
+    queryCondition["TMS_APP_COMMON__DEVICE_UUID"] = userInfo.uuid;
+
     $.ajax({
         type: 'POST',
         url: url ,
@@ -12,32 +20,50 @@ var ajaxPost = function (url,queryCondition,success,onError) {
         success: success ,
         dataType: "json",
         error:onError,
-        ContentType: 'application/json;charset=UTF-8'
+        contentType: 'application/json; charset=utf-8'
     });
-};
-
-export function getReplyList(queryCondition,callback,onError) {
-    ajaxPost('/cloud/reply/getReplyList.json', queryCondition,callback,onError);
 }
 
-export function createReply(queryCondition,callback,onError) {
-    ajaxPost('/cloud/reply/createReply.json', queryCondition,callback,onError);
+export default class AvatarApi{
+
+    constructor(props) {
+        props = props || {};
+        var userInfoGetter = props.userInfoGetter || function(){
+                return {
+                    tokenId:"",
+                    devicePlatform:"",
+                    uuid:""
+                };
+            };
+        this.ajaxPost = ajaxPost.bind(this,userInfoGetter);
+    }
+
+     getReplyList(queryCondition,callback,onError) {
+        this.ajaxPost('/cloud/reply/getReplyList.json', queryCondition,callback,onError);
+    }
+
+    createReply(queryCondition,callback,onError) {
+        this.ajaxPost('/cloud/reply/createReply.json', queryCondition,callback,onError);
+    }
+
+     deleteReply(queryCondition,callback,onError) {
+        this.ajaxPost('/cloud/reply/deleteReply.json', queryCondition,callback,onError);
+    }
+
+    likeReply(queryCondition,callback,onError) {
+        this.ajaxPost('/cloud/reply/likeReply.json', queryCondition,callback,onError);
+    }
+
+    createReplyReply(queryCondition,callback,onError) {
+        this.ajaxPost('/cloud/reply/createReplyReply.json', queryCondition,callback,onError);
+    }
+
+
+     deleteReplyReply(queryCondition,callback,onError) {
+        this.ajaxPost('/cloud/reply/deleteReplyReply.json', queryCondition,callback,onError);
+    }
+
+
+
+
 }
-
-export function deleteReply(queryCondition,callback,onError) {
-    ajaxPost('/cloud/reply/deleteReply.json', queryCondition,callback,onError);
-}
-
-export function likeReply(queryCondition,callback,onError) {
-    ajaxPost('/cloud/reply/likeReply.json', queryCondition,callback,onError);
-}
-
-export function createReplyReply(queryCondition,callback,onError) {
-    ajaxPost('/cloud/reply/createReplyReply.json', queryCondition,callback,onError);
-}
-
-
-export function deleteReplyReply(queryCondition,callback,onError) {
-    ajaxPost('/cloud/reply/deleteReplyReply.json', queryCondition,callback,onError);
-}
-

@@ -135,8 +135,8 @@ module.exports = {
         contentBase: './',
         historyApiFallback: true,
         proxy: {
-            '/coolpeng/app/*': {
-                target: 'http://127.0.0.1:10086',
+            '/cloud/*': {
+                target: 'http://www.coolpeng.cn',
                 secure: false,
                 changeOrigin: true
             },

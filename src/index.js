@@ -44,3 +44,13 @@ ReactDOM.render(
     </Provider>,
     document.getElementById('root')
 );
+
+
+
+
+
+var AvatarView = window.coolpengAvatarView;
+var view = new AvatarView({
+    DOM:document.getElementById("replyTestContainer"),
+    pageId:"test"
+});
