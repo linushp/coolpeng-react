@@ -43,7 +43,7 @@ function AvatarView(config) {
         DOM.innerHTML = '' +
             '<div class="cp-reply-service" id="' + id + '">' +
             '    <div class="cp-reply-loading">loading...</div>' +
-            '    <div class="cp-reply-input">' + renderReplyInput() + '</div>' +
+            '    <div class="cp-reply-input">' + renderReplyInput(false) + '</div>' +
             '    <div class="cp-reply-list"></div>' +
             '    <div class="cp-reply-pagination"></div>' +
             '</div>';
@@ -67,12 +67,13 @@ function AvatarView(config) {
     }
 
 
-    function renderReplyInput() {
+    function renderReplyInput(isReplyReply) {
+        isReplyReply = isReplyReply || false;
 
         var createAvatar = getRandomAvatarURL();
 
         return '' +
-            '<div class="boxCreateReply">' +
+            '<div class="boxCreateReply isReplyReply_'+isReplyReply+'" >' +
             '   <div class="cp-reply-avatar cp-loading-wrap">' +
             '       <img class="boxCreateReplyImg" src="' + createAvatar + '" />' +
             '       <span class="changeAvatar">换一个?</span>' +
@@ -98,7 +99,7 @@ function AvatarView(config) {
         var replyListHTML = [];
         for (var i = 0; i < replyList.length; i++) {
             var cloudReply = replyList[i];
-            var html = renderItemView(cloudReply);
+            var html = renderItemView(cloudReply,false);
             replyListHTML.push(html);
         }
         if (replyListHTML.length === 0) {
@@ -112,13 +113,28 @@ function AvatarView(config) {
 
 
     function renderReplyReplyList(cloudReply){
-        return "";
+
+        //TODO 显示回复的回复
+        var replyList = cloudReply.replyList || [];
+
+        var replyListHTML = [];
+        for (var i = 0; i < replyList.length; i++) {
+            var cloudReply = replyList[i];
+            replyListHTML.push('' +
+                '<div class="">' +
+                '</div>' +
+                '');
+        }
+
+        var htmlJoin = replyListHTML.join("");
+        return htmlJoin;
     }
 
 
 
 
-    function renderItemView(cloudReply) {
+    function renderItemView(cloudReply,isReplyReply) {
+        isReplyReply = isReplyReply || false;
         var m = cloudReply || {};
         var createUserId = m.createUserId || "";
 
@@ -172,7 +188,10 @@ function AvatarView(config) {
         return $("#" + id);
     }
 
-    function findDOM(selector) {
+    function findDOM(selector,rootElement) {
+        if(rootElement){
+            return rootElement.find(selector);
+        }
         return getViewRootDOM().find(selector);
     }
 
@@ -182,8 +201,8 @@ function AvatarView(config) {
         $dom.on("click", "." + clazzName, callback);
     }
 
-    function findDOMByClass(className) {
-        return findDOM("." + className);
+    function findDOMByClass(className,rootElement) {
+        return findDOM("." + className,rootElement);
     }
 
 
@@ -194,19 +213,33 @@ function AvatarView(config) {
         setTimeout(function () {
             hideAvatarLoading($dom);
         }, 5000);
+
+        $dom[0].onload = function (a, b, c) {
+            console.log("img loaded")
+            var target = a.target || a.srcElement;
+            hideAvatarLoading($(target));
+        }
     }
 
     function hideAvatarLoading($dom) {
         $dom.closest(".cp-loading-wrap").find('.cp-loading').hide();
     }
 
+
+
     function bindEventHandler() {
 
         onClickClazzName("btnCreateReply", function (e) {
-            var img = findDOMByClass('boxCreateReplyImg').attr('src');
-            var msg = findDOMByClass('createReplyContent').val();
-            var email = findDOMByClass('createReplyEmail').val();
-            var nickname = findDOMByClass('createReplyNickname').val();
+
+            var $target = $(e.target || e.srcElement);
+
+            var boxCreateReply = $target.closest(".boxCreateReply");
+
+
+            var img = findDOMByClass('boxCreateReplyImg',boxCreateReply).attr('src');
+            var msg = findDOMByClass('createReplyContent',boxCreateReply).val();
+            var email = findDOMByClass('createReplyEmail',boxCreateReply).val();
+            var nickname = findDOMByClass('createReplyNickname',boxCreateReply).val();
             var data = {
                 pageId: pageId,
                 replyContent: msg,
@@ -215,15 +248,27 @@ function AvatarView(config) {
                 createAvatar: img,
                 createMail: email
             };
-            avatarApi.createReply(data, function () {
-                findDOMByClass('createReplyContent').val("");
-                queryAndView();
-            });
+
+            if(boxCreateReply.hasClass('isReplyReply_true')){
+                var $replyItem =  $target.closest('.cp-reply-item');
+                data['replyId'] =$replyItem.data("id");
+                avatarApi.createReplyReply(data, function (d) {
+                    findDOMByClass('createReplyContent',boxCreateReply).val("");
+                    debugger;
+                });
+            }else {
+                avatarApi.createReply(data, function () {
+                    findDOMByClass('createReplyContent',boxCreateReply).val("");
+                    queryAndView();
+                });
+            }
+
         });
 
-        onClickClazzName("changeAvatar", function () {
+        onClickClazzName("changeAvatar", function (e) {
+            var boxCreateReply = $(e.target || e.srcElement).closest(".boxCreateReply");
             var img = getRandomAvatarURL();
-            var $dom = findDOMByClass("boxCreateReplyImg");
+            var $dom = findDOMByClass("boxCreateReplyImg",boxCreateReply);
             $dom.attr('src', img);
             showAvatarLoading($dom);
         });
@@ -234,7 +279,7 @@ function AvatarView(config) {
             var $this = $(this);
             var $item = $this.closest(".cp-reply-item");
             var itemId = $item.data("id");
-            var reply2 = renderReplyInput();
+            var reply2 = renderReplyInput(true);
             var $thisInput = $item.find('.cp-reply2-input');
             $thisInput.html(reply2);
             $thisInput.show();
