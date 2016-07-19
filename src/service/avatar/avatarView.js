@@ -99,7 +99,7 @@ function AvatarView(config) {
         var replyListHTML = [];
         for (var i = 0; i < replyList.length; i++) {
             var cloudReply = replyList[i];
-            var html = renderItemView(cloudReply,false);
+            var html = renderItemView(cloudReply);
             replyListHTML.push(html);
         }
         if (replyListHTML.length === 0) {
@@ -112,18 +112,38 @@ function AvatarView(config) {
 
 
 
-    function renderReplyReplyList(cloudReply){
+    function renderReplyReplyItem(obj){
+        var html = '' +
+            '<div class="cp-reply2-item">' +
+            '   <a class="cp-reply2-avatar">' +
+            '       <img src="'+obj.createAvatar+'" alt="'+obj.createNickname+'">' +
+            '   </a>' +
+            '   <div class="cp-reply2-cnt">' +
+            '       <a href="" class="cp-reply2-name">'+obj.createNickname+'</a> : &nbsp;' +
+            '       <span class="cp-reply2-text">'+obj.replyContent+'</span>' +
+            '       <p>' +
+            '           <i>'+obj.createTime+'</i>' +
+            '       </p>' +
+            '   </div>' +
+            '</div>';
+        return html;
+    }
 
-        //TODO 显示回复的回复
+    function renderReplyReplyList(cloudReply,maxCount){
+        maxCount = maxCount || 9999;
         var replyList = cloudReply.replyList || [];
+
+        replyList = replyList.sort(function(a,b){
+            return a.createTime<b.createTime?1:-1;
+        });
+
+        replyList = replyList.slice(0,maxCount);
 
         var replyListHTML = [];
         for (var i = 0; i < replyList.length; i++) {
             var cloudReply = replyList[i];
-            replyListHTML.push('' +
-                '<div class="">' +
-                '</div>' +
-                '');
+            var x= renderReplyReplyItem(cloudReply);
+            replyListHTML.push(x);
         }
 
         var htmlJoin = replyListHTML.join("");
@@ -133,8 +153,7 @@ function AvatarView(config) {
 
 
 
-    function renderItemView(cloudReply,isReplyReply) {
-        isReplyReply = isReplyReply || false;
+    function renderItemView(cloudReply) {
         var m = cloudReply || {};
         var createUserId = m.createUserId || "";
 
@@ -156,7 +175,7 @@ function AvatarView(config) {
             '   <i class="clear"></i>' +
             '   <div class="cp-reply2">' +
             '       <div class="cp-reply2-input"></div>' +
-            '       <div class="cp-reply2-list">' + renderReplyReplyList(cloudReply) +
+            '       <div class="cp-reply2-list">' + renderReplyReplyList(cloudReply,5) +
             '       </div>' +
             '   </div>' +
             '</div>';
