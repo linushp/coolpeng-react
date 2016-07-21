@@ -49,8 +49,8 @@ ReactDOM.render(
 
 
 
-var AvatarView = window.coolpengAvatarView;
-var view = new AvatarView({
-    DOM:document.getElementById("replyTestContainer"),
-    pageId:"test"
-});
+//var AvatarView = window.coolpengAvatarView;
+//var view = new AvatarView({
+//    DOM:document.getElementById("replyTestContainer"),
+//    pageId:"test"
+//});

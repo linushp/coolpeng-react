@@ -10,7 +10,7 @@ var webpack = require('webpack'),
 
 
 var isProduction = function () {
-    console.log("process.env.NODE_ENV:" + process.env.NODE_ENV + "MMMMMMMMMMMMMMY");
+    console.log("process.env.NODE_ENV:" + process.env.NODE_ENV);
     var env = process.env.NODE_ENV || "";
     var isRelease = env.trim() === "production";
 
@@ -25,8 +25,8 @@ module.exports = {
     target: 'web',
     cache: true,
     entry: {
-        appIndex: path.join(srcPath, 'index.js'),
-        replyService: path.join(srcPath, 'service/avatar/avatarView.js')
+        appIndex: path.join(srcPath, 'index.js')
+        //replyService: path.join(srcPath, 'service/avatar/avatarView.js')
     },
     /**
      *  Webpack 解析bundle 中请求的module 路径时的设置
@@ -98,7 +98,13 @@ module.exports = {
         react:"React",
         ReactDOM:"ReactDOM",
         "react-dom":"ReactDOM",
-        "react-router":"ReactRouter"
+        "react-router":"ReactRouter",
+        "react-redux":"ReactRedux",
+        "redux":"Redux",
+        "history":"History",
+        "lodash":"_",
+        "_":"_",
+        "underscore":"_"
     },
 
 

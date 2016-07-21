@@ -1,11 +1,7 @@
-import Api from './api';
+import {AjaxPromise,ajaxPost} from './api';
 
-const api = new Api({
-  baseURI: '/coolpeng', //TODO
-  headers: {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json;charset=UTF-8'
-  }
+var api = new AjaxPromise({
+
 });
 
 export default api

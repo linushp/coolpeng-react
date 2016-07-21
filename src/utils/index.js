@@ -1,6 +1,6 @@
 import {Router, Route, IndexRedirect, useRouterHistory} from 'react-router';
 import {createHistory} from 'history'
-import 'lodash'
+import 'underscore'
 var _ = self._;
 const routeHistory = useRouterHistory(createHistory)({ basename: '' });
 

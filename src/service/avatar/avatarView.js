@@ -167,14 +167,16 @@ function AvatarView(config) {
             '       <div class="cc-content"> ' + m.replyContent + '</div>' +
             '       <div class="cc-footer"> ' +
             '           <span class="cc-time"> ' + m.createTime + '</span>' +
+            '           <span class="cc-like"> 赞(<span>'+m.likeCount+'</span>) </span>' +
             '           <span class="cc-reply"> 回复 </span>' +
-            '           <span class="cc-like"> 赞 </span>' +
+            '           <span class="cc-reply-view"> 查看回复(<span>'+m.maxFloorNumber+'</span>) </span>' +
             '       </div>' +
             '       <i class="clear"></i>' +
             '   </div>' +
             '   <i class="clear"></i>' +
             '   <div class="cp-reply2">' +
             '       <div class="cp-reply2-input"></div>' +
+            '       <div class="cp-reply2-input-msg"></div>' +
             '       <div class="cp-reply2-list">' + renderReplyReplyList(cloudReply,5) +
             '       </div>' +
             '   </div>' +
@@ -273,7 +275,17 @@ function AvatarView(config) {
                 data['replyId'] =$replyItem.data("id");
                 avatarApi.createReplyReply(data, function (d) {
                     findDOMByClass('createReplyContent',boxCreateReply).val("");
-                    debugger;
+                    var $resultMsg = findDOMByClass('cp-reply2-input-msg',$replyItem);
+                    if(d.responseCode!==0){
+                        $resultMsg.html(d.responseText);
+                        return;
+                    }
+                    if(d.data && d.data.replyList){
+                        $resultMsg.html('');
+                        var html = renderReplyReplyList(d.data,5);
+                        findDOMByClass('cp-reply2-list',$replyItem).html(html);
+                        findDOMByClass('cc-reply-view',$replyItem).find('span').html(d.data.maxFloorNumber);
+                    }
                 });
             }else {
                 avatarApi.createReply(data, function () {
@@ -302,6 +314,22 @@ function AvatarView(config) {
             var $thisInput = $item.find('.cp-reply2-input');
             $thisInput.html(reply2);
             $thisInput.show();
+        });
+
+
+        onClickClazzName('cc-like',function(){
+            var $this = $(this);
+            var $item = $this.closest(".cp-reply-item");
+            var itemId = $item.data("id");
+            avatarApi.likeReply({
+                replyId:itemId,
+                isLike:true
+            },function(d){
+                try {
+                    $this.find('span').html(d.data.likeCount);
+                }catch (e){
+                }
+            });
         });
 
         findDOMByClass('boxCreateReplyImg')[0].onload = function (a, b, c) {

@@ -30,7 +30,7 @@ export function login(user, password) {
   return {
       type: 'LOGIN',
       payload: {
-        promise: api.put('/login', {
+        promise: api.post('/login', {
           data: {
             user: user,
             password: password
