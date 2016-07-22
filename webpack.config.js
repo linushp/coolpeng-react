@@ -16,6 +16,8 @@ var isProduction = function () {
 
     console.log("isRelease:", isRelease);
     return isRelease;
+
+    //return true;
 };
 
 
