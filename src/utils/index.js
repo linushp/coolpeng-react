@@ -1,7 +1,5 @@
 import {Router, Route, IndexRedirect, useRouterHistory} from 'react-router';
 import {createHistory} from 'history'
-import 'underscore'
-var _ = self._;
 const routeHistory = useRouterHistory(createHistory)({ basename: '' });
 
 export function getRouteHistory() {
@@ -37,12 +35,18 @@ export function setLocalStorage(name,value) {
 }
 
 export function toQueryParam(paramObject) {
-  var paramArray = _.map(paramObject, function (value, key) {
+  paramObject = paramObject || {};
+  var keys = Object.getOwnPropertyNames(paramObject) || [];
+
+  var paramArray = keys.map(function (key, i) {
+    var value = paramObject[key];
     return key + "=" + encodeURIComponent(value);
   });
+
   if (paramArray && paramArray.length > 0) {
     return "?" + paramArray.join("&");
   }
+
   return "";
 }
 

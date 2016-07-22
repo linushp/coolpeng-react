@@ -4,18 +4,56 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            #rootLoading{
+                position: absolute;
+                top: 45%;
+                left: 45%;
+                font-size: 13px;
+                line-height: 30px;
+                color: #666;
+                font-family: Microsoft YaHei,Arial,sans-serif;
+            }
+        </style>
     </head>
-
     <body>
         <div id="root"> </div>
-        <div id="replyTestContainer"></div>
+        <div id="rootLoading">
+            <span id="rootLoadingPercent">0</span> %
+            &nbsp;&nbsp;loading...
+        </div>
+        <script>
+            var currentDateTime = new Date().getTime();
+            function setLoadingPercent(num){
+                var d2 = new Date().getTime();
+                console.log(num+"%",d2 - currentDateTime);
+                currentDateTime = d2;
+                document.getElementById("rootLoadingPercent").innerHTML = num;
+                if(num===100){
+                    setTimeout(function(){
+                        document.getElementById("rootLoading").style.display='none';
+                    },10);
+                }
+            }
+            setLoadingPercent(10);
+        </script>
+
         <script src="static/lib/jquery.min.js"></script>
+        <script>setLoadingPercent(20); </script>
         <script src="static/lib/react.min.js"></script>
+        <script>setLoadingPercent(30); </script>
         <script src="static/lib/react-dom.min.js"></script>
+        <script>setLoadingPercent(40); </script>
         <script src="static/lib/ReactRouter.min.js"></script>
+        <script>setLoadingPercent(50); </script>
         <script src="static/lib/redux.min.js"></script>
+        <script>setLoadingPercent(60); </script>
         <script src="static/lib/react-redux.min.js"></script>
+        <script>setLoadingPercent(70); </script>
         <script src="static/lib/history.min.js"></script>
-        <script src="static/lib/underscore-min.js"></script>
+        <script>setLoadingPercent(80); </script>
+        <!--<script src="static/lib/underscore-min.js"></script>-->
     </body>
 </html>
+
+<script>setLoadingPercent(100);</script>
