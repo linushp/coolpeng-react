@@ -1,5 +1,6 @@
 import React from 'react'
 import PanelBox from '../../components/PanelBox';
+import AvatarReact from '../../service/avatar/AvatarReact';
 
 import './index.less'
 
@@ -16,20 +17,35 @@ const text = `
 `;
 
 export default class Home extends React.Component {
-  constructor () {
-    super()
+  constructor (props) {
+    super(props);
+    this.state = {
+      x:0
+    };
   }
 
   componentWillMount () {
   }
 
   callback() {
+    var x = this.state.x;
 
+    this.setState({x:(x +1)});
   }
 
   render () {
+    var x = this.state.x;
+    if (x%2===0){
+      return (
+          <div>
+            <button onClick={this.callback.bind(this)}>mmmmmmm</button>
+          </div>);
+    }
     return (
-        <div>Home</div>
+        <div>
+          <button onClick={this.callback.bind(this)}>mmmmm</button>
+          <AvatarReact></AvatarReact>
+        </div>
     );
   }
 }

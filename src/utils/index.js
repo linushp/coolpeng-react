@@ -64,3 +64,8 @@ export function createUUID() {
   });
   return randomStr + new Date().getTime();
 }
+
+
+export function getStaticURL(p){
+  return "http://image.coolpeng.cn/static/" + p;
+}
