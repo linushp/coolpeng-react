@@ -4,10 +4,13 @@ var webpack = require('webpack'),
     HtmlWebpackPlugin = require('html-webpack-plugin'),
     path = require('path'),
     fs = require('fs'),
-    staticResourcePath = path.join(__dirname, 'static'),
-    srcPath = path.join(__dirname, 'src'),
-    nodeModulesPath = path.join(__dirname, 'node_modules');
+    srcPath = path.join(__dirname, '../src');
+var appPath = function(s){
+    var x=  path.join(__dirname,"../");
+    return path.join(x,s);
+};
 
+var __appPath = path.join(__dirname,"../");
 
 var isProduction = function () {
     console.log("process.env.NODE_ENV:" + process.env.NODE_ENV);
@@ -23,7 +26,7 @@ var isProduction = function () {
 
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-module.exports = {
+var webpackConfig = {
     target: 'web',
     cache: true,
     entry: {
@@ -46,7 +49,7 @@ module.exports = {
      *  @type {Object}
      */
     output: {
-        path: path.join(__dirname, 'dist'),
+        path: path.join(__appPath, 'dist'),
         publicPath: '/',
         filename: 'app/[name].[hash].js',
         chunkFilename: 'modules/[name].[hash].js',
@@ -70,7 +73,7 @@ module.exports = {
                     'css-loader',
                     'less-loader?{"sourceMap":true}'
                 ],
-                include: __dirname
+                include: __appPath
             },
             {
                 test: /\.css$/, loader: ExtractTextPlugin.extract(
@@ -91,7 +94,7 @@ module.exports = {
      *  @type {Object}
      */
     sassLoader: {
-        includePaths: [path.resolve(__dirname, "./static")]
+        includePaths: [path.resolve(__appPath, "./static")]
     },
 
     externals: {
@@ -113,8 +116,8 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             inject: true,
-            excludeChunks: ['test'],
-            template: 'index.html'
+            excludeChunks: ['tests'],
+            template: appPath('index.html')
         }),
         new webpack.optimize.UglifyJsPlugin({
             compress: {
@@ -138,7 +141,7 @@ module.exports = {
     debug: isProduction() ? false : true,
     devtool: isProduction() ? null: 'eval-cheap-module-source-map',
     devServer: {
-        port: 3000,
+        port: 4000,
         host: "0.0.0.0",
         contentBase: './',
         historyApiFallback: true,
@@ -155,3 +158,8 @@ module.exports = {
         }
     }
 };
+
+
+
+module.exports = webpackConfig;
+

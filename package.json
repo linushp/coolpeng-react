@@ -6,10 +6,11 @@
   "scripts": {
     "test": "mocha tests/.setup.js tests/**/*-test.js --compilers css:mocha-compiler.js",
     "start": "node server",
-    "build": "webpack --config ./webpack.release.js",
-    "package": "NODE_ENV=production webpack --progress --profile --colors",
-    "package2": "set NODE_ENV=production && webpack --progress --profile --colors",
-    "watch": "webpack-dev-server  --hot --inline --progress --colors"
+    "build": "webpack --config ./bin/webpack.config.js",
+    "package": "NODE_ENV=production webpack  --config ./bin/webpack.config.js --progress --profile --colors",
+    "package_win": "set NODE_ENV=production && webpack  --config ./bin/webpack.config.js --progress --profile --colors",
+    "watch": "webpack-dev-server  --config ./bin/webpack.config.js  --hot --inline --progress --colors",
+    "dev-reply": "webpack-dev-server  --config ./bin/dev-reply.js  --hot --inline --progress --colors"
   },
   "author": "fireyy",
   "license": "WTFPL",
