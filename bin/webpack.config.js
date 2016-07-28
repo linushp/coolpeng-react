@@ -30,7 +30,7 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 
 
-function createWebpackConfig(jsFile,htmlFile){
+function createWebpackConfig(jsFile,htmlFile,mainFileName){
     var webpackConfig = {
         target: 'web',
         cache: true,
@@ -163,11 +163,17 @@ function createWebpackConfig(jsFile,htmlFile){
         }
     };
 
+
+    if(mainFileName){
+        webpackConfig.entry =  {};
+        webpackConfig.entry[mainFileName] = appPath(jsFile);
+    }
+
     return webpackConfig;
 }
 
 
-var webpackConfig = createWebpackConfig("src/index.js",'index.html');
+var webpackConfig = createWebpackConfig("src/index.js",'index.html',"main");
 webpackConfig.createWebpackConfig = createWebpackConfig;
 module.exports = webpackConfig;
 
