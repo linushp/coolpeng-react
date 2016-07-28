@@ -10,7 +10,8 @@
     "package": "NODE_ENV=production webpack  --config ./bin/webpack.config.js --progress --profile --colors",
     "package_win": "set NODE_ENV=production && webpack  --config ./bin/webpack.config.js --progress --profile --colors",
     "watch": "webpack-dev-server  --config ./bin/webpack.config.js  --hot --inline --progress --colors",
-    "dev-reply": "webpack-dev-server  --config ./bin/dev-reply.js  --hot --inline --progress --colors"
+    "dev-reply": "webpack-dev-server  --config ./bin/dev-reply.js  --hot --inline --progress --colors",
+    "pack-reply": "NODE_ENV=production webpack  --config ./bin/dev-reply.js --progress --profile --colors"
   },
   "author": "fireyy",
   "license": "WTFPL",

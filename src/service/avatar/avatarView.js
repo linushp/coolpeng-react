@@ -36,12 +36,26 @@ function AvatarView(config) {
         totalCount: 1
     };
 
+    var userInfo = config.userInfo || {
+        nickname: "",
+        email: null,
+        avatar: null,
+
+        tokenId: "",
+        devicePlatform: "",
+        uuid: "",
+
+        hasLogin: false
+    };
+
     var $$viewId;
 
     function initViewContainer() {
         var id = getViewId();
         DOM.innerHTML = '' +
             '<div class="cp-reply-service" id="' + id + '">' +
+            '    <div class="cp-reply-h1">一起吐槽<span><b>0</b>条评论</span>' +
+            '    </div>' +
             '    <div class="cp-reply-loading">loading...</div>' +
             '    <div class="cp-reply-input">' + renderReplyInput(false) + '</div>' +
             '    <div class="cp-reply-list"></div>' +
@@ -57,8 +71,10 @@ function AvatarView(config) {
             state.data = d.data;
             state.pageNo = d.pageNo;
             state.pageSize = d.pageSize;
+            renderReplyTitle();
             renderReplyList();
             hideLoading();
+            renderUserInfo();
         });
     }
 
@@ -66,26 +82,56 @@ function AvatarView(config) {
         return "http://image.coolpeng.cn/avatar/" + avatarURL.getRandomAvatarURL();
     }
 
+    function renderReplyTitle() {
+        findDOM(".cp-reply-h1").find('span').show();
+        findDOM(".cp-reply-h1").find('span b').html(state.totalCount);
+    }
+
+    function renderUserInfo() {
+        var login = hasLogin();
+        var $dom = findDOMByClass('boxCreateReply');
+        $dom.removeClass("hasLogin_"+!login).addClass("hasLogin_"+login);
+
+        if (login){
+            findDOMByClass("boxCreateReplyImg").attr('src',userInfo.avatar);
+        }
+    }
+
+    function isAdmin(){
+        return  !!(hasLogin() && userInfo.isAdmin);
+    }
+
+    function hasLogin(){
+        return  !!(userInfo && userInfo.hasLogin);
+    }
 
     function renderReplyInput(isReplyReply) {
         isReplyReply = isReplyReply || false;
 
-        var createAvatar = getRandomAvatarURL();
+        var hasLogin = !!(userInfo && userInfo.hasLogin);
+        var avatarImg = hasLogin ? userInfo.avatar : getRandomAvatarURL();
+
 
         return '' +
-            '<div class="boxCreateReply isReplyReply_'+isReplyReply+'" >' +
+            '<div class="boxCreateReply isReplyReply_' + isReplyReply + '  hasLogin_' + hasLogin + '" >' +
             '   <div class="cp-reply-avatar cp-loading-wrap">' +
-            '       <img class="boxCreateReplyImg" src="' + createAvatar + '" />' +
+            '       <img class="boxCreateReplyImg" src="' + avatarImg + '" />' +
             '       <span class="changeAvatar">换一个?</span>' +
             '       <div class="cp-loading"></div>' +
             '   </div>' +
             '   <div class="cp-reply-cc">' +
-            '       <div>' +
+            '       <div class="createReplyContentWrap">' +
             '           <textarea class="createReplyContent"></textarea>' +
-            '           邮箱:<input type="input" class="createReplyEmail" />' +
-            '           昵称:<input type="input" class="createReplyNickname" />' +
-            '           <div>' +
-            '               <button class="btnCreateReply">留言</button>' +
+            '           <div class="createReplyContent_1">' +
+            '               <div class="tempUserInfo">' +
+            '                   邮箱:<input type="input" class="createReplyEmail" />' +
+            '                   昵称:<input type="input" class="createReplyNickname" />' +
+            '               </div>' +
+            '               <div class="loginUserInfo">' +
+            '                   ' + userInfo.nickname +
+            '               </div>' +
+            '               <button class="btnCreateReply">添加评论</button>' +
+            '               <i class="clear"></i>' +
             '           </div>' +
             '       </div>' +
             '       <i class="clear"></i>' +
@@ -111,46 +157,43 @@ function AvatarView(config) {
     }
 
 
-
-    function renderReplyReplyItem(obj){
+    function renderReplyReplyItem(obj) {
         var html = '' +
             '<div class="cp-reply2-item">' +
             '   <a class="cp-reply2-avatar">' +
-            '       <img src="'+obj.createAvatar+'" alt="'+obj.createNickname+'">' +
+            '       <img src="' + obj.createAvatar + '" alt="' + obj.createNickname + '">' +
             '   </a>' +
             '   <div class="cp-reply2-cnt">' +
-            '       <a href="" class="cp-reply2-name">'+obj.createNickname+'</a> : &nbsp;' +
-            '       <span class="cp-reply2-text">'+obj.replyContent+'</span>' +
+            '       <a href="" class="cp-reply2-name">' + obj.createNickname + '</a> : &nbsp;' +
+            '       <span class="cp-reply2-text">' + obj.replyContent + '</span>' +
             '       <p>' +
-            '           <i>'+obj.createTime+'</i>' +
+            '           <i>' + obj.createTime + '</i>' +
             '       </p>' +
             '   </div>' +
             '</div>';
         return html;
     }
 
-    function renderReplyReplyList(cloudReply,maxCount){
+    function renderReplyReplyList(cloudReply, maxCount) {
         maxCount = maxCount || 9999;
         var replyList = cloudReply.replyList || [];
 
-        replyList = replyList.sort(function(a,b){
-            return a.createTime<b.createTime?1:-1;
+        replyList = replyList.sort(function (a, b) {
+            return a.createTime < b.createTime ? 1 : -1;
         });
 
-        replyList = replyList.slice(0,maxCount);
+        replyList = replyList.slice(0, maxCount);
 
         var replyListHTML = [];
         for (var i = 0; i < replyList.length; i++) {
             var cloudReply = replyList[i];
-            var x= renderReplyReplyItem(cloudReply);
+            var x = renderReplyReplyItem(cloudReply);
             replyListHTML.push(x);
         }
 
         var htmlJoin = replyListHTML.join("");
         return htmlJoin;
     }
-
-
 
 
     function renderItemView(cloudReply) {
@@ -167,9 +210,9 @@ function AvatarView(config) {
             '       <div class="cc-content"> ' + m.replyContent + '</div>' +
             '       <div class="cc-footer"> ' +
             '           <span class="cc-time"> ' + m.createTime + '</span>' +
-            '           <span class="cc-like"> 赞(<span>'+m.likeCount+'</span>) </span>' +
+            '           <span class="cc-like"> 赞(<span>' + m.likeCount + '</span>) </span>' +
             '           <span class="cc-reply"> 回复 </span>' +
-            '           <span class="cc-reply-view"> 查看回复(<span>'+m.maxFloorNumber+'</span>) </span>' +
+            '           <span class="cc-reply-view"> 查看回复(<span>' + m.maxFloorNumber + '</span>) </span>' +
             '       </div>' +
             '       <i class="clear"></i>' +
             '   </div>' +
@@ -177,7 +220,7 @@ function AvatarView(config) {
             '   <div class="cp-reply2">' +
             '       <div class="cp-reply2-input"></div>' +
             '       <div class="cp-reply2-input-msg"></div>' +
-            '       <div class="cp-reply2-list">' + renderReplyReplyList(cloudReply,5) +
+            '       <div class="cp-reply2-list">' + renderReplyReplyList(cloudReply, 5) +
             '       </div>' +
             '   </div>' +
             '</div>';
@@ -209,8 +252,8 @@ function AvatarView(config) {
         return $("#" + id);
     }
 
-    function findDOM(selector,rootElement) {
-        if(rootElement){
+    function findDOM(selector, rootElement) {
+        if (rootElement) {
             return rootElement.find(selector);
         }
         return getViewRootDOM().find(selector);
@@ -222,8 +265,8 @@ function AvatarView(config) {
         $dom.on("click", "." + clazzName, callback);
     }
 
-    function findDOMByClass(className,rootElement) {
-        return findDOM("." + className,rootElement);
+    function findDOMByClass(className, rootElement) {
+        return findDOM("." + className, rootElement);
     }
 
 
@@ -247,7 +290,6 @@ function AvatarView(config) {
     }
 
 
-
     function bindEventHandler() {
 
         onClickClazzName("btnCreateReply", function (e) {
@@ -257,10 +299,18 @@ function AvatarView(config) {
             var boxCreateReply = $target.closest(".boxCreateReply");
 
 
-            var img = findDOMByClass('boxCreateReplyImg',boxCreateReply).attr('src');
-            var msg = findDOMByClass('createReplyContent',boxCreateReply).val();
-            var email = findDOMByClass('createReplyEmail',boxCreateReply).val();
-            var nickname = findDOMByClass('createReplyNickname',boxCreateReply).val();
+            var img = findDOMByClass('boxCreateReplyImg', boxCreateReply).attr('src');
+            var msg = findDOMByClass('createReplyContent', boxCreateReply).val();
+            var email = findDOMByClass('createReplyEmail', boxCreateReply).val();
+            var nickname = findDOMByClass('createReplyNickname', boxCreateReply).val();
+
+            if(userInfo.hasLogin){
+                img = userInfo.avatar;
+                email = userInfo.email;
+                nickname = userInfo.nickname;
+            }
+
+
             var data = {
                 pageId: pageId,
                 replyContent: msg,
@@ -270,36 +320,39 @@ function AvatarView(config) {
                 createMail: email
             };
 
-            if(boxCreateReply.hasClass('isReplyReply_true')){
-                var $replyItem =  $target.closest('.cp-reply-item');
-                data['replyId'] =$replyItem.data("id");
+            if (boxCreateReply.hasClass('isReplyReply_true')) {
+                var $replyItem = $target.closest('.cp-reply-item');
+                data['replyId'] = $replyItem.data("id");
                 avatarApi.createReplyReply(data, function (d) {
-                    findDOMByClass('createReplyContent',boxCreateReply).val("");
-                    var $resultMsg = findDOMByClass('cp-reply2-input-msg',$replyItem);
-                    if(d.responseCode!==0){
+                    findDOMByClass('createReplyContent', boxCreateReply).val("");
+                    var $resultMsg = findDOMByClass('cp-reply2-input-msg', $replyItem);
+                    if (d.responseCode !== 0) {
                         $resultMsg.html(d.responseText);
                         return;
                     }
-                    if(d.data && d.data.replyList){
+                    if (d.data && d.data.replyList) {
                         $resultMsg.html('');
-                        var html = renderReplyReplyList(d.data,5);
-                        findDOMByClass('cp-reply2-list',$replyItem).html(html);
-                        findDOMByClass('cc-reply-view',$replyItem).find('span').html(d.data.maxFloorNumber);
+                        var html = renderReplyReplyList(d.data, 5);
+                        findDOMByClass('cp-reply2-list', $replyItem).html(html);
+                        findDOMByClass('cc-reply-view', $replyItem).find('span').html(d.data.maxFloorNumber);
                     }
                 });
-            }else {
+            } else {
                 avatarApi.createReply(data, function () {
-                    findDOMByClass('createReplyContent',boxCreateReply).val("");
+                    findDOMByClass('createReplyContent', boxCreateReply).val("");
+                    //优化...
                     queryAndView();
                 });
             }
 
         });
 
+
+
         onClickClazzName("changeAvatar", function (e) {
             var boxCreateReply = $(e.target || e.srcElement).closest(".boxCreateReply");
             var img = getRandomAvatarURL();
-            var $dom = findDOMByClass("boxCreateReplyImg",boxCreateReply);
+            var $dom = findDOMByClass("boxCreateReplyImg", boxCreateReply);
             $dom.attr('src', img);
             showAvatarLoading($dom);
         });
@@ -317,17 +370,17 @@ function AvatarView(config) {
         });
 
 
-        onClickClazzName('cc-like',function(){
+        onClickClazzName('cc-like', function () {
             var $this = $(this);
             var $item = $this.closest(".cp-reply-item");
             var itemId = $item.data("id");
             avatarApi.likeReply({
-                replyId:itemId,
-                isLike:true
-            },function(d){
+                replyId: itemId,
+                isLike: true
+            }, function (d) {
                 try {
                     $this.find('span').html(d.data.likeCount);
-                }catch (e){
+                } catch (e) {
                 }
             });
         });
@@ -338,11 +391,21 @@ function AvatarView(config) {
         }
     }
 
-    /** init **/
-    initViewContainer();
-    queryAndView();
-    bindEventHandler()
 
+    function initOutAPI(obj) {
+        obj.outSetUserInfo = function (newInfo) {
+            userInfo = Object.assign({}, userInfo, newInfo);
+            renderUserInfo();
+        }
+    }
+
+
+    /** init **/
+    initViewContainer(this);
+    queryAndView(this);
+    bindEventHandler(this);
+    initOutAPI(this);
+    renderUserInfo();
 }
 
 

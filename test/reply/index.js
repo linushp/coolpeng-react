@@ -1,4 +1,7 @@
+//import avatarView from '../../src/service/avatar/avatarView';
+
 import AvatarReact from '../../src/service/avatar/AvatarReact';
+
 
 import React from 'react';
 import ReactDOM from 'react-dom';

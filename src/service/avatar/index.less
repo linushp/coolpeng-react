@@ -1,8 +1,13 @@
 .cp-reply-service{
+  padding: 0px;
+  margin: 0px;
+  font-size: 12px;
+
   .clear{
     clear: both;
     display: block;
-    height: 1px;
+    height: 0px;
+    line-height: 0px;
   }
   .cp-loading-wrap{
     position: relative;
@@ -32,7 +37,83 @@
     //opacity: 0.6;
   }
 
+  .cp-reply-h1{
+    height: 50px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    line-height: 50px;
+    font-size: 20px;
+    border-bottom: 2px solid #dd5862;
+
+    span{
+      float: right;
+      font-size: 13px;
+      display: none;
+    }
+  }
+
   .boxCreateReply{
+    .loginUserInfo{
+      float: left;
+    }
+
+    .tempUserInfo{
+      float: left;
+    }
+  }
+
+  .boxCreateReply.hasLogin_false{
+    .loginUserInfo{
+      display: none;
+    }
+  }
+
+  .boxCreateReply.hasLogin_true{
+    .changeAvatar{
+      display: none;
+    }
+    .tempUserInfo{
+      display: none;
+    }
+  }
+
+  .createReplyContentWrap{
+    border: 1px solid #CCC;
+  }
+
+  .createReplyContent{
+    min-height: 70px;
+    width: 800px;
+    max-width: 800px;
+    outline: none;
+    border: none;
+    border-bottom:1px solid #CCC;;
+  }
+
+  .createReplyContent_1{
+    //height: 30px;
+    line-height: 30px;
+    border-top: none;
+    padding-left: 10px;
+    input{
+      outline: none;
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+
+
+    button{
+      float: right;
+      width: 100px;
+      height: 30px;
+      border: none;
+      outline: none;
+      background-color: #dd5862;
+      padding: 0px;
+      margin: 0px;
+      color: #FFFFFF;
+      cursor: pointer;
+    }
 
   }
 
