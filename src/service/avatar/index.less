@@ -8,6 +8,7 @@
   padding: 0px;
   margin: 0px;
   font-size: 12px;
+  position: relative;
 
   .clear{
     clear: both;
@@ -170,6 +171,8 @@
       margin-top: 5px;
       padding-bottom: 15px;
       zoom: 1;
+      font-size: 12px;
+      font-family: SimSun,Arial Narrow,HELVETICA;
 
       a{
         cursor: pointer;
@@ -181,17 +184,15 @@
   .cp-reply-item{
     width: 100%;
     position: relative;
-    border-top:1px solid @BOTTOM_LINE_COLOR;
+    border-top:1px dotted @BOTTOM_LINE_COLOR;
     padding-top: 20px;
   }
-
-
-
 
   .cp-reply2-list{
     margin-left: 60px;
     border-left: 2px solid @LEFT_LINE_COLOR;
     padding-left: 10px;
+    margin-bottom: 10px;
   }
 
   .cp-reply2-item{
@@ -200,10 +201,12 @@
   }
 
   .cp-reply2-all{
-    font-size: 13px;
-    color: @TEXT_COLOR;
+    font-size: 12px;
+    color: @NAME_COLOR;
     cursor: pointer;
+    font-family: SimSun;
     display: inline-block;
+    padding-bottom: 10px;
   }
   .cp-reply2-avatar{
 
@@ -235,6 +238,8 @@
     .cp-reply2-time{
       font-style: normal;
       color: @GRAY_COLOR;
+      font-size: 12px;
+      font-family: SimSun,Arial Narrow,HELVETICA;
     }
     .cp-reply2-text{
       color: @TEXT_COLOR;
@@ -246,6 +251,45 @@
 
 
 
+
+  .cp-reply-msg,.cp-reply2-input-msg{
+    display: none;
+    margin: 10px auto;
+    border: 1px solid #e7f6e1;
+    background-color: #f3faf0;
+    padding: 8px 8px 8px 16px;
+    border-radius: 6px;
+    color: #666;
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+
+  .cp-reply-msg.msg_false,.cp-reply2-input-msg.msg_false{
+    border: 1px solid #fdc;
+    background-color: #ffeee6;
+  }
+
+  .cp-reply-loading{
+    position: absolute;
+    top: 250px;
+    left: 50%;
+    margin-left: -61px;
+
+    span{
+      line-height: 39px;
+      display: block;
+      float: left;
+      margin-left: 12px;
+      font-size: 15px;
+    }
+
+    img{
+      float: left;
+      display: block;
+      border: none;
+    }
+  }
 
 
 }
@@ -275,6 +319,7 @@
     background-color: #000;
     opacity: 0.6;
   }
+
   .cp-reply-layer-wrapper{
     position: absolute;
     z-index: 10002;
@@ -286,6 +331,18 @@
     left: 50%;
     margin-top: -300px;
     margin-left: -390px;
+    box-shadow: 0 0 20px #333;
+  }
+
+  .cp-reply-layer-close{
+    position: absolute;
+    z-index: 10003;
+    background: url("../../../static/images/ico_close_16x16.png") no-repeat;
+    width: 16px;
+    height: 16px;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
   }
 
   .cp-reply-layer-content{

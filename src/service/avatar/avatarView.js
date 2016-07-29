@@ -1,13 +1,15 @@
 import $ from 'jquery';
 import * as avatarURL from './avatarURL';
 import AvatarApi from './avatarApi';
-
+import {toPrettyString} from './avatarUtil';
 import './index.less';
 
 
 var loadingImg = '<img src="http://image.coolpeng.cn/static/icons/loading2.gif" />';
 var viewIdIndex = 0;
 
+var clearTimeout = window.clearTimeout;
+var setTimeout = window.setTimeout;
 
 function AvatarView(config) {
     var pageId = config.pageId;
@@ -33,25 +35,43 @@ function AvatarView(config) {
         data: [],
         pageSize: 1,
         pageNo: 1,
-        totalCount: 1
+        totalCount: 1,
+        serverTime: new Date().getTime()
     };
 
     var userInfo = config.userInfo || {
-        nickname: "",
-        email: null,
-        avatar: null,
+            nickname: "",
+            email: null,
+            avatar: null,
+            tokenId: "",
+            devicePlatform: "",
+            uuid: "",
+            hasLogin: false
+        };
 
-        tokenId: "",
-        devicePlatform: "",
-        uuid: "",
+    //最多允许多个个二级评论
+    var MAX_REPLY_REPLY_COUNT = 20;
 
-        hasLogin: false
-    };
+    //最多允许多少个评论
+    var MAX_REPLY_COUNT = 1000;
 
-    var MAX_REPLY2_COUNT = 5;
+    //在第一页最多显示多少个回复
+    var MAX_SHOW_REPLY2_COUNT = 5;
 
-    var $layerPlaceholder;
+    //是否直接在页面上显示二级回复
+    var IS_SHOW_REPLY2 = config.isShowReply2 === true;
+
     var $$viewId;
+
+    var mapCache = {};
+
+    function toPrettyDate(str) {
+        try {
+            return toPrettyString(str, state.serverTime);
+        } catch (e) {
+            return str || "";
+        }
+    }
 
     function initViewContainer() {
         var id = getViewId();
@@ -59,8 +79,10 @@ function AvatarView(config) {
             '<div class="cp-reply-service" id="' + id + '">' +
             '    <div class="cp-reply-h1">一起吐槽<span><b>0</b>条评论</span>' +
             '    </div>' +
-            '    <div class="cp-reply-loading">loading...</div>' +
+            '    <div class="cp-reply-loading">' + loadingImg + '<span>loading...</span></div>' +
+            '    <div class="cp-reply-msg"></div>' +
             '    <div class="cp-reply-input">' + renderReplyInput(false) + '</div>' +
+            '    <div></div>' +
             '    <div class="cp-reply-list"></div>' +
             '    <div class="cp-reply-pagination"></div>' +
             '</div>';
@@ -74,6 +96,11 @@ function AvatarView(config) {
             state.data = d.data;
             state.pageNo = d.pageNo;
             state.pageSize = d.pageSize;
+            state.serverTime = d.extendData.serverTime || new Date().getTime();
+            MAX_REPLY_REPLY_COUNT = d.extendData.MAX_REPLY_REPLY_COUNT || MAX_REPLY_REPLY_COUNT;
+            MAX_REPLY_COUNT = d.extendData.MAX_REPLY_COUNT || MAX_REPLY_COUNT;
+
+
             renderReplyTitle();
             renderReplyList();
             hideLoading();
@@ -86,25 +113,26 @@ function AvatarView(config) {
         return "http://image.coolpeng.cn/avatar/" + avatarURL.getRandomAvatarURL();
     }
 
-    function renderLayerPlaceholder(){
+    function renderLayerPlaceholder() {
         var html = '' +
-            '<div id="cpLayer'+getViewId()+'" viewid="'+getViewId()+'" class="cp-reply-service cp-reply-layer">' +
+            '<div id="cpLayer' + getViewId() + '" viewid="' + getViewId() + '" class="cp-reply-service cp-reply-layer">' +
             '   <div class="cp-reply-layer-bg"></div>' +
             '   <div class="cp-reply-layer-wrapper">' +
+            '       <span class="cp-reply-layer-close"></span>' +
             '       <div class="cp-reply-layer-content"></div>' +
             '   </div>' +
             '</div>';
         $('body').append(html);
     }
 
-    function showReplyLayer(html){
-        var obj =  $("#cpLayer"+getViewId());
-        findDOMByClass('cp-reply-layer-content',obj).html(html);
+    function showReplyLayer(html) {
+        var obj = $("#cpLayer" + getViewId());
+        findDOMByClass('cp-reply-layer-content', obj).html(html);
         obj.show();
     }
 
-    function hideReplyLayer(){
-        $("#cpLayer"+getViewId()).hide();
+    function hideReplyLayer() {
+        $("#cpLayer" + getViewId()).hide();
     }
 
     function renderReplyTitle() {
@@ -115,26 +143,26 @@ function AvatarView(config) {
     function renderUserInfo() {
         var login = hasLogin();
         var $dom = findDOMByClass('boxCreateReply');
-        $dom.removeClass("hasLogin_"+!login).addClass("hasLogin_"+login);
+        $dom.removeClass("hasLogin_" + !login).addClass("hasLogin_" + login);
 
-        if (login){
-            findDOMByClass("boxCreateReplyImg").attr('src',userInfo.avatar);
+        if (login) {
+            findDOMByClass("boxCreateReplyImg").attr('src', userInfo.avatar);
         }
     }
 
-    function isAdmin(){
-        return  !!(hasLogin() && userInfo.isAdmin);
+    function isAdmin() {
+        return !!(hasLogin() && userInfo.isAdmin);
     }
 
-    function hasLogin(){
-        return  !!(userInfo && userInfo.hasLogin);
+    function hasLogin() {
+        return !!(userInfo && userInfo.hasLogin);
     }
 
-    function getReplyObjById(mid){
+    function getReplyObjById(mid) {
         var replyList = state.data || [];
         for (var i = 0; i < replyList.length; i++) {
             var m = replyList[i];
-            if(m.id==mid){
+            if (m.id == mid) {
                 return m;
             }
         }
@@ -181,7 +209,7 @@ function AvatarView(config) {
         var replyListHTML = [];
         for (var i = 0; i < replyList.length; i++) {
             var cloudReply = replyList[i];
-            var html = renderItemView(cloudReply,MAX_REPLY2_COUNT);
+            var html = renderItemView(cloudReply, MAX_SHOW_REPLY2_COUNT, IS_SHOW_REPLY2);
             replyListHTML.push(html);
         }
         if (replyListHTML.length === 0) {
@@ -202,7 +230,7 @@ function AvatarView(config) {
             '   <div class="cp-reply2-cnt">' +
             '       <div class="cp-reply2-header">' +
             '           <a class="cp-reply2-name">' + obj.createNickname + '</a> : &nbsp;' +
-            '           <i class="cp-reply2-time">' + obj.createTime + '</i>' +
+            '           <i class="cp-reply2-time">' + toPrettyDate(obj.createTime) + '</i>' +
             '       </div>' +
             '       <div class="cp-reply2-text">' + obj.replyContent + '</div>' +
             '   </div>' +
@@ -230,12 +258,11 @@ function AvatarView(config) {
             replyListHTML.push(x);
         }
 
-
         //如果内容大于maxCount条的话
-        if(replyCount>maxCount){
+        if (replyCount > maxCount) {
             replyListHTML.push('' +
                 '<div class="cp-reply2-all cp-reply-btn-layer" mid="' + m.id + '" >' +
-                '    还有'+(replyCount-maxCount)+'条回复,点击查看' +
+                '    还有' + (replyCount - maxCount) + '条回复,点击查看' +
                 '</div>');
         }
 
@@ -245,7 +272,7 @@ function AvatarView(config) {
     }
 
 
-    function renderItemView(cloudReply,maxReply2Count) {
+    function renderItemView(cloudReply, maxReply2Count, isShowReply2) {
         var m = cloudReply || {};
         var createUserId = m.createUserId || "";
 
@@ -258,7 +285,7 @@ function AvatarView(config) {
             '       <a class="cc-header register-' + (!!createUserId) + '"> ' + m.createNickname + '</a>' +
             '       <div class="cc-content"> ' + m.replyContent + '</div>' +
             '       <div class="cc-footer"> ' +
-            '           <span class="cc-time"> ' + m.createTime + '</span>' +
+            '           <span class="cc-time"> ' + toPrettyDate(m.createTime) + '</span>' +
             '           <a class="cc-like"> 赞(<span>' + m.likeCount + '</span>) </a>' +
             '           <a class="cc-reply"> 回复 </a>' +
             '           <a class="cc-reply-view cp-reply-btn-layer"  mid="' + m.id + '"> 查看回复(<span>' + m.maxFloorNumber + '</span>) </a>' +
@@ -269,8 +296,7 @@ function AvatarView(config) {
             '   <div class="cp-reply2">' +
             '       <div class="cp-reply2-input"></div>' +
             '       <div class="cp-reply2-input-msg"></div>' +
-            '       <div class="cp-reply2-list">' + renderReplyReplyList(m, maxReply2Count) +
-            '       </div>' +
+            '       <div class="cp-reply2-list">' + (isShowReply2 ? renderReplyReplyList(m, maxReply2Count) : '') + '</div>' +
             '   </div>' +
             '</div>';
     }
@@ -339,8 +365,67 @@ function AvatarView(config) {
     }
 
 
+    function showCreateReply2Message(replyId, $resultMsg, msg, isSuccess) {
+        $resultMsg.removeClass('msg_false').removeClass('msg_true').addClass('msg_' + isSuccess);
+        $resultMsg.html(msg);
+        $resultMsg.show();
+        var handlerId = 'msg_time_' + replyId;
+        var oldHandler = mapCache[handlerId];
+        if (oldHandler) {
+            clearTimeout(oldHandler);
+        }
+        mapCache[handlerId] = setTimeout(function () {
+            $resultMsg.hide();
+            mapCache[handlerId] = null;
+            delete mapCache[handlerId];
+        }, 3000);
+    }
 
 
+    function onReplyReplySuccess(d, $replyItem, boxCreateReply, replyId) {
+        findDOMByClass('createReplyContent', boxCreateReply).val("");
+        var $resultMsg = findDOMByClass('cp-reply2-input-msg', $replyItem);
+        if (d.responseCode !== 0) {
+            showCreateReply2Message(replyId, $resultMsg, d.responseText, false);
+            return;
+        }
+
+        if (d.data && d.data.replyList) {
+            //showCreateReply2Message(replyId,$resultMsg,"回复成功",true);
+
+            var replyNew = d.data;
+            //数据更新
+            var replyObj = getReplyObjById(replyId) || {};
+            replyObj.replyList = replyNew.replyList;
+            replyObj.hot = replyNew.hot;
+            replyObj.maxFloorNumber = replyNew.maxFloorNumber;
+
+            //DOM更新COUNT
+            findDOMByClass('cc-reply-view', $replyItem).find('span').html(d.data.maxFloorNumber);
+            if (IS_SHOW_REPLY2) {
+                //DOM更新LIST
+                var html = renderReplyReplyList(d.data, MAX_SHOW_REPLY2_COUNT);
+                findDOMByClass('cp-reply2-list', $replyItem).html(html);
+            }
+        }
+    }
+
+
+    function onReplyCreateSuccess(d, boxCreateReply) {
+        var isOK = d.responseCode === 0;
+        findDOMByClass('createReplyContent', boxCreateReply).val("");
+        var $resultMsg = findDOMByClass('cp-reply-msg');
+        if (isOK) {
+            var cloudReply = d.data;
+            //更新数据
+            state.data.push(cloudReply);
+            //更新DOM
+            var html = renderItemView(cloudReply, MAX_SHOW_REPLY2_COUNT, IS_SHOW_REPLY2);
+            findDOMByClass('cp-reply-list').prepend(html);
+        } else {
+            showCreateReply2Message('main', $resultMsg, d.responseText, isOK);
+        }
+    }
 
 
     function bindEventHandler() {
@@ -359,7 +444,7 @@ function AvatarView(config) {
             var email = findDOMByClass('createReplyEmail', boxCreateReply).val();
             var nickname = findDOMByClass('createReplyNickname', boxCreateReply).val();
 
-            if(userInfo.hasLogin){
+            if (userInfo.hasLogin) {
                 img = userInfo.avatar;
                 email = userInfo.email;
                 nickname = userInfo.nickname;
@@ -377,31 +462,18 @@ function AvatarView(config) {
 
             if (boxCreateReply.hasClass('isReplyReply_true')) {
                 var $replyItem = $target.closest('.cp-reply-item');
-                data['replyId'] = $replyItem.data("id");
+                var replyId = $replyItem.data("id");
+                data['replyId'] = replyId;
                 avatarApi.createReplyReply(data, function (d) {
-                    findDOMByClass('createReplyContent', boxCreateReply).val("");
-                    var $resultMsg = findDOMByClass('cp-reply2-input-msg', $replyItem);
-                    if (d.responseCode !== 0) {
-                        $resultMsg.html(d.responseText);
-                        return;
-                    }
-                    if (d.data && d.data.replyList) {
-                        $resultMsg.html('');
-                        var html = renderReplyReplyList(d.data, MAX_REPLY2_COUNT);
-                        findDOMByClass('cp-reply2-list', $replyItem).html(html);
-                        findDOMByClass('cc-reply-view', $replyItem).find('span').html(d.data.maxFloorNumber);
-                    }
+                    onReplyReplySuccess(d, $replyItem, boxCreateReply, replyId)
                 });
             } else {
-                avatarApi.createReply(data, function () {
-                    findDOMByClass('createReplyContent', boxCreateReply).val("");
-                    //优化...
-                    queryAndView();
+                avatarApi.createReply(data, function (d) {
+                    onReplyCreateSuccess(d, boxCreateReply);
                 });
             }
 
         });
-
 
 
         //点击切换头像按钮
@@ -450,19 +522,23 @@ function AvatarView(config) {
         };
 
 
-
         //点击查看更多二级回复按钮
-        onClickClazzName("cp-reply-btn-layer",function(){
-            var $btn  = $(this);
+        onClickClazzName("cp-reply-btn-layer", function () {
+            var $btn = $(this);
             var mid = $btn.attr('mid');
             var replyObj = getReplyObjById(mid);
-            var html = renderItemView(replyObj, 99999);
+            var html = renderItemView(replyObj, 99999, true);
             showReplyLayer(html);
         });
 
-        $(document).on('click','.cp-reply-layer-bg',function(){
+        $(document).on('click', '.cp-reply-layer-bg', function () {
             hideReplyLayer();
         });
+
+        $(document).on('click', '.cp-reply-layer-close', function () {
+            hideReplyLayer();
+        });
+
     }
 
 

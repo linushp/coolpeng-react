@@ -16,7 +16,13 @@ function ajaxPost(userInfoGetter,url,queryCondition,success,onError) {
         success: success,
         dataType: "json",
         error: onError,
-        contentType: 'application/json; charset=utf-8'
+        contentType: 'application/json; charset=utf-8',
+        xhrFields: {
+            withCredentials: true
+        },
+        beforeSend: function(xhr){
+            xhr.withCredentials = true;
+        }
     });
 }
 
