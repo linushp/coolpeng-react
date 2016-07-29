@@ -48,6 +48,9 @@ function AvatarView(config) {
         hasLogin: false
     };
 
+    var MAX_REPLY2_COUNT = 5;
+
+    var $layerPlaceholder;
     var $$viewId;
 
     function initViewContainer() {
@@ -75,11 +78,33 @@ function AvatarView(config) {
             renderReplyList();
             hideLoading();
             renderUserInfo();
+            renderLayerPlaceholder();
         });
     }
 
     function getRandomAvatarURL() {
         return "http://image.coolpeng.cn/avatar/" + avatarURL.getRandomAvatarURL();
+    }
+
+    function renderLayerPlaceholder(){
+        var html = '' +
+            '<div id="cpLayer'+getViewId()+'" viewid="'+getViewId()+'" class="cp-reply-service cp-reply-layer">' +
+            '   <div class="cp-reply-layer-bg"></div>' +
+            '   <div class="cp-reply-layer-wrapper">' +
+            '       <div class="cp-reply-layer-content"></div>' +
+            '   </div>' +
+            '</div>';
+        $('body').append(html);
+    }
+
+    function showReplyLayer(html){
+        var obj =  $("#cpLayer"+getViewId());
+        findDOMByClass('cp-reply-layer-content',obj).html(html);
+        obj.show();
+    }
+
+    function hideReplyLayer(){
+        $("#cpLayer"+getViewId()).hide();
     }
 
     function renderReplyTitle() {
@@ -103,6 +128,17 @@ function AvatarView(config) {
 
     function hasLogin(){
         return  !!(userInfo && userInfo.hasLogin);
+    }
+
+    function getReplyObjById(mid){
+        var replyList = state.data || [];
+        for (var i = 0; i < replyList.length; i++) {
+            var m = replyList[i];
+            if(m.id==mid){
+                return m;
+            }
+        }
+        return null;
     }
 
     function renderReplyInput(isReplyReply) {
@@ -145,7 +181,7 @@ function AvatarView(config) {
         var replyListHTML = [];
         for (var i = 0; i < replyList.length; i++) {
             var cloudReply = replyList[i];
-            var html = renderItemView(cloudReply);
+            var html = renderItemView(cloudReply,MAX_REPLY2_COUNT);
             replyListHTML.push(html);
         }
         if (replyListHTML.length === 0) {
@@ -164,19 +200,22 @@ function AvatarView(config) {
             '       <img src="' + obj.createAvatar + '" alt="' + obj.createNickname + '">' +
             '   </a>' +
             '   <div class="cp-reply2-cnt">' +
-            '       <a href="" class="cp-reply2-name">' + obj.createNickname + '</a> : &nbsp;' +
-            '       <span class="cp-reply2-text">' + obj.replyContent + '</span>' +
-            '       <p>' +
-            '           <i>' + obj.createTime + '</i>' +
-            '       </p>' +
+            '       <div class="cp-reply2-header">' +
+            '           <a class="cp-reply2-name">' + obj.createNickname + '</a> : &nbsp;' +
+            '           <i class="cp-reply2-time">' + obj.createTime + '</i>' +
+            '       </div>' +
+            '       <div class="cp-reply2-text">' + obj.replyContent + '</div>' +
             '   </div>' +
+            '   <i class="clear"></i>' +
             '</div>';
         return html;
     }
 
     function renderReplyReplyList(cloudReply, maxCount) {
+        var m = cloudReply || {};
         maxCount = maxCount || 9999;
         var replyList = cloudReply.replyList || [];
+        var replyCount = replyList.length;
 
         replyList = replyList.sort(function (a, b) {
             return a.createTime < b.createTime ? 1 : -1;
@@ -191,12 +230,22 @@ function AvatarView(config) {
             replyListHTML.push(x);
         }
 
+
+        //如果内容大于maxCount条的话
+        if(replyCount>maxCount){
+            replyListHTML.push('' +
+                '<div class="cp-reply2-all cp-reply-btn-layer" mid="' + m.id + '" >' +
+                '    还有'+(replyCount-maxCount)+'条回复,点击查看' +
+                '</div>');
+        }
+
+
         var htmlJoin = replyListHTML.join("");
         return htmlJoin;
     }
 
 
-    function renderItemView(cloudReply) {
+    function renderItemView(cloudReply,maxReply2Count) {
         var m = cloudReply || {};
         var createUserId = m.createUserId || "";
 
@@ -210,9 +259,9 @@ function AvatarView(config) {
             '       <div class="cc-content"> ' + m.replyContent + '</div>' +
             '       <div class="cc-footer"> ' +
             '           <span class="cc-time"> ' + m.createTime + '</span>' +
-            '           <span class="cc-like"> 赞(<span>' + m.likeCount + '</span>) </span>' +
-            '           <span class="cc-reply"> 回复 </span>' +
-            '           <span class="cc-reply-view"> 查看回复(<span>' + m.maxFloorNumber + '</span>) </span>' +
+            '           <a class="cc-like"> 赞(<span>' + m.likeCount + '</span>) </a>' +
+            '           <a class="cc-reply"> 回复 </a>' +
+            '           <a class="cc-reply-view cp-reply-btn-layer"  mid="' + m.id + '"> 查看回复(<span>' + m.maxFloorNumber + '</span>) </a>' +
             '       </div>' +
             '       <i class="clear"></i>' +
             '   </div>' +
@@ -220,7 +269,7 @@ function AvatarView(config) {
             '   <div class="cp-reply2">' +
             '       <div class="cp-reply2-input"></div>' +
             '       <div class="cp-reply2-input-msg"></div>' +
-            '       <div class="cp-reply2-list">' + renderReplyReplyList(cloudReply, 5) +
+            '       <div class="cp-reply2-list">' + renderReplyReplyList(m, maxReply2Count) +
             '       </div>' +
             '   </div>' +
             '</div>';
@@ -290,8 +339,14 @@ function AvatarView(config) {
     }
 
 
+
+
+
+
     function bindEventHandler() {
 
+
+        //点击提交回复按钮
         onClickClazzName("btnCreateReply", function (e) {
 
             var $target = $(e.target || e.srcElement);
@@ -332,7 +387,7 @@ function AvatarView(config) {
                     }
                     if (d.data && d.data.replyList) {
                         $resultMsg.html('');
-                        var html = renderReplyReplyList(d.data, 5);
+                        var html = renderReplyReplyList(d.data, MAX_REPLY2_COUNT);
                         findDOMByClass('cp-reply2-list', $replyItem).html(html);
                         findDOMByClass('cc-reply-view', $replyItem).find('span').html(d.data.maxFloorNumber);
                     }
@@ -349,6 +404,7 @@ function AvatarView(config) {
 
 
 
+        //点击切换头像按钮
         onClickClazzName("changeAvatar", function (e) {
             var boxCreateReply = $(e.target || e.srcElement).closest(".boxCreateReply");
             var img = getRandomAvatarURL();
@@ -358,6 +414,7 @@ function AvatarView(config) {
         });
 
 
+        //点击二级回复按钮
         onClickClazzName('cc-reply', function () {
             findDOMByClass('cp-reply-item').find('.cp-reply2-input').hide();
             var $this = $(this);
@@ -370,6 +427,7 @@ function AvatarView(config) {
         });
 
 
+        //点赞
         onClickClazzName('cc-like', function () {
             var $this = $(this);
             var $item = $this.closest(".cp-reply-item");
@@ -385,10 +443,26 @@ function AvatarView(config) {
             });
         });
 
+        //绑定图片加载完毕事件
         findDOMByClass('boxCreateReplyImg')[0].onload = function (a, b, c) {
             var target = a.target || a.srcElement;
             hideAvatarLoading($(target));
-        }
+        };
+
+
+
+        //点击查看更多二级回复按钮
+        onClickClazzName("cp-reply-btn-layer",function(){
+            var $btn  = $(this);
+            var mid = $btn.attr('mid');
+            var replyObj = getReplyObjById(mid);
+            var html = renderItemView(replyObj, 99999);
+            showReplyLayer(html);
+        });
+
+        $(document).on('click','.cp-reply-layer-bg',function(){
+            hideReplyLayer();
+        });
     }
 
 
