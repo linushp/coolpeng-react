@@ -11,3 +11,4 @@ ReactDOM.render(
     <AvatarReact></AvatarReact>,
     document.getElementById('root')
 );
+
