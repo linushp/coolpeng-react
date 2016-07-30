@@ -10,3 +10,4 @@ workspace.xml
 .idea/workspace.xml
 src/.idea/
 tmp/
+.idea/
