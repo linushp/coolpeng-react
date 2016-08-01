@@ -2,6 +2,7 @@ import $ from 'jquery';
 import * as avatarURL from './avatarURL';
 import AvatarApi from './avatarApi';
 import {toPrettyString} from './avatarUtil';
+import {toPagination} from '../../components/Pagination/Pagination';
 import './index.less';
 
 
@@ -26,7 +27,7 @@ function AvatarView(config) {
     var DOM = config.DOM;
     var queryCondition = {
         pageId: config.pageId,
-        pageSize: config.pageSize || 20,
+        pageSize: config.pageSize || 30,
         pageNumber: config.defaultPageNumber || 1,
         orderType: config.defaultOrderType || 1  //最新1，最早2，最热3
     };
@@ -79,42 +80,54 @@ function AvatarView(config) {
             '<div class="cp-reply-service" id="' + id + '">' +
             '    <div class="cp-reply-h1">一起吐槽<span><b>0</b>条评论</span>' +
             '    </div>' +
-            '    <div class="cp-reply-loading">' + loadingImg + '<span>loading...</span></div>' +
+            '    <div class="cp-reply-loading">' + loadingImg + '<span>加载中...</span></div>' +
             '    <div class="cp-reply-msg"></div>' +
             '    <div class="cp-reply-input">' + renderReplyInput(false) + '</div>' +
-            '    <div class="cp-reply-oper">' + renderQcOrderType(false) +'</div>' +
+            '    <div class="cp-reply-oper">' + renderQcOrderType(false) + '</div>' +
             '    <div class="cp-reply-list"></div>' +
-            '    <div class="cp-reply-pagination"></div>' +
+            '    <div class="cp-reply-pagination">' + renderPagination(false) + '</div>' +
             '</div>';
     }
 
+
+    function renderPagination(isAutoAppend) {
+        var html = toPagination({
+            pageNumber: state.pageNo,
+            pageSize: state.pageSize,
+            recordCount: state.totalCount,
+            linkRender: ""
+        });
+        if (isAutoAppend) {
+            findDOMByClass('cp-reply-pagination').html(html);
+        }
+        return html;
+    }
 
     /**
      * 是否自动拼接到dom上去
      * @param isAutoAppend
      * @returns {string}
      */
-    function renderQcOrderType(isAutoAppend){
-        var orderType = parseInt(queryCondition.orderType,10);
-        var textArr = ["","最新","最早","最热"];
+    function renderQcOrderType(isAutoAppend) {
+        var orderType = parseInt(queryCondition.orderType, 10);
+        var textArr = ["", "最新", "最早", "最热"];
         var x = '' +
             '<div>' +
-            '   <span>'+textArr[orderType]+'评论</span>' +
+            '   <span>' + textArr[orderType] + '评论</span>' +
             '   <div class="dd">' +
-            '       <i mid="1" class="QcOrderType '+((orderType===1)?'cur':'')+'" >'+textArr[1]+'</i>' +
-            '       <i mid="2" class="QcOrderType '+((orderType===2)?'cur':'')+'" >'+textArr[2]+'</i>' +
-            '       <i mid="3" class="QcOrderType '+((orderType===3)?'cur':'')+'" >'+textArr[3]+'</i>' +
+            '       <i mid="1" class="QcOrderType ' + ((orderType === 1) ? 'cur' : '') + '" >' + textArr[1] + '</i>' +
+            '       <i mid="2" class="QcOrderType ' + ((orderType === 2) ? 'cur' : '') + '" >' + textArr[2] + '</i>' +
+            '       <i mid="3" class="QcOrderType ' + ((orderType === 3) ? 'cur' : '') + '" >' + textArr[3] + '</i>' +
             '   </div>' +
             '</div>';
-        if(isAutoAppend===true){
+        if (isAutoAppend === true) {
             findDOMByClass('cp-reply-oper').html(x);
         }
         return x;
     }
 
 
-
-    function queryAndView(that,callback) {
+    function queryAndView(that, callback) {
         showLoading();
         avatarApi.getReplyList(queryCondition, function (d) {
             state.totalCount = d.totalCount;
@@ -128,13 +141,13 @@ function AvatarView(config) {
 
             renderReplyTitle();
             renderReplyList();
+            renderPagination(true);
             hideLoading();
             renderUserInfo();
             renderLayerPlaceholder();
             callback && callback(d);
-        },function(){
+        }, function () {
             hideLoading();
-
         });
     }
 
@@ -304,7 +317,7 @@ function AvatarView(config) {
     function renderItemView(cloudReply, maxReply2Count, isShowReply2) {
         var m = cloudReply || {};
         var createUserId = m.createUserId || "";
-        var createIpStr = (m.createIpStr||"").replace(/;/gm,"");
+        var createIpStr = (m.createIpStr || "").replace(/;/gm, "");
 
         return '' +
             '<div class="cp-reply-item" data-id="' + m.id + '">' +
@@ -368,8 +381,12 @@ function AvatarView(config) {
 
 
     function onClickClazzName(clazzName, callback) {
+        onClick("." + clazzName, callback)
+    }
+
+    function onClick(selector, callback) {
         var $dom = getViewRootDOM();
-        $dom.on("click", "." + clazzName, callback);
+        $dom.on("click", selector, callback);
     }
 
     function findDOMByClass(className, rootElement) {
@@ -397,7 +414,7 @@ function AvatarView(config) {
     }
 
 
-    function showCreateReply2Message(replyId, $resultMsg, msg, isSuccess) {
+    function showCreateMessage(replyId, $resultMsg, msg, isSuccess) {
         $resultMsg.removeClass('msg_false').removeClass('msg_true').addClass('msg_' + isSuccess);
         $resultMsg.html(msg);
         $resultMsg.show();
@@ -418,7 +435,7 @@ function AvatarView(config) {
         findDOMByClass('createReplyContent', boxCreateReply).val("");
         var $resultMsg = findDOMByClass('cp-reply2-input-msg', $replyItem);
         if (d.responseCode !== 0) {
-            showCreateReply2Message(replyId, $resultMsg, d.responseText, false);
+            showCreateMessage(replyId, $resultMsg, d.responseText, false);
             return;
         }
 
@@ -445,9 +462,10 @@ function AvatarView(config) {
 
     function onReplyCreateSuccess(d, boxCreateReply) {
         var isOK = d.responseCode === 0;
-        findDOMByClass('createReplyContent', boxCreateReply).val("");
         var $resultMsg = findDOMByClass('cp-reply-msg');
         if (isOK) {
+            findDOMByClass('createReplyContent', boxCreateReply).val("");
+
             var cloudReply = d.data;
             //更新数据
             state.data.push(cloudReply);
@@ -456,8 +474,9 @@ function AvatarView(config) {
             var html = renderItemView(cloudReply, MAX_SHOW_REPLY2_COUNT, IS_SHOW_REPLY2);
             findDOMByClass('cp-reply-list').prepend(html);
             renderReplyTitle();
+            findDOMByClass('cp-nothing').hide();
         } else {
-            showCreateReply2Message('main', $resultMsg, d.responseText, isOK);
+            showCreateMessage('main', $resultMsg, d.responseText, isOK);
         }
     }
 
@@ -565,13 +584,22 @@ function AvatarView(config) {
             showReplyLayer(html);
         });
 
-        onClickClazzName('QcOrderType',function(){
+        onClickClazzName('QcOrderType', function () {
             var $btn = $(this);
             queryCondition.orderType = $btn.attr('mid');
             queryCondition.pageNumber = 1;
             renderQcOrderType(true);
-            queryAndView(that,function(){
+            queryAndView(that, function () {
             });
+        });
+
+        onClick(".cp-reply-pagination a", function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            var $this = $(this);
+            var pageNo = $this.attr('href');
+            queryCondition.pageNumber = pageNo;
+            queryAndView(that);
         });
 
         $(document).on('click', '.cp-reply-layer-bg', function () {

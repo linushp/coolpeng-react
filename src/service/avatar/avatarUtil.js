@@ -47,6 +47,20 @@ function toPrettyString(timeStr,nowTime0){
 
 
 
+function validateInput(nickname,email,msg){
+    if(!msg || !msg.trim()){
+        return "留言内容不能为空";
+    }
+    if (msg.length>300){
+        return "留言内容文字不能多于300个字符";
+    }
+
+
+
+}
+
+
+
 exports.toPrettyString = toPrettyString;
 
 
