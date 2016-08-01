@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import * as avatarURL from './avatarURL';
 import AvatarApi from './avatarApi';
-import {toPrettyString} from './avatarUtil';
+import {toPrettyString,toHtmlEncode} from './avatarUtil';
 import {toPagination} from '../../components/Pagination/Pagination';
 import './index.less';
 
@@ -48,9 +48,9 @@ function AvatarView(config) {
     var avatarApi = new AvatarApi({
         userTokenGetter: function () {
             return {
-                tokenId:userInfo.tokenId,
-                devicePlatform:userInfo.devicePlatform,
-                uuid:userInfo.uuid
+                tokenId: userInfo.tokenId,
+                devicePlatform: userInfo.devicePlatform,
+                uuid: userInfo.uuid
             }
         }
     });
@@ -90,7 +90,7 @@ function AvatarView(config) {
             '    <div class="cp-reply-input">' + renderReplyInput(false) + '</div>' +
             '    <div class="cp-reply-oper">' + renderQcOrderType(false) + '</div>' +
             '    <div class="cp-reply-list"></div>' +
-            '    <div class="cp-reply-pagination">' + renderPagination(false) + '</div>' +
+            '    <div class="cp-reply-pagination" style="display: none">' + renderPagination(false) + '</div>' +
             '</div>';
     }
 
@@ -150,6 +150,7 @@ function AvatarView(config) {
             hideLoading();
             renderUserInfo();
             renderLayerPlaceholder();
+            findDOMByClass('cp-reply-pagination').show();
             callback && callback(d);
         }, function () {
             hideLoading();
@@ -161,8 +162,14 @@ function AvatarView(config) {
     }
 
     function renderLayerPlaceholder() {
+
+        var m = getCpLayerDOM();
+        if (m && m.length > 0) {
+            return;
+        }
+
         var html = '' +
-            '<div id="cpLayer' + getViewId() + '" viewid="' + getViewId() + '" class="cp-reply-service cp-reply-layer">' +
+            '<div id=' + getCpLayerId() + ' viewid="' + getViewId() + '" class="cp-reply-service cp-reply-layer">' +
             '   <div class="cp-reply-layer-bg"></div>' +
             '   <div class="cp-reply-layer-wrapper">' +
             '       <span class="cp-reply-layer-close"></span>' +
@@ -172,14 +179,24 @@ function AvatarView(config) {
         $('body').append(html);
     }
 
+
+    function getCpLayerId(){
+       return "cpLayer_" + getViewId();
+    }
+
+    function getCpLayerDOM() {
+        var m = $("#" + getCpLayerId());
+        return m;
+    }
+
     function showReplyLayer(html) {
-        var obj = $("#cpLayer" + getViewId());
+        var obj = getCpLayerDOM();
         findDOMByClass('cp-reply-layer-content', obj).html(html);
         obj.show();
     }
 
     function hideReplyLayer() {
-        $("#cpLayer" + getViewId()).hide();
+        getCpLayerDOM().hide();
     }
 
     function renderReplyTitle() {
@@ -280,7 +297,7 @@ function AvatarView(config) {
             '           <a class="cp-reply2-name">' + obj.createNickname + '</a> : &nbsp;' +
             '           <i class="cp-reply2-time">' + toPrettyDate(obj.createTime) + '</i>' +
             '       </div>' +
-            '       <div class="cp-reply2-text">' + obj.replyContent + '</div>' +
+            '       <div class="cp-reply2-text">' + toHtmlEncode(obj.replyContent) + '</div>' +
             '   </div>' +
             '   <i class="clear"></i>' +
             '</div>';
@@ -334,7 +351,7 @@ function AvatarView(config) {
             '   <div class="cp-reply-cc">' +
             '       <a class="cc-header register-' + (!!createUserId) + '"> ' + m.createNickname + '</a>' +
             '       <a class="cc-ipAddr"> ' + createIpStr + '</a>' +
-            '       <div class="cc-content"> ' + m.replyContent + '</div>' +
+            '       <div class="cc-content"> ' + toHtmlEncode(m.replyContent) + '</div>' +
             '       <div class="cc-footer"> ' +
             '           <span class="cc-time"> ' + toPrettyDate(m.createTime) + '</span>' +
             '           <a class="cc-like"> 赞(<span>' + m.likeCount + '</span>) </a>' +
@@ -507,11 +524,11 @@ function AvatarView(config) {
                 img = userInfo.avatar;
                 email = userInfo.email;
                 nickname = userInfo.nickname;
-            }else {
+            } else {
                 config.innerSetUserInfo({
-                    nickname:nickname,
-                    email:email,
-                    avatar:img
+                    nickname: nickname,
+                    email: email,
+                    avatar: img
                 });
             }
 

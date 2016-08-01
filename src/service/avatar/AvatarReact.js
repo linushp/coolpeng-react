@@ -42,6 +42,7 @@ export default class AvatarReact extends React.Component {
                 u.tokenId = "";
                 u.devicePlatform = "";
                 u.uuid = "";
+
                 u.hasLogin = true;
                 u.isAdmin = false;
 
@@ -49,12 +50,7 @@ export default class AvatarReact extends React.Component {
             }
         });
 
-
         view.outSetUserInfo(userInfo);
-
-        window.COOLPEBG_REPLY_setUserInfo = function(u){
-            view.outSetUserInfo(u);
-        }
 
     }
 

@@ -46,6 +46,14 @@ function toPrettyString(timeStr,nowTime0){
 }
 
 
+function toHtmlEncode(str){
+    if(str){
+        str = str.replace(/</gm,'&lt;');
+        str = str.replace(/>/gm,'&gt;');
+    }
+    return str;
+}
+
 
 function validateInput(nickname,email,msg){
     if(!msg || !msg.trim()){
@@ -54,13 +62,10 @@ function validateInput(nickname,email,msg){
     if (msg.length>300){
         return "留言内容文字不能多于300个字符";
     }
-
-
-
 }
 
 
 
 exports.toPrettyString = toPrettyString;
-
+exports.toHtmlEncode = toHtmlEncode;
 
