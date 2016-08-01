@@ -290,11 +290,11 @@ function AvatarView(config) {
         var html = '' +
             '<div class="cp-reply2-item">' +
             '   <a class="cp-reply2-avatar">' +
-            '       <img src="' + obj.createAvatar + '" alt="' + obj.createNickname + '">' +
+            '       <img src="' + obj.createAvatar + '"  >' +
             '   </a>' +
             '   <div class="cp-reply2-cnt">' +
             '       <div class="cp-reply2-header">' +
-            '           <a class="cp-reply2-name">' + obj.createNickname + '</a> : &nbsp;' +
+            '           <a class="cp-reply2-name">' + toHtmlEncode(obj.createNickname) + '</a> : &nbsp;' +
             '           <i class="cp-reply2-time">' + toPrettyDate(obj.createTime) + '</i>' +
             '       </div>' +
             '       <div class="cp-reply2-text">' + toHtmlEncode(obj.replyContent) + '</div>' +
@@ -349,7 +349,7 @@ function AvatarView(config) {
             '   </div>' +
             '   <a class="cc-floorNumber"> ' + m.floorNumber + ' 楼 </a>' +
             '   <div class="cp-reply-cc">' +
-            '       <a class="cc-header register-' + (!!createUserId) + '"> ' + m.createNickname + '</a>' +
+            '       <a class="cc-header register-' + (!!createUserId) + '"> ' + toHtmlEncode(m.createNickname) + '</a>' +
             '       <a class="cc-ipAddr"> ' + createIpStr + '</a>' +
             '       <div class="cc-content"> ' + toHtmlEncode(m.replyContent) + '</div>' +
             '       <div class="cc-footer"> ' +

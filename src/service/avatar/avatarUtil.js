@@ -47,7 +47,7 @@ function toPrettyString(timeStr,nowTime0){
 
 
 function toHtmlEncode(str){
-    if(str){
+    if(str && str.length>0){
         str = str.replace(/</gm,'&lt;');
         str = str.replace(/>/gm,'&gt;');
     }
