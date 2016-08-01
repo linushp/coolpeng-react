@@ -26,6 +26,11 @@ var revCollector = require('gulp-rev-collector');
 //- 路径替换
 
 
+//删除文件夹中的内容
+gulp.task('clean', function() {
+    del(["./dist/"]);
+});
+
 //压缩js
 gulp.task('minifyCommonJS', function() {
 

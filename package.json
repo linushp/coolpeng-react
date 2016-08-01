@@ -4,6 +4,7 @@
   "description": "React blog",
   "main": "index.js",
   "scripts": {
+    "clean":"gulp clean",
     "test": "mocha tests/.setup.js tests/**/*-test.js --compilers css:mocha-compiler.js",
     "start": "node server",
     "build": "webpack --config ./bin/webpack.config.js",
