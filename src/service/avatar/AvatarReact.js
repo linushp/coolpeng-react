@@ -30,7 +30,7 @@ export default class AvatarReact extends React.Component {
         var avatarRoot = this.refs.avatarRoot.getDOMNode();//拿到了原生DOM
         var view = new AvatarView({
             DOM: avatarRoot,
-            pageId: "test2",
+            pageId: "test",
             pageSize:30,
             defaultPageNumber:1,
             defaultOrderType:1,
