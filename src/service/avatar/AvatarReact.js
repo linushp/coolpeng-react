@@ -34,16 +34,28 @@ export default class AvatarReact extends React.Component {
             pageSize:30,
             defaultPageNumber:1,
             defaultOrderType:1,
-
-
+            isShowReply2:false,//是否在第一屏显示二级回复
             userInfo: userInfo,
-            innerSetUserInfo: function (userInfo) {
-                console.log(userInfo)
+            innerSetUserInfo: function (u) {
+                console.log(u);
+
+                u.tokenId = "";
+                u.devicePlatform = "";
+                u.uuid = "";
+                u.hasLogin = true;
+                u.isAdmin = false;
+
+                view.outSetUserInfo(u);
             }
         });
 
 
         view.outSetUserInfo(userInfo);
+
+        window.COOLPEBG_REPLY_setUserInfo = function(u){
+            view.outSetUserInfo(u);
+        }
+
     }
 
     render() {

@@ -13,16 +13,8 @@ var clearTimeout = window.clearTimeout;
 var setTimeout = window.setTimeout;
 
 function AvatarView(config) {
+
     var pageId = config.pageId;
-    var avatarApi = new AvatarApi({
-        userInfoGetter: function () {
-            return {
-                tokenId: "",
-                devicePlatform: "",
-                uuid: ""
-            };
-        }
-    });
 
     var DOM = config.DOM;
     var queryCondition = {
@@ -44,11 +36,24 @@ function AvatarView(config) {
             nickname: "",
             email: null,
             avatar: null,
+
+            hasLogin: false,
+            isAdmin: false,
+
             tokenId: "",
             devicePlatform: "",
-            uuid: "",
-            hasLogin: false
+            uuid: ""
         };
+
+    var avatarApi = new AvatarApi({
+        userTokenGetter: function () {
+            return {
+                tokenId:userInfo.tokenId,
+                devicePlatform:userInfo.devicePlatform,
+                uuid:userInfo.uuid
+            }
+        }
+    });
 
     //最多允许多个个二级评论
     var MAX_REPLY_REPLY_COUNT = 20;
@@ -188,6 +193,7 @@ function AvatarView(config) {
         $dom.removeClass("hasLogin_" + !login).addClass("hasLogin_" + login);
 
         if (login) {
+            findDOMByClass('loginUserInfo').html(userInfo.nickname);
             findDOMByClass("boxCreateReplyImg").attr('src', userInfo.avatar);
         }
     }
@@ -225,7 +231,7 @@ function AvatarView(config) {
             '       <span class="changeAvatar">换一个?</span>' +
             '       <div class="cp-loading"></div>' +
             '   </div>' +
-            '   <div class="cp-reply-cc">' +
+            '   <div class="cp-reply-cc" style="width: 90%;">' +
             '       <div class="createReplyContentWrap">' +
             '           <textarea class="createReplyContent"></textarea>' +
             '           <div class="createReplyContent_1">' +
@@ -501,6 +507,12 @@ function AvatarView(config) {
                 img = userInfo.avatar;
                 email = userInfo.email;
                 nickname = userInfo.nickname;
+            }else {
+                config.innerSetUserInfo({
+                    nickname:nickname,
+                    email:email,
+                    avatar:img
+                });
             }
 
 

@@ -1,9 +1,9 @@
 import $ from 'jquery';
 
-function ajaxPost(userInfoGetter,url,queryCondition,success,onError) {
+function ajaxPost(userTokenGetter,url,queryCondition,success,onError) {
     var urlPrefix = window.coolpengAvatarApiURLPrefix || "";
     url = urlPrefix + "" + url;
-    var userInfo = userInfoGetter?userInfoGetter():{};
+    var userInfo = userTokenGetter?userTokenGetter():{};
     queryCondition = queryCondition || {};
     queryCondition["TMS_APP_COMMON__TOKEN_ID"] = userInfo.tokenId;
     queryCondition["TMS_APP_COMMON__DEVICE_PLATFORM"] = userInfo.devicePlatform;
@@ -31,14 +31,14 @@ export default class AvatarApi{
 
     constructor(props) {
         props = props || {};
-        var userInfoGetter = props.userInfoGetter || function(){
+        var userTokenGetter = props.userTokenGetter || function(){
                 return {
                     tokenId:"",
                     devicePlatform:"",
                     uuid:""
                 };
             };
-        this.ajaxPost = ajaxPost.bind(this,userInfoGetter);
+        this.ajaxPost = ajaxPost.bind(this,userTokenGetter);
     }
 
      getReplyList(queryCondition,callback,onError) {
