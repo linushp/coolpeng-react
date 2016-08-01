@@ -38,8 +38,14 @@ class AvatarReact extends React.Component {
             pageSize:30,
             defaultPageNumber:1,
             defaultOrderType:1,
-            isShowReply2:false,//是否在第一屏显示二级回复
+
             userInfo: userInfo,
+
+            isShowReply2:false,//是否在第一屏显示二级回复
+            isOnlyAdminReply:false, //TODO 是否只有管理员可以回复
+            isOnlyShowRepliedMsg:false, //TODO 是否只显示被回复过的.
+            //管理员删除功能
+
             innerSetUserInfo: function (u) {
                 console.log(u);
 
