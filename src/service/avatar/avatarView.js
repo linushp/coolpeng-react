@@ -82,14 +82,39 @@ function AvatarView(config) {
             '    <div class="cp-reply-loading">' + loadingImg + '<span>loading...</span></div>' +
             '    <div class="cp-reply-msg"></div>' +
             '    <div class="cp-reply-input">' + renderReplyInput(false) + '</div>' +
-            '    <div></div>' +
+            '    <div class="cp-reply-oper">' + renderQcOrderType(false) +'</div>' +
             '    <div class="cp-reply-list"></div>' +
             '    <div class="cp-reply-pagination"></div>' +
             '</div>';
     }
 
 
-    function queryAndView() {
+    /**
+     * 是否自动拼接到dom上去
+     * @param isAutoAppend
+     * @returns {string}
+     */
+    function renderQcOrderType(isAutoAppend){
+        var orderType = parseInt(queryCondition.orderType,10);
+        var textArr = ["","最新","最早","最热"];
+        var x = '' +
+            '<div>' +
+            '   <span>'+textArr[orderType]+'评论</span>' +
+            '   <div class="dd">' +
+            '       <i mid="1" class="QcOrderType '+((orderType===1)?'cur':'')+'" >'+textArr[1]+'</i>' +
+            '       <i mid="2" class="QcOrderType '+((orderType===2)?'cur':'')+'" >'+textArr[2]+'</i>' +
+            '       <i mid="3" class="QcOrderType '+((orderType===3)?'cur':'')+'" >'+textArr[3]+'</i>' +
+            '   </div>' +
+            '</div>';
+        if(isAutoAppend===true){
+            findDOMByClass('cp-reply-oper').html(x);
+        }
+        return x;
+    }
+
+
+
+    function queryAndView(that,callback) {
         showLoading();
         avatarApi.getReplyList(queryCondition, function (d) {
             state.totalCount = d.totalCount;
@@ -106,6 +131,10 @@ function AvatarView(config) {
             hideLoading();
             renderUserInfo();
             renderLayerPlaceholder();
+            callback && callback(d);
+        },function(){
+            hideLoading();
+
         });
     }
 
@@ -275,14 +304,17 @@ function AvatarView(config) {
     function renderItemView(cloudReply, maxReply2Count, isShowReply2) {
         var m = cloudReply || {};
         var createUserId = m.createUserId || "";
+        var createIpStr = (m.createIpStr||"").replace(/;/gm,"");
 
         return '' +
             '<div class="cp-reply-item" data-id="' + m.id + '">' +
             '   <div class="cp-reply-avatar">' +
             '       <img src="' + m.createAvatar + '" />' +
             '   </div>' +
+            '   <a class="cc-floorNumber"> ' + m.floorNumber + ' 楼 </a>' +
             '   <div class="cp-reply-cc">' +
             '       <a class="cc-header register-' + (!!createUserId) + '"> ' + m.createNickname + '</a>' +
+            '       <a class="cc-ipAddr"> ' + createIpStr + '</a>' +
             '       <div class="cc-content"> ' + m.replyContent + '</div>' +
             '       <div class="cc-footer"> ' +
             '           <span class="cc-time"> ' + toPrettyDate(m.createTime) + '</span>' +
@@ -419,16 +451,18 @@ function AvatarView(config) {
             var cloudReply = d.data;
             //更新数据
             state.data.push(cloudReply);
+            state.totalCount = state.totalCount + 1;
             //更新DOM
             var html = renderItemView(cloudReply, MAX_SHOW_REPLY2_COUNT, IS_SHOW_REPLY2);
             findDOMByClass('cp-reply-list').prepend(html);
+            renderReplyTitle();
         } else {
             showCreateReply2Message('main', $resultMsg, d.responseText, isOK);
         }
     }
 
 
-    function bindEventHandler() {
+    function bindEventHandler(that) {
 
 
         //点击提交回复按钮
@@ -529,6 +563,15 @@ function AvatarView(config) {
             var replyObj = getReplyObjById(mid);
             var html = renderItemView(replyObj, 99999, true);
             showReplyLayer(html);
+        });
+
+        onClickClazzName('QcOrderType',function(){
+            var $btn = $(this);
+            queryCondition.orderType = $btn.attr('mid');
+            queryCondition.pageNumber = 1;
+            renderQcOrderType(true);
+            queryAndView(that,function(){
+            });
         });
 
         $(document).on('click', '.cp-reply-layer-bg', function () {

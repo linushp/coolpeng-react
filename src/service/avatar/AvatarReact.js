@@ -22,7 +22,7 @@ export default class AvatarReact extends React.Component {
             devicePlatform: "",
             uuid: "",
 
-            hasLogin: true,
+            hasLogin: false,
             isAdmin: false
         };
 

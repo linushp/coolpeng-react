@@ -3,9 +3,9 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
 import NavPath from '../../components/NavPath'
-import Header from '../../components/Header'
-import Sidebar from '../../components/Sidebar'
-import Footer from '../../components/Footer'
+import Header from '../../components/fragment/Header'
+import Sidebar from '../../components/fragment/Sidebar'
+import Footer from '../../components/fragment/Footer'
 import {fetchProfile, logout} from '../../actions/user';
 
 import './index.less';
