@@ -92,7 +92,6 @@ ReactDOM.render(
         速度比较法收到不放假多喝水
         <Button type="primary" size="large">Large</Button>
     </div>,
-
     document.getElementById('root')
 );
 
