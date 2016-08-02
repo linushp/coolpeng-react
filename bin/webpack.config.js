@@ -102,18 +102,19 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
         },
 
         externals: {
-            jquery: "jQuery",
-            $: "jQuery",
-            react:"React",
-            ReactDOM:"ReactDOM",
-            "react-dom":"ReactDOM",
-            "react-router":"ReactRouter",
-            "react-redux":"ReactRedux",
-            "redux":"Redux",
-            "history":"History",
-            "lodash":"_",
-            "_":"_",
-            "underscore":"_"
+            jquery: "window.jQuery",
+            $: "window.jQuery",
+            react:"window.React",
+            ReactDOM:"window.ReactDOM",
+            "react-dom":"window.ReactDOM",
+            "react-router":"window.ReactRouter",
+            "react-redux":"window.ReactRedux",
+            "redux":"window.Redux",
+            "history":"window.History",
+            "lodash":"window._",
+            "_":"window._",
+            "underscore":"window._",
+            "antd":"window.antd"
         },
 
 

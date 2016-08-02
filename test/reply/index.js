@@ -2,8 +2,13 @@
 
 //import AvatarReact from '../../src/service/avatar/AvatarReact';
 
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import {Button} from 'antd';
 
 import AvatarView from '../../src/service/avatar/avatarView';
+
 
 class AvatarReact extends React.Component {
     constructor(props) {
@@ -81,12 +86,13 @@ class AvatarReact extends React.Component {
 
 
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-
-
 ReactDOM.render(
-    <AvatarReact></AvatarReact>,
+    <div>
+        <AvatarReact></AvatarReact>
+        速度比较法收到不放假多喝水
+        <Button type="primary" size="large">Large</Button>
+    </div>,
+
     document.getElementById('root')
 );
 
