@@ -42,9 +42,16 @@ class AvatarReact extends React.Component {
             userInfo: userInfo,
 
             isShowReply2:false,//是否在第一屏显示二级回复
+
             isOnlyAdminReply:false, //TODO 是否只有管理员可以回复
             isOnlyShowRepliedMsg:false, //TODO 是否只显示被回复过的.
+            //loading样式优化
             //管理员删除功能
+            //提示信息优化
+            //二级回复输入框优化
+            //插入表情支持
+            //回复插入图片支持
+
 
             innerSetUserInfo: function (u) {
                 console.log(u);
