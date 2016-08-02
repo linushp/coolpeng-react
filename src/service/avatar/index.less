@@ -12,6 +12,11 @@
   position: relative;
   font-family: Microsoft YaHei,Heiti SC;
 
+  *{
+    margin: 0;
+    padding: 0;
+  }
+
   .clear{
     clear: both;
     display: block;
@@ -125,8 +130,10 @@
     padding-left: 10px;
     input{
       outline: none;
-      margin-left: 5px;
-      margin-right: 5px;
+      padding: 0;
+      margin: 0 5px;
+      line-height: 20px;
+      text-indent: 6px;
     }
 
 
@@ -185,6 +192,7 @@
       font-size: 12px;
       a{
         cursor: pointer;
+        color:@GRAY_COLOR;
       }
 
     }

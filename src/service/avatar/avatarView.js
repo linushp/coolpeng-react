@@ -347,10 +347,10 @@ function AvatarView(config) {
             '   <div class="cp-reply-avatar">' +
             '       <img src="' + m.createAvatar + '" />' +
             '   </div>' +
-            '   <a class="cc-floorNumber"> ' + m.floorNumber + ' 楼 </a>' +
+            '   <span class="cc-floorNumber"> ' + m.floorNumber + ' 楼 </span>' +
             '   <div class="cp-reply-cc">' +
-            '       <a class="cc-header register-' + (!!createUserId) + '"> ' + toHtmlEncode(m.createNickname) + '</a>' +
-            '       <a class="cc-ipAddr"> ' + createIpStr + '</a>' +
+            '       <span class="cc-header register-' + (!!createUserId) + '"> ' + toHtmlEncode(m.createNickname) + '</span>' +
+            '       <span class="cc-ipAddr"> ' + createIpStr + '</span>' +
             '       <div class="cc-content"> ' + toHtmlEncode(m.replyContent) + '</div>' +
             '       <div class="cc-footer"> ' +
             '           <span class="cc-time"> ' + toPrettyDate(m.createTime) + '</span>' +
