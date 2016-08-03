@@ -33,36 +33,45 @@
 
     (function(exports) {
 
-        function loadingAnimationDisplay(num) {
+
+        function loadingAnimationDisplay(num,start) {
             document.getElementById("rootLoadingPercent").innerHTML = num;
         }
+
+        function loadingAnimationCompleted() {
+            document.getElementById("rootLoading").style.display = 'none';
+        }
+
+
 
         var currentDateTime = new Date().getTime();
         var beginDateTime = currentDateTime;
         var loadingTimeInterval = null;
 
-        function setLoadingPercent(num1, num2) {
+        function setLoadingPercent(startNum, num2) {
+            var displayNum = startNum;
             var d2 = new Date().getTime();
-            console.log(num1 + "%", d2 - currentDateTime, d2 - beginDateTime, d2);
+            console.log(displayNum + "%", d2 - currentDateTime, d2 - beginDateTime, d2);
             currentDateTime = d2;
-            loadingAnimationDisplay(num1);
+            loadingAnimationDisplay(displayNum,startNum);
 
             if (loadingTimeInterval) {
                 window.clearInterval(loadingTimeInterval);
             }
+
             loadingTimeInterval = window.setInterval(function () {
-                if (num1 < num2) {
+                if (displayNum < num2) {
                     var d3 = new Date().getTime();
-                    console.log(num1 + "%", d3 - currentDateTime, d3 - beginDateTime, d3);
-                    loadingAnimationDisplay(num1);
-                    num1++;
+                    console.log(displayNum + "%", d3 - currentDateTime, d3 - beginDateTime, d3);
+                    loadingAnimationDisplay(displayNum,startNum);
+                    displayNum++;
                 }
             }, 100);
 
-            if (num1 === 100) {
+            if (displayNum === 100) {
                 window.clearInterval(loadingTimeInterval);
                 setTimeout(function () {
-                    document.getElementById("rootLoading").style.display = 'none';
+                    loadingAnimationCompleted();
                 }, 10);
             }
         }
