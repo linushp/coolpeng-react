@@ -1,72 +1,90 @@
 <html>
-    <head>
-        <title>coolpeng</title>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <style>
-            #rootLoading{
-                position: absolute;
-                top: 45%;
-                left: 45%;
-                font-size: 13px;
-                line-height: 30px;
-                color: #666;
-                font-family: Microsoft YaHei,Arial,sans-serif;
+<head>
+    <title>coolpeng</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        #rootLoading{
+            position: absolute;
+            top: 45%;
+            left: 45%;
+            font-size: 13px;
+            line-height: 30px;
+            color: #666;
+            font-family: Microsoft YaHei,Arial,sans-serif;
+        }
+
+        #root{
+            width: 900px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+<div id="root"> </div>
+<div id="rootLoading">
+    <span id="rootLoadingPercent">0</span> %
+    &nbsp;&nbsp;loading...
+</div>
+<script>
+
+    window.coolpengAvatarApiURLPrefix = "http://www.coolpeng.cn";
+
+    (function(exports) {
+
+        function loadingAnimationDisplay(num) {
+            document.getElementById("rootLoadingPercent").innerHTML = num;
+        }
+
+        var currentDateTime = new Date().getTime();
+        var beginDateTime = currentDateTime;
+        var loadingTimeInterval = null;
+
+        function setLoadingPercent(num1, num2) {
+            var d2 = new Date().getTime();
+            console.log(num1 + "%", d2 - currentDateTime, d2 - beginDateTime, d2);
+            currentDateTime = d2;
+            loadingAnimationDisplay(num1);
+
+            if (loadingTimeInterval) {
+                window.clearInterval(loadingTimeInterval);
             }
-        </style>
-    </head>
-    <body>
-        <div id="root"> </div>
-        <div id="rootLoading">
-            <span id="rootLoadingPercent">0</span> %
-            &nbsp;&nbsp;loading...
-        </div>
-        <script>
-            var currentDateTime = new Date().getTime();
-            function setLoadingPercent(num){
-                var d2 = new Date().getTime();
-                console.log(num+"%",d2 - currentDateTime);
-                currentDateTime = d2;
-                document.getElementById("rootLoadingPercent").innerHTML = num;
-                if(num===100){
-                    setTimeout(function(){
-                        document.getElementById("rootLoading").style.display='none';
-                    },10);
+            loadingTimeInterval = window.setInterval(function () {
+                if (num1 < num2) {
+                    var d3 = new Date().getTime();
+                    console.log(num1 + "%", d3 - currentDateTime, d3 - beginDateTime, d3);
+                    loadingAnimationDisplay(num1);
+                    num1++;
                 }
+            }, 100);
+
+            if (num1 === 100) {
+                window.clearInterval(loadingTimeInterval);
+                setTimeout(function () {
+                    document.getElementById("rootLoading").style.display = 'none';
+                }, 10);
             }
-            setLoadingPercent(10);
-        </script>
+        }
 
-        <!--<script src="http://image.coolpeng.cn/static/lib/jquery.min.js"></script>-->
-        <!--<script>setLoadingPercent(20); </script>-->
-        <!--<script src="http://image.coolpeng.cn/static/lib/react.min.js"></script>-->
-        <!--<script>setLoadingPercent(30); </script>-->
-        <!--<script src="http://image.coolpeng.cn/static/lib/react-dom.min.js"></script>-->
-        <!--<script>setLoadingPercent(40); </script>-->
-        <!--<script src="http://image.coolpeng.cn/static/lib/ReactRouter.min.js"></script>-->
-        <!--<script>setLoadingPercent(50); </script>-->
-        <!--<script src="http://image.coolpeng.cn/static/lib/redux.min.js"></script>-->
-        <!--<script>setLoadingPercent(60); </script>-->
-        <!--<script src="http://image.coolpeng.cn/static/lib/react-redux.min.js"></script>-->
-        <!--<script>setLoadingPercent(70); </script>-->
-        <!--<script src="http://image.coolpeng.cn/static/lib/history.min.js"></script>-->
-        <!--<script>setLoadingPercent(80); </script>-->
+        exports.setLoadingPercent = setLoadingPercent;
+    })(window);
 
-        <!--<script src="http://image.coolpeng.cn/static/lib/combo/jquery-react-router-redux-history.min.js"></script>-->
-        <!--<script>setLoadingPercent(50); </script>-->
+</script>
 
+<script>setLoadingPercent(10,20); </script>
+<script src="http://image.coolpeng.cn/static/lib/jquery.min.js"></script>
+<script>setLoadingPercent(20,30); </script>
+<script src="http://image.coolpeng.cn/static/lib/react.min.js"></script>
+<script>setLoadingPercent(30,40); </script>
+<script src="http://image.coolpeng.cn/static/lib/combo/router-redux-history.min.js"></script>
+<script>setLoadingPercent(40,60);</script>
+<link type="text/css" rel="stylesheet" href="http://image.coolpeng.cn/static/lib/antd/antd.min.css" />
+<script>setLoadingPercent(60,80);</script>
+<script src="http://image.coolpeng.cn/static/lib/antd/antd.min.js"></script>
+<script>setLoadingPercent(80,95);</script>
 
-
-        <script src="http://image.coolpeng.cn/static/lib/jquery.min.js"></script>
-        <script>setLoadingPercent(20); </script>
-        <script src="http://image.coolpeng.cn/static/lib/react.min.js"></script>
-        <script>setLoadingPercent(30); </script>
-        <script src="http://image.coolpeng.cn/static/lib/combo/router-redux-history.min.js"></script>
-        <script>setLoadingPercent(80);</script>
-
-
-    </body>
+</body>
 </html>
 
-<script>setLoadingPercent(100);</script>
+<script>setLoadingPercent(100,100);</script>
