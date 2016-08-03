@@ -5,24 +5,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        #rootLoading{
+        #rootLoading {
             position: absolute;
             top: 45%;
             left: 45%;
             font-size: 13px;
             line-height: 30px;
             color: #666;
-            font-family: Microsoft YaHei,Arial,sans-serif;
+            font-family: Microsoft YaHei, Arial, sans-serif;
         }
 
-        #root{
+        #root {
             width: 900px;
             margin: 0 auto;
         }
     </style>
 </head>
 <body>
-<div id="root"> </div>
+<div id="root"></div>
 <div id="rootLoading">
     <span id="rootLoadingPercent">0</span> %
     &nbsp;&nbsp;loading...
@@ -31,17 +31,16 @@
 
     window.coolpengAvatarApiURLPrefix = "http://www.coolpeng.cn";
 
-    (function(exports) {
+    (function (exports) {
 
 
-        function loadingAnimationDisplay(num,start) {
+        function loadingAnimationDisplay(num, start) {
             document.getElementById("rootLoadingPercent").innerHTML = num;
         }
 
         function loadingAnimationCompleted() {
             document.getElementById("rootLoading").style.display = 'none';
         }
-
 
 
         var currentDateTime = new Date().getTime();
@@ -53,7 +52,7 @@
             var d2 = new Date().getTime();
             console.log(displayNum + "%", d2 - currentDateTime, d2 - beginDateTime, d2);
             currentDateTime = d2;
-            loadingAnimationDisplay(displayNum,startNum);
+            loadingAnimationDisplay(displayNum, startNum);
 
             if (loadingTimeInterval) {
                 window.clearInterval(loadingTimeInterval);
@@ -63,7 +62,7 @@
                 if (displayNum < num2) {
                     var d3 = new Date().getTime();
                     console.log(displayNum + "%", d3 - currentDateTime, d3 - beginDateTime, d3);
-                    loadingAnimationDisplay(displayNum,startNum);
+                    loadingAnimationDisplay(displayNum, startNum);
                     displayNum++;
                 }
             }, 100);
@@ -81,19 +80,17 @@
 
 </script>
 
-<script>setLoadingPercent(10,20); </script>
+<script>setLoadingPercent(10, 20); </script>
 <script src="http://image.coolpeng.cn/static/lib/jquery.min.js"></script>
-<script>setLoadingPercent(20,30); </script>
+<script>setLoadingPercent(20, 30); </script>
 <script src="http://image.coolpeng.cn/static/lib/react.min.js"></script>
-<script>setLoadingPercent(30,40); </script>
+<script>setLoadingPercent(30, 40); </script>
 <script src="http://image.coolpeng.cn/static/lib/combo/router-redux-history.min.js"></script>
-<script>setLoadingPercent(40,60);</script>
-<link type="text/css" rel="stylesheet" href="http://image.coolpeng.cn/static/lib/antd/antd.min.css" />
-<script>setLoadingPercent(60,80);</script>
+<script>setLoadingPercent(40, 60);</script>
+<link type="text/css" rel="stylesheet" href="http://image.coolpeng.cn/static/lib/antd/antd.min.css"/>
+<script>setLoadingPercent(60, 80);</script>
 <script src="http://image.coolpeng.cn/static/lib/antd/antd.min.js"></script>
-<script>setLoadingPercent(80,95);</script>
-
+<script>setLoadingPercent(80, 100);</script>
 </body>
 </html>
-
-<script>setLoadingPercent(100,100);</script>
+<script>setLoadingPercent(100, 100);</script>
