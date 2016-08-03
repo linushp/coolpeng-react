@@ -33,6 +33,7 @@
 
     (function (exports) {
 
+        var console = window.console || {log:function(){}};
 
         function loadingAnimationDisplay(num, start) {
             document.getElementById("rootLoadingPercent").innerHTML = num;
