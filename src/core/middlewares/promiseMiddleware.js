@@ -1,6 +1,6 @@
 import { isPromise } from '../utils';
 
-const defaultTypes = ['PENDING', 'FULFILLED', 'REJECTED'];
+const defaultTypes = ['PENDING', 'SUCCESS', 'ERROR'];
 
 export default function promiseMiddleware(config = {}) {
   const promiseTypeSuffixes = config.promiseTypeSuffixes || defaultTypes;
@@ -15,7 +15,8 @@ export default function promiseMiddleware(config = {}) {
 
       const { type, payload, meta } = action;
       const { promise, data } = payload;
-      const [ PENDING, FULFILLED, REJECTED ] = (meta || {}).promiseTypeSuffixes || promiseTypeSuffixes;
+      const [ PENDING, SUCCESS, ERROR ] = (meta || {}).promiseTypeSuffixes || promiseTypeSuffixes;
+      const actionSourceCallback = (meta || {}).actionSourceCallback || function(){};
 
       /**
        * Dispatch the first async handler. This tells the
@@ -30,7 +31,7 @@ export default function promiseMiddleware(config = {}) {
       const isAction = resolved => resolved && (resolved.meta || resolved.payload);
       const isThunk = resolved => typeof resolved === 'function';
       const getResolveAction = isError => ({
-        type: `${type}_${isError ? REJECTED : FULFILLED}`,
+        type: `${type}_${isError ? ERROR : SUCCESS}`,
         ...!!meta ? { meta } : {},
         ...!!isError ? { error: true } : {}
       });
@@ -43,6 +44,9 @@ export default function promiseMiddleware(config = {}) {
        */
       action.payload.promise = promise.then(
           (resolved = {}) => {
+
+            actionSourceCallback(resolved);
+
             const resolveAction = getResolveAction();
             return dispatch(isThunk(resolved) ? resolved.bind(null, resolveAction) : {
               ...resolveAction,
@@ -50,8 +54,12 @@ export default function promiseMiddleware(config = {}) {
                 ...!!resolved && { payload: resolved }
               }
             });
+
           },
           (rejected = {}) => {
+
+            actionSourceCallback(rejected);
+
             const resolveAction = getResolveAction(true);
             return dispatch(isThunk(rejected) ? rejected.bind(null, resolveAction) : {
               ...resolveAction,

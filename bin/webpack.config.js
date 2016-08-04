@@ -114,7 +114,8 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
             "lodash":"window._",
             "_":"window._",
             "underscore":"window._",
-            "antd":"window.antd"
+            "antd":"window.antd",
+            "immutable":"window.Immutable"
         },
 
 

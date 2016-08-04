@@ -1,10 +1,3 @@
-import {Router, Route, IndexRedirect, useRouterHistory} from 'react-router';
-import {createHistory} from 'history'
-const routeHistory = useRouterHistory(createHistory)({ basename: '' });
-
-export function getRouteHistory() {
-  return routeHistory;
-}
 
 export function isPromise(value) {
   if (value !== null && typeof value === 'object') {
@@ -17,7 +10,6 @@ export function getCookie(name) {
   var parts = value.split("; " + name + "=");
   if (parts.length == 2) return parts.pop().split(";").shift();
 }
-
 
 export function getLocalStorage(name) {
   var value = window.localStorage.getItem(name);

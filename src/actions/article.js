@@ -1,6 +1,6 @@
-import api from '../api'
+import api from '../core/api'
 
-import {getCookie} from '../utils';
+import {getCookie} from '../core/utils';
 
 export const GET_MODULE_LIST_PENDING = 'GET_MODULE_LIST_PENDING';
 export const GET_MODULE_LIST_SUCCESS = 'GET_MODULE_LIST_SUCCESS';

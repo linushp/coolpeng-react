@@ -2,10 +2,8 @@ import $ from 'jquery';
 import {toQueryParam} from '../utils';
 
 
-function ajaxPost(userInfoGetter,url,queryCondition,success,onError) {
-    var urlPrefix = window.coolpengAvatarApiURLPrefix || "";
-    url = urlPrefix + "" + url;
-    var userInfo = userInfoGetter?userInfoGetter():{};
+function ajaxPost(userInfoGetter, url, queryCondition, success, onError) {
+    var userInfo = userInfoGetter ? userInfoGetter() : {};
     queryCondition = queryCondition || {};
     queryCondition["TMS_APP_COMMON__TOKEN_ID"] = userInfo.tokenId;
     queryCondition["TMS_APP_COMMON__DEVICE_PLATFORM"] = userInfo.devicePlatform;
@@ -23,22 +21,22 @@ function ajaxPost(userInfoGetter,url,queryCondition,success,onError) {
 }
 
 
-class AjaxPromise{
+class AjaxPromise {
 
     constructor(config) {
         config = config || {};
         this.userInfoGetter = config.userInfoGetter;
+        this.urlPrefix = config.urlPrefix || "";
     }
 
 
-    post(url,queryCondition){
+    post(url, queryCondition) {
         var that = this;
-        return new Promise(function(resolve, reject){
-            ajaxPost(that.userInfoGetter,url,queryCondition,function(data){
-                console.log('response success:',data);
+        url = that.urlPrefix + url;
+        return new Promise(function (resolve, reject) {
+            ajaxPost(that.userInfoGetter, url, queryCondition, function (data) {
                 resolve(data);
-            },function(e){
-                console.log("Fetch failed!", e);
+            }, function (e) {
                 reject(e);
             });
         });

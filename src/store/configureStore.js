@@ -1,13 +1,14 @@
 import {createStore, applyMiddleware, combineReducers} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 
-import promiseMiddleware from '../middlewares/promiseMiddleware'
+import promiseMiddleware from '../core/middlewares/promiseMiddleware'
 
 import user from '../reducers/user';
 import menu from '../reducers/menu';
 import article from '../reducers/article';
+import daohang from '../reducers/daohang';
 
-const reducer = combineReducers({user, menu, article});
+const reducer = combineReducers({user, menu, article,daohang});
 
 const createStoreWithMiddleware = applyMiddleware(
   thunkMiddleware,

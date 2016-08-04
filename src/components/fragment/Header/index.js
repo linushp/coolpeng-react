@@ -3,16 +3,31 @@ import './index.less'
 import {Link} from 'react-router'
 
 export default class Header extends React.Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
     }
 
-    handleClick() {
 
+
+    renderRightLogin(){
+        const {user} = this.props;
+        var userInfo = user.user;
+        if(userInfo && userInfo.id){
+            return (
+                <div>
+                    欢迎您:{userInfo.nickname}
+                </div>
+            );
+        }
+        return (
+            <div>
+                <span>注册</span>&nbsp;/&nbsp;
+                <span onClick={this.props.onClickLogin}>登录</span>
+            </div>);
     }
 
     render() {
-        const {user} = this.props;
+
         return (
             <div className='ant-layout-header'>
 
@@ -26,7 +41,7 @@ export default class Header extends React.Component {
                         
                     </div>
                     <div className="float-r login-btn">
-                        <span>注册&nbsp;/&nbsp;登录</span>
+                        {this.renderRightLogin()}
                     </div>
                     <div className="clear"></div>
                 </div>

@@ -6,6 +6,7 @@ import NavPath from '../../components/NavPath'
 import Header from '../../components/fragment/Header'
 import Sidebar from '../../components/fragment/Sidebar'
 import Footer from '../../components/fragment/Footer'
+import LoginDialog from '../Dialogs/LoginDialog';
 import {fetchProfile, logout} from '../../actions/user';
 
 import './index.less';
@@ -16,19 +17,25 @@ class App extends React.Component {
         super(props);
     }
 
-    componentWillMount() {
-        const {actions} = this.props;
-        actions.fetchProfile();
+    componentDidMount() {
+        const {user, actions} = this.props;
+        //actions.fetchProfile();
     }
+
+
+    onClickLogin(){
+        var loginDialog = this.refs["loginDialog"];
+        loginDialog.open();
+    }
+
 
     render() {
         const {user, actions} = this.props;
 
-
         return (
             <div className="page-wrapper">
                 <div className="page-header">
-                    <Header user={user}/>
+                    <Header user={user} onClickLogin={this.onClickLogin.bind(this)}  />
                 </div>
                 <div className="page-content">
                     <NavPath />
@@ -40,25 +47,11 @@ class App extends React.Component {
                 <div className="page-footer">
                     <Footer />
                 </div>
+                <div>
+                    <LoginDialog ref="loginDialog" ></LoginDialog>
+                </div>
             </div>
         );
-
-
-        // return (
-        //   <div className="ant-layout-aside">
-        //     <Sidebar />
-        //     <div className="ant-layout-main">
-        //       <Header user={user} />
-        //       <NavPath />
-        //       <div className="ant-layout-container">
-        //         <div className="ant-layout-content">
-        //           {this.props.children}
-        //         </div>
-        //       </div>
-        //       <Footer />
-        //     </div>
-        //   </div>
-        // );
     }
 }
 
@@ -75,7 +68,7 @@ App.contextTypes = {
 const mapStateToProps = (state) => {
     const {user} = state;
     return {
-        user: user ? user : null,
+        user: user ? user : null
     };
 };
 

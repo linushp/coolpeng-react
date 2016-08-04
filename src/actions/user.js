@@ -1,6 +1,6 @@
-import api from '../api'
+import api from '../core/api'
 
-import {getCookie} from '../utils';
+import {getCookie} from '../core/utils';
 
 export const FETCH_PROFILE_PENDING = 'FETCH_PROFILE_PENDING';
 export const FETCH_PROFILE_SUCCESS = 'FETCH_PROFILE_SUCCESS';
@@ -12,36 +12,31 @@ export const LOGIN_ERROR = 'LOGIN_ERROR';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 
 export function fetchProfile() {
-    let uid = getCookie('uid');
-
-    if (uid === undefined) {
-        return {type: 'UID_NOT_FOUND'};
-    }
-
     return {
         type: 'FETCH_PROFILE',
         payload: {
-          promise: api.post('/my')
+          promise: api.post('/cloud/user/getCurrentUserInfo.json',{})
         }
     }
 }
 
-export function login(user, password) {
+
+export function login(username, password,callback) {
   return {
       type: 'LOGIN',
       payload: {
-        promise: api.post('/login', {
-          data: {
-            user: user,
+        promise: api.post('/cloud/user/login.json', {
+            username: username,
             password: password
-          }
         })
+      },
+      meta:{
+          actionSourceCallback:callback
       }
   }
 }
 
 export function logout() {
-
     return {
         type: 'LOGOUT'
     }

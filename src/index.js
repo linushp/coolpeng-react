@@ -1,27 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
-import {Router, Route, IndexRedirect} from 'react-router';
-
+import {Router, Route, IndexRedirect,useRouterHistory} from 'react-router';
+import {createHistory} from 'history'
 import configureStore from './store/configureStore';
 
 import App from './views/App';
 import Home from './views/Home';
-import Login from './views/Login';
 import Article from './views/Article/Article';
 import ArticleList from './views/Article/ArticleList';
 import ArticleSingle from './views/Article/ArticleSingle';
 
-import {getCookie, getRouteHistory} from './utils';
+import DaoHang from './views/DaoHang/DaoHang';
 
-const history = getRouteHistory();
+const history = useRouterHistory(createHistory)({ basename: '' });
+
+import {getCookie} from './core/utils';
+
+
 const store = configureStore();
 
 const validate = function (next, replace, callback) {
-    // const isLoggedIn = !!getCookie('uid')
-    // if (!isLoggedIn && next.location.pathname != '/login') {
-    //   replace('/login')
-    // }
     callback()
 };
 
@@ -29,7 +28,7 @@ ReactDOM.render(
     <Provider store={store}>
         <Router history={history}>
             <Route path="/" onEnter={validate}>
-                <IndexRedirect to="home"/>
+                <IndexRedirect to="daohang"/>
                 <Route component={App}>
                     <Route path="home" component={Home}/>
                     <Route path="article" component={Article}>
@@ -37,20 +36,10 @@ ReactDOM.render(
                         <Route path="list/" component={ArticleList}/>
                         <Route path="single/:id" component={ArticleSingle}/>
                     </Route>
+                    <Route path="daohang" component={DaoHang}> </Route>
                 </Route>
-                <Route path="login" component={Login}/>
             </Route>
         </Router>
     </Provider>,
     document.getElementById('root')
 );
-
-
-
-
-
-//var AvatarView = window.coolpengAvatarView;
-//var view = new AvatarView({
-//    DOM:document.getElementById("replyTestContainer"),
-//    pageId:"test"
-//});
