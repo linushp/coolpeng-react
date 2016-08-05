@@ -35,7 +35,12 @@ class AjaxPromise {
         url = that.urlPrefix + url;
         return new Promise(function (resolve, reject) {
             ajaxPost(that.userInfoGetter, url, queryCondition, function (data) {
-                resolve(data);
+                if(data.responseCode!==0){
+                    reject(data);
+                }
+                else {
+                    resolve(data);
+                }
             }, function (e) {
                 reject(e);
             });

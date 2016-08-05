@@ -12,7 +12,11 @@ class DaoHang extends PureRenderComponent {
         super(props);
     }
 
-    componentWillMount() {
+    componentDidMount() {
+        this.refreshCategoryList();
+    }
+
+    refreshCategoryList(){
         const {actions} = this.props;
         actions.getCategoryList({type: 1});
     }
@@ -29,10 +33,9 @@ class DaoHang extends PureRenderComponent {
     render() {
         const {user, daohang, actions} = this.props;
         var categoryList = daohang.get("categoryList") || [];
-        console.log(categoryList)
         return (
             <div>
-                <DaohangCreate daohang={daohang} user={user} actions={actions}></DaohangCreate>
+                <DaohangCreate daohang={daohang} user={user} actions={actions} refreshCategoryList={this.refreshCategoryList.bind(this)}></DaohangCreate>
                 <div>
                     {this.renderCategoryList(categoryList)}
                 </div>

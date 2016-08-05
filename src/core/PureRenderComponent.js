@@ -1,6 +1,9 @@
 import React from 'react';
 
 function shallowEqual(objA, objB) {
+
+    //return objA===objB;
+
     if (objA === objB) {
         return true;
     }
@@ -38,7 +41,6 @@ export function shallowCompare(component, nextProps, nextState) {
  */
 export default class PureRenderComponent extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
-
         return shallowCompare(this, nextProps, nextState);
     }
 }
