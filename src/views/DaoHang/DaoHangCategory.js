@@ -6,8 +6,8 @@ export default class DaoHangCategory extends PureRenderComponent {
     }
 
     componentWillMount() {
-        const {actions} = this.props;
-        actions.getCategoryList({type:1});
+        //const {actions} = this.props;
+        //actions.getCategoryList({type:1});
     }
 
     deleteItem(item,i){

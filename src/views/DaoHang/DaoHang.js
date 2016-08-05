@@ -12,9 +12,18 @@ class DaoHang extends PureRenderComponent {
         super(props);
     }
 
-    componentDidMount() {
+    componentWillMount() {
+        if(!this.isDataOk()){
+            this.refreshCategoryList();
+        }
+    }
+
+    isDataOk(){
         const {daohang} = this.props;
-        this.refreshCategoryList();
+        if(!daohang || !daohang.get('categoryList') || daohang.get('categoryList').size===0){
+            return false;
+        }
+        return true;
     }
 
     refreshCategoryList(){
@@ -32,6 +41,11 @@ class DaoHang extends PureRenderComponent {
     }
 
     render() {
+
+        if(!this.isDataOk()){
+            return <div></div>
+        }
+
         const {user, daohang, actions} = this.props;
         var categoryList = daohang.get("categoryList") || [];
         return (
