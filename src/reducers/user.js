@@ -114,7 +114,7 @@ export default function auth(state = initialState, action = {}) {
             return receiveLogout(state, {responseCode: 0, data: null});
         case FETCH_PROFILE_SUCCESS:
             return receiveUserInfo(state, action.payload);
-        case 'LOGOUT_TEMP_USER':
+        case 'LOGIN_TEMP_USER':
             return receiveTempUserInfo(state, action.payload);
         default:
             return state;

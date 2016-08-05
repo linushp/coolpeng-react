@@ -48,7 +48,7 @@ export function logout(callback) {
 
 export function setCurrentTempUser(tempUser){
     return {
-        type: 'LOGOUT_TEMP_USER',
+        type: 'LOGIN_TEMP_USER',
         payload:{
             data:tempUser
         }
