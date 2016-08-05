@@ -74,7 +74,8 @@ export default class AvatarReact extends React.Component {
         var userObjNext = nextProps.user || {};
         var user1 = userObj.user || {};
         var user2 = userObjNext.user || {};
-        if (user1.id != user2.id) {
+        if (user1.id != user2.id || user1.nickname != user2.nickname || user1.mail != user2.mail
+        ||user1.avatar != user2.avatar || user1.lastLoginToken != user2.lastLoginToken) {
             return true;
         }
         return false;
