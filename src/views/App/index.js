@@ -28,6 +28,11 @@ class App extends React.Component {
         loginDialog.open();
     }
 
+    onClickLogout(){
+        const {user, actions} = this.props;
+        actions.logout();
+    }
+
 
     render() {
         const {user, actions} = this.props;
@@ -35,7 +40,7 @@ class App extends React.Component {
         return (
             <div className="page-wrapper">
                 <div className="page-header">
-                    <Header user={user} onClickLogin={this.onClickLogin.bind(this)}  />
+                    <Header user={user} onClickLogin={this.onClickLogin.bind(this)}  onClickLogout={this.onClickLogout.bind(this)} />
                 </div>
                 <div className="page-content">
                     <NavPath />

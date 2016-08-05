@@ -12,10 +12,11 @@ export default class Header extends React.Component {
     renderRightLogin(){
         const {user} = this.props;
         var userInfo = user.user;
-        if(userInfo && userInfo.id){
+        if(userInfo && user.isLogged){
             return (
                 <div>
                     欢迎您:{userInfo.nickname}
+                    &nbsp;<span onClick={this.props.onClickLogout}>退出</span>
                 </div>
             );
         }

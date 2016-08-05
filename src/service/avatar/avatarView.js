@@ -24,14 +24,6 @@ function AvatarView(config) {
         orderType: config.defaultOrderType || 1  //最新1，最早2，最热3
     };
 
-    var state = {
-        data: [],
-        pageSize: 1,
-        pageNo: 1,
-        totalCount: 1,
-        serverTime: new Date().getTime()
-    };
-
     var userInfo = config.userInfo || {
             nickname: "",
             email: null,
@@ -44,6 +36,17 @@ function AvatarView(config) {
             devicePlatform: "",
             uuid: ""
         };
+
+    var _isHasLogin = !!(userInfo && userInfo.hasLogin);
+    var avatarImg = _isHasLogin ? userInfo.avatar : getRandomAvatarURL();
+    var state = {
+        data: [],
+        pageSize: 1,
+        pageNo: 1,
+        totalCount: 1,
+        serverTime: new Date().getTime(),
+        avatarImg:avatarImg
+    };
 
     var avatarApi = new AvatarApi({
         userTokenGetter: function () {
@@ -70,6 +73,14 @@ function AvatarView(config) {
     var $$viewId;
 
     var mapCache = {};
+
+    function isAdmin() {
+        return !!(hasLogin() && userInfo.isAdmin);
+    }
+
+    function hasLogin() {
+        return !!(userInfo && userInfo.hasLogin);
+    }
 
     function toPrettyDate(str) {
         try {
@@ -132,26 +143,30 @@ function AvatarView(config) {
     }
 
 
+    function initView(d,callback){
+        state.totalCount = d.totalCount;
+        state.data = d.data;
+        state.pageNo = d.pageNo;
+        state.pageSize = d.pageSize;
+        state.serverTime = d.extendData.serverTime || new Date().getTime();
+        MAX_REPLY_REPLY_COUNT = d.extendData.MAX_REPLY_REPLY_COUNT || MAX_REPLY_REPLY_COUNT;
+        MAX_REPLY_COUNT = d.extendData.MAX_REPLY_COUNT || MAX_REPLY_COUNT;
+
+        renderReplyTitle();
+        renderReplyList();
+        renderPagination(true);
+        hideLoading();
+        renderUserInfo();
+        renderLayerPlaceholder();
+        findDOMByClass('cp-reply-pagination').show();
+        callback && callback(d);
+    }
+
+
     function queryAndView(that, callback) {
         showLoading();
         avatarApi.getReplyList(queryCondition, function (d) {
-            state.totalCount = d.totalCount;
-            state.data = d.data;
-            state.pageNo = d.pageNo;
-            state.pageSize = d.pageSize;
-            state.serverTime = d.extendData.serverTime || new Date().getTime();
-            MAX_REPLY_REPLY_COUNT = d.extendData.MAX_REPLY_REPLY_COUNT || MAX_REPLY_REPLY_COUNT;
-            MAX_REPLY_COUNT = d.extendData.MAX_REPLY_COUNT || MAX_REPLY_COUNT;
-
-
-            renderReplyTitle();
-            renderReplyList();
-            renderPagination(true);
-            hideLoading();
-            renderUserInfo();
-            renderLayerPlaceholder();
-            findDOMByClass('cp-reply-pagination').show();
-            callback && callback(d);
+            initView(d, callback);
         }, function () {
             hideLoading();
         });
@@ -215,13 +230,6 @@ function AvatarView(config) {
         }
     }
 
-    function isAdmin() {
-        return !!(hasLogin() && userInfo.isAdmin);
-    }
-
-    function hasLogin() {
-        return !!(userInfo && userInfo.hasLogin);
-    }
 
     function getReplyObjById(mid) {
         var replyList = state.data || [];
@@ -236,10 +244,6 @@ function AvatarView(config) {
 
     function renderReplyInput(isReplyReply) {
         isReplyReply = isReplyReply || false;
-
-        var hasLogin = !!(userInfo && userInfo.hasLogin);
-        var avatarImg = hasLogin ? userInfo.avatar : getRandomAvatarURL();
-
 
         return '' +
             '<div class="boxCreateReply isReplyReply_' + isReplyReply + '  hasLogin_' + hasLogin + '" >' +

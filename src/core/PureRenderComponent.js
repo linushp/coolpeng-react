@@ -1,9 +1,6 @@
 import React from 'react';
 
 function shallowEqual(objA, objB) {
-
-    //return objA===objB;
-
     if (objA === objB) {
         return true;
     }

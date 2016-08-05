@@ -19,7 +19,6 @@ var LoginModal = React.createClass({
         var username = data.username;
         var password = data.password;
         this.props.login(username, password, function (action,res) {
-            debugger;
             if (res && res.responseCode === 0) {
                 var parent = that.props.parent;
                 parent.close();

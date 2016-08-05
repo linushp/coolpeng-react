@@ -36,8 +36,21 @@ export function login(username, password,callback) {
   }
 }
 
-export function logout() {
+export function logout(callback) {
     return {
-        type: 'LOGOUT'
+        type: 'LOGOUT',
+        payload: {
+            promise: api.post('/cloud/user/logout.json')
+        }
+    }
+}
+
+
+export function setCurrentTempUser(tempUser){
+    return {
+        type: 'LOGOUT_TEMP_USER',
+        payload:{
+            data:tempUser
+        }
     }
 }

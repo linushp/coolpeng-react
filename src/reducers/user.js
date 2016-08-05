@@ -13,43 +13,109 @@ const STATE_STORAGE_KEY = "user_state";
 
 var oldState = getLocalStorage(STATE_STORAGE_KEY) || {};
 
-const initialState = Object.assign({
-    user: null,
-    loggingShow:false,
+var defaultInitState = {
+    user: {
+        admin: false,
+        avatar: "",
+        createTime: "",
+        createUserId: "1",
+        id: 0,
+        lastLoginDevPlatform: "browser",
+        lastLoginDevUid: "",
+        lastLoginTime: "",
+        lastLoginToken: "",
+        mail: "",
+        nickname: "",
+        permission: "",
+        status: 0,
+        updateTime: "",
+        updateUserId: "",
+        username: ""
+    },
+    isTempUser: false,
+    isLogged: false,
+    loggingShow: false,
     loggingIn: false,
     loggingOut: false,
     loginErrors: null
-},oldState);
+};
+
+const initialState = Object.assign({}, defaultInitState, oldState);
 
 window.COOLPENG_USER_STATE = initialState;
 
 
-
 function receiveUserInfo(state, response) {
     if (response.responseCode === 0) {
-        var newState =  Object.assign({}, state, {user: response.data, loggingIn: false,loggingOut:false, loginErrors: null});
+        var newState = Object.assign({}, state, {
+            user: response.data,
+            loggingIn: false,
+            loggingOut: false,
+            loginErrors: null,
+            isLogged: true,
+            isTempUser: false
+        });
     } else {
-        var newState =  Object.assign({}, state, {user: null, loggingIn: false, loggingOut:false,loginErrors: response.responseText});
+        var newState = Object.assign({}, state, {
+            user: null,
+            loggingIn: false,
+            loggingOut: false,
+            loginErrors: response.responseText
+        });
     }
-    setLocalStorage(STATE_STORAGE_KEY,newState);
+    setLocalStorage(STATE_STORAGE_KEY, newState);
     window.COOLPENG_USER_STATE = newState;
     return newState;
 }
 
 
+function receiveTempUserInfo(state, payload) {
+    if (!payload) {
+        return state;
+    }
+    var data = payload.data;
+    if (!data) {
+        return state;
+    }
+    var user = Object.assign({}, state.user, {
+        avatar: data.avatar,
+        nickname: data.nickname,
+        mail: data.email
+    });
+    var newState = Object.assign({}, state, {
+        user: user,
+        loggingIn: false,
+        loggingOut: false,
+        loginErrors: null,
+        isLogged: true,
+        isTempUser: true
+    });
+    setLocalStorage(STATE_STORAGE_KEY, newState);
+    window.COOLPENG_USER_STATE = newState;
+    return newState;
+}
+
+function receiveLogout(state) {
+    var newState = Object.assign({}, state, defaultInitState);
+    setLocalStorage(STATE_STORAGE_KEY, newState);
+    window.COOLPENG_USER_STATE = newState;
+    return newState;
+}
 
 export default function auth(state = initialState, action = {}) {
     switch (action.type) {
         case LOGIN_PENDING:
-            return Object.assign({}, initialState, {loggingIn: true});
+            return Object.assign({}, state, {loggingIn: true});
         case LOGIN_SUCCESS:
             return receiveUserInfo(state, action.payload);
         case LOGIN_ERROR:
-            return receiveUserInfo(state, {responseCode:10000,responseText:"未知错误"});
+            return receiveUserInfo(state, {responseCode: 10000, responseText: "未知错误"});
         case LOGOUT_SUCCESS:
-            return receiveUserInfo(state, {responseCode:0,data:null});
+            return receiveLogout(state, {responseCode: 0, data: null});
         case FETCH_PROFILE_SUCCESS:
             return receiveUserInfo(state, action.payload);
+        case 'LOGOUT_TEMP_USER':
+            return receiveTempUserInfo(state, action.payload);
         default:
             return state;
     }

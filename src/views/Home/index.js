@@ -1,6 +1,9 @@
 import React from 'react'
 import PanelBox from '../../components/PanelBox';
 import AvatarReact from '../../service/avatar/AvatarReact';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import {setCurrentTempUser} from '../../actions/user';
 
 import './index.less'
 
@@ -16,7 +19,7 @@ const text = `
   it can be found as a welcome guest in many households across the world.
 `;
 
-export default class Home extends React.Component {
+class Home extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -34,18 +37,32 @@ export default class Home extends React.Component {
   }
 
   render () {
-    var x = this.state.x;
-    if (x%2===0){
-      return (
-          <div>
-            <button onClick={this.callback.bind(this)}>mmmmmmm</button>
-          </div>);
-    }
+      var actions = this.props.actions;
+      var user = this.props.user || {};
     return (
         <div>
           <button onClick={this.callback.bind(this)}>mmmmm</button>
-          <AvatarReact></AvatarReact>
+          <AvatarReact user={user} actions={actions}></AvatarReact>
         </div>
     );
   }
 }
+
+
+
+const mapStateToProps = (state) => {
+    const {user} = state;
+    return {
+        user: user
+    };
+};
+
+function mapDispatchToProps(dispatch) {
+    return {
+        actions:{
+            setCurrentTempUser: bindActionCreators(setCurrentTempUser, dispatch)
+        }
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
