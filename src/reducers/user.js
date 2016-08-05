@@ -21,7 +21,7 @@ const initialState = Object.assign({
     loginErrors: null
 },oldState);
 
-
+window.COOLPENG_USER_STATE = initialState;
 
 
 

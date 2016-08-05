@@ -1,33 +1,45 @@
 import React, {PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+import PureRenderComponent from '../../core/PureRenderComponent';
 import daohangActions from '../../actions/daohang';
 
-import CreateDaohang from './CreateDaohang';
+import DaohangCreate from './DaohangCreate';
+import DaoHangCategory from './DaoHangCategory';
 
-class DaoHang extends React.Component {
+class DaoHang extends PureRenderComponent {
     constructor(props) {
         super(props);
     }
 
     componentWillMount() {
         const {actions} = this.props;
-        actions.getCategoryList({type:1});
+        actions.getCategoryList({type: 1});
+    }
+
+    renderCategoryList(categoryList) {
+        const {user, daohang, actions} = this.props;
+        var result = [];
+        categoryList.forEach(function (c, i) {
+            result.push(<DaoHangCategory category={c} user={user} actions={actions}></DaoHangCategory>);
+        });
+        return result;
     }
 
     render() {
         const {user, daohang, actions} = this.props;
+        var categoryList = daohang.get("categoryList") || [];
+        console.log(categoryList)
         return (
             <div>
-                <CreateDaohang daohang={daohang} user={user} actions={actions} ></CreateDaohang>
+                <DaohangCreate daohang={daohang} user={user} actions={actions}></DaohangCreate>
                 <div>
-
+                    {this.renderCategoryList(categoryList)}
                 </div>
             </div>
         );
     }
 }
-
 
 
 DaoHang.propTypes = {
@@ -43,7 +55,7 @@ const mapStateToProps = (state) => {
     const {user,daohang} = state;
     return {
         user: user,
-        daohang:daohang
+        daohang: daohang
     };
 };
 

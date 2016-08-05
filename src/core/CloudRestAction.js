@@ -2,13 +2,19 @@ import api from './api'
 
 
 function createCloudRestAction(prefix, funcName) {
+
     return function (data, callback) {
+        var url = '/cloud/' + prefix + '/' + funcName + '.json';
+        var type = prefix + '_' + funcName;
         return {
             type: prefix + '_' + funcName,
             payload: {
-                promise: api.post('/cloud/' + prefix + '/' + funcName + '.json', data)
+                promise: api.post(url, data)
             },
             meta: {
+                reqData: data,
+                reqUrl: url,
+                reqType: type,
                 actionSourceCallback: callback
             }
         }

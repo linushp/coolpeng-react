@@ -50,22 +50,18 @@ export default function promiseMiddleware(config = {}) {
             const resolveAction = getResolveAction();
             return dispatch(isThunk(resolved) ? resolved.bind(null, resolveAction) : {
               ...resolveAction,
-              ...isAction(resolved) ? resolved : {
-                ...!!resolved && { payload: resolved }
-              }
+              ...isAction(resolved) ? resolved : {...!!resolved && { payload: resolved }}
             });
 
           },
           (rejected = {}) => {
 
-            actionSourceCallback(rejected);
+            actionSourceCallback(rejected,queryCondition);
 
             const resolveAction = getResolveAction(true);
             return dispatch(isThunk(rejected) ? rejected.bind(null, resolveAction) : {
               ...resolveAction,
-              ...isAction(rejected) ? rejected : {
-                ...!!rejected && { payload: rejected }
-              }
+              ...isAction(rejected) ? rejected : {...!!rejected && { payload: rejected }}
             });
           }
       );
