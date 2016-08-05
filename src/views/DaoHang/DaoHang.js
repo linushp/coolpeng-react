@@ -13,6 +13,7 @@ class DaoHang extends PureRenderComponent {
     }
 
     componentDidMount() {
+        const {daohang} = this.props;
         this.refreshCategoryList();
     }
 

@@ -33,12 +33,18 @@ export default class Header extends React.Component {
 
                 <div className='page-content'>
                     <h1 className="my-logo float-l" >
-                        <a href="/">
+                        <Link to="/home">
                             <span className="text">coolpeng</span>
-                        </a>
+                        </Link>
                     </h1>
+                    <Link to="/home">
+                        home
+                    </Link>
+                    &nbsp;&nbsp;&nbsp;
+                    <Link to="/daohang">
+                        daohang
+                    </Link>
                     <div className="float-l">
-                        
                     </div>
                     <div className="float-r login-btn">
                         {this.renderRightLogin()}
