@@ -13,8 +13,11 @@ import ArticleSingle from './views/Article/ArticleSingle';
 
 import DaoHang from './views/DaoHang/DaoHang';
 
-const history = useRouterHistory(createHistory)({ basename: '' });
-//const history = useRouterHistory(createHashHistory)({ basename: '' });
+var history = useRouterHistory(createHistory)({ basename: '' });
+
+if(window.COOPENG_USE_HASH_HISTORY){
+    history = useRouterHistory(createHashHistory)({ basename: '' });
+}
 
 import {getCookie} from './core/utils';
 

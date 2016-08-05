@@ -1,8 +1,8 @@
 import $ from 'jquery';
 
 function ajaxPost(userTokenGetter,url,queryCondition,success,onError) {
-    var urlPrefix = window.coolpengAvatarApiURLPrefix || "";
-    url = urlPrefix + "" + url;
+    var urlPrefix = window.COOPENG_REQUEST_PREFIX || "";
+    url = urlPrefix + url;
     var userInfo = userTokenGetter?userTokenGetter():{};
     queryCondition = queryCondition || {};
     queryCondition["TMS_APP_COMMON__TOKEN_ID"] = userInfo.tokenId;

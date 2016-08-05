@@ -3,7 +3,7 @@ import {AjaxPromise,ajaxPost} from './api';
 import {getLocalStorage} from '../utils/index';
 
 var api = new AjaxPromise({
-    urlPrefix: "",
+    urlPrefix: window.COOPENG_REQUEST_PREFIX || "",
     userInfoGetter: function () {
         var userState = window.COOLPENG_USER_STATE || {};
         var user = userState.user || {};
