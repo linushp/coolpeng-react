@@ -153,7 +153,10 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
             historyApiFallback: true,
             proxy: {
                 '/cloud/*': {
-                    target: 'http://www.coolpeng.cn',
+
+                    // target: 'http://www.coolpeng.cn',
+                    target: 'http://127.0.0.1:10086',
+
                     secure: false,
                     changeOrigin: true
                 },

@@ -32,10 +32,11 @@ class DaoHang extends PureRenderComponent {
     }
 
     renderCategoryList(categoryList) {
+        var that = this;
         const {user, daohang, actions} = this.props;
         var result = [];
         categoryList.forEach(function (c, i) {
-            result.push(<DaoHangCategory category={c} user={user} actions={actions}></DaoHangCategory>);
+            result.push(<DaoHangCategory category={c} user={user} actions={actions} refreshCategoryList={that.refreshCategoryList.bind(that)}></DaoHangCategory>);
         });
         return result;
     }

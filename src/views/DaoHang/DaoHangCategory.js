@@ -17,8 +17,10 @@ export default class DaoHangCategory extends PureRenderComponent {
     }
 
     deleteDhCategory(category){
-        const {actions} = this.props;
-        actions.deleteDhCategory(category.toJS());
+        const {actions,refreshCategoryList} = this.props;
+        actions.deleteDhCategory(category.toJS(),function () {
+            refreshCategoryList()
+        });
     }
 
     renderItemList(){
@@ -46,7 +48,7 @@ export default class DaoHangCategory extends PureRenderComponent {
         var that = this;
         return (
             <div>
-                <h2>{category.get('text')}---{category.get('id')}
+                <h2>{category.get('text')}========={category.get('id')}
                     <button onClick={that.deleteDhCategory.bind(that,category)}> 删除</button>
                 </h2>
                 <div>{this.renderItemList()}</div>

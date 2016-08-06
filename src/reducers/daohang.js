@@ -52,12 +52,12 @@ export default CreateCloudRestReducer({
         },
         'deleteDhCategory': function (state, res, restState, meta) {
             if (restState.isSuccess()) {
-                var targetCategory = immutable.fromJS(meta.reqData || {});
-                var categoryList = state.get('categoryList');
-                categoryList = categoryList.filterNot(function (c) {
-                    return c.get('id') === targetCategory.get('id');
-                });
-                state = state.set('categoryList', categoryList);
+                // var targetCategory = immutable.fromJS(meta.reqData || {});
+                // var categoryList = state.get('categoryList');
+                // categoryList = categoryList.filterNot(function (c) {
+                //     return c.get('id') === targetCategory.get('id');
+                // });
+                // state = state.set('categoryList', categoryList);
             }
             return state;
         },
