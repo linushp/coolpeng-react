@@ -32,7 +32,7 @@ export default class DaoHangCategory extends PureRenderComponent {
             itemList.forEach(function(item,i){
                 resultList.push (
                     <div>
-                        <a href={item.get("link")} >{item.get("text")}</a>
+                        <a href={item.get("link")} target="_blank">{item.get("text")}</a>
                         <button onClick={that.deleteItem.bind(that,item,i)}> 删除</button>
                     </div>
                 );

@@ -35,7 +35,7 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
         target: 'web',
         cache: true,
         entry: {
-            main: appPath(jsFile)
+            'main': appPath(jsFile)
         },
         /**
          *  Webpack 解析bundle 中请求的module 路径时的设置
@@ -47,6 +47,7 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
             modulesDirectories: ['node_modules', 'src'],
             alias: {}
         },
+
         /**
          *  Webpack bundle 的输出设置
          详情见于 https://webpack.github.io/docs/configuration.html#output-chunkfilename
@@ -55,8 +56,9 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
         output: {
             path: path.join(__appPath, 'dist'),
             publicPath: '/',
-            filename: 'app/[name].[hash].js',
-            chunkFilename: 'modules/[name].[hash].js',
+            //publicPath: 'http://www.coolpeng.cn/',
+            filename: 'release/[name].[chunkhash].js',//hash
+            chunkFilename: 'release/module.[name].[chunkhash].js',
             library: ['CoolpengApp', '[name]'],
             pathInfo: true
         },
@@ -120,6 +122,10 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
 
 
         plugins: [
+            new webpack.optimize.CommonsChunkPlugin({
+                name: "/shared",
+                minChunks: 3
+            }),
             new HtmlWebpackPlugin({
                 inject: true,
                 //excludeChunks: ['tests'],
@@ -154,8 +160,8 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
             proxy: {
                 '/cloud/*': {
 
-                    // target: 'http://www.coolpeng.cn',
-                    target: 'http://127.0.0.1:10086',
+                     target: 'http://www.coolpeng.cn',
+                    //target: 'http://127.0.0.1:10086',
 
                     secure: false,
                     changeOrigin: true

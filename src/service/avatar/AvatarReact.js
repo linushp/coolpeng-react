@@ -1,9 +1,13 @@
-import AvatarView from './avatarView';
+//import AvatarView from './avatarView';
 
 
+/**
+ * 支持一个入口页面,功能实现是异步加载的
+ */
 export default class AvatarReact extends React.Component {
     constructor(props) {
         super(props);
+        this.isInited=false;
     }
 
     componentWillMount() {
@@ -25,48 +29,64 @@ export default class AvatarReact extends React.Component {
         };
     }
 
-    componentDidMount() {
 
-        console.log('componentDidMount');
+    componentDidMount(){
+        this.initAvatarView();
+    }
 
-        var userObj = this.props.user || {};
-        var user = userObj.user;
-        var pageId = this.props.pageId || "test";
-        var actions = this.props.actions;
+    initAvatarView() {
 
-        var userInfo = this.getUserInfo();
+        if (this.isInited === true) {
+            return;
+        }
 
-        var avatarRoot = this.refs.avatarRoot.getDOMNode();//拿到了原生DOM
-        var view = new AvatarView({
-            DOM: avatarRoot,
-            pageId: pageId,
-            pageSize: 30,
-            defaultPageNumber: 1,
-            defaultOrderType: 1,
-            userInfo: userInfo,
-            isShowReply2: false,//是否在第一屏显示二级回复
-            isOnlyAdminReply: false, //TODO 是否只有管理员可以回复
-            isOnlyShowRepliedMsg: false, //TODO 是否只显示被回复过的.
-            //loading样式优化
-            //管理员删除功能
-            //提示信息优化
-            //二级回复输入框优化
-            //插入表情支持
-            //回复插入图片支持
-            innerSetUserInfo: function (u) {
-                console.log(u);
-                u.tokenId = "";
-                u.devicePlatform = "";
-                u.uuid = "";
-                u.hasLogin = true;
-                u.isAdmin = false;
-                actions.setCurrentTempUser(u);
-                view.outSetUserInfo(u);
-            }
-        });
-        view.outSetUserInfo(userInfo);
+        console.log('Avatar initAvatarView1', new Date().getTime());
+        require.ensure([], function (require) {
+            this.isInited = true;
 
-        this.viewHandler = view;
+            var AvatarView = require('./avatarView');
+            console.log('Avatar initAvatarView2', new Date().getTime());
+
+            var userObj = this.props.user || {};
+            var user = userObj.user;
+            var pageId = this.props.pageId || "test";
+            var actions = this.props.actions;
+
+            var userInfo = this.getUserInfo();
+
+            var avatarRoot = this.refs.avatarRoot.getDOMNode();//拿到了原生DOM
+            var view = new AvatarView({
+                DOM: avatarRoot,
+                pageId: pageId,
+                pageSize: 30,
+                defaultPageNumber: 1,
+                defaultOrderType: 1,
+                userInfo: userInfo,
+                isShowReply2: false,//是否在第一屏显示二级回复
+                isOnlyAdminReply: false, //TODO 是否只有管理员可以回复
+                isOnlyShowRepliedMsg: false, //TODO 是否只显示被回复过的.
+                //loading样式优化
+                //管理员删除功能
+                //提示信息优化
+                //二级回复输入框优化
+                //插入表情支持
+                //回复插入图片支持
+                innerSetUserInfo: function (u) {
+                    console.log(u);
+                    u.tokenId = "";
+                    u.devicePlatform = "";
+                    u.uuid = "";
+                    u.hasLogin = true;
+                    u.isAdmin = false;
+                    actions.setCurrentTempUser(u);
+                    view.outSetUserInfo(u);
+                }
+            });
+            view.outSetUserInfo(userInfo);
+
+            this.viewHandler = view;
+        }.bind(this));
+
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -88,6 +108,8 @@ export default class AvatarReact extends React.Component {
             console.log('componentDidUpdate')
             var userInfo = this.getUserInfo();
             this.viewHandler.outSetUserInfo(userInfo);
+        }else {
+            this.initAvatarView();
         }
     }
 

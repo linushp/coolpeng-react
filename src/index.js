@@ -5,13 +5,14 @@ import {Router, Route, IndexRedirect,useRouterHistory} from 'react-router';
 import {createHistory,createHashHistory} from 'history'
 import configureStore from './store/configureStore';
 
+
 import App from './views/App';
 import Home from './views/Home';
 import Article from './views/Article/Article';
 import ArticleList from './views/Article/ArticleList';
 import ArticleSingle from './views/Article/ArticleSingle';
 
-import DaoHang from './views/DaoHang/DaoHang';
+import DaoHangIndex from './views/DaoHang/index';
 
 var history = useRouterHistory(createHistory)({ basename: '' });
 
@@ -40,7 +41,7 @@ ReactDOM.render(
                         <Route path="list/" component={ArticleList}/>
                         <Route path="single/:id" component={ArticleSingle}/>
                     </Route>
-                    <Route path="daohang" component={DaoHang}> </Route>
+                    <Route path="daohang" getComponent={DaoHangIndex.getComponent}> </Route>
                 </Route>
             </Route>
         </Router>
