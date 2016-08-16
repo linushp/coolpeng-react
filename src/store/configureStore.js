@@ -3,10 +3,10 @@ import thunkMiddleware from 'redux-thunk';
 
 import promiseMiddleware from '../core/middlewares/promiseMiddleware'
 
-import user from '../reducers/user';
-import menu from '../reducers/menu';
-import article from '../reducers/article';
-import daohang from '../reducers/daohang';
+import user from './reducers/user';
+import menu from './reducers/menu';
+import article from './reducers/article';
+import daohang from './reducers/daohang';
 
 const reducer = combineReducers({user, menu, article,daohang});
 

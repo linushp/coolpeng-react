@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
-import NavPath from '../../components/NavPath'
+import NavPath from '../../components/fragment/NavPath'
 import Header from '../../components/fragment/Header'
 import Sidebar from '../../components/fragment/Sidebar'
 import Footer from '../../components/fragment/Footer'
@@ -43,14 +43,14 @@ class App extends React.Component {
                     <Header user={user} onClickLogin={this.onClickLogin.bind(this)}  onClickLogout={this.onClickLogout.bind(this)} />
                 </div>
                 <div className="page-content">
-                    <NavPath />
+                    <NavPath user={user} actions={actions} />
                     <div className="clear"></div>
                 </div>
                 <div className="page-content">
                     {this.props.children}
                 </div>
                 <div className="page-footer">
-                    <Footer />
+                    <Footer user={user}/>
                 </div>
                 <div>
                     <LoginDialog ref="loginDialog" ></LoginDialog>

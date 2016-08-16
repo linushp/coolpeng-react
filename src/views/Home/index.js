@@ -3,66 +3,39 @@ import PanelBox from '../../components/PanelBox';
 import AvatarReact from '../../service/avatar/AvatarReact';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {setCurrentTempUser} from '../../actions/user';
+import ActionStoreHelper from '../Common/ActionStoreHelper';
 
 import './index.less'
 
-const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-`;
-
 class Home extends React.Component {
-  constructor (props) {
-    super(props);
-    this.state = {
-      x:0
-    };
-  }
+    constructor(props) {
+        super(props);
+        this.state = {
+        };
+    }
 
-  componentWillMount () {
-  }
+    componentWillMount() {
+    }
 
-  callback() {
-    var x = this.state.x;
-
-    this.setState({x:(x +1)});
-  }
-
-  render () {
-      var actions = this.props.actions;
-      var user = this.props.user || {};
-    return (
-        <div>
-          <button onClick={this.callback.bind(this)}>mmmmm</button>
-          <AvatarReact user={user} actions={actions}></AvatarReact>
-        </div>
-    );
-  }
+    render() {
+        var actions = this.props.actions;
+        var user = this.props.user || {};
+        return (
+            <div>
+                <AvatarReact user={user} actions={actions}></AvatarReact>
+            </div>
+        );
+    }
 }
 
 
-
-const mapStateToProps = (state) => {
-    const {user} = state;
-    return {
-        user: user
-    };
+Home.STATE_CONFIG = {
+    user: 'user'
 };
 
-function mapDispatchToProps(dispatch) {
-    return {
-        actions:{
-            setCurrentTempUser: bindActionCreators(setCurrentTempUser, dispatch)
-        }
-    };
-}
+Home.ACTION_CONFIG = {
+    setCurrentTempUser: 'user.setCurrentTempUser'
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+
+export default ActionStoreHelper()(Home);

@@ -1,4 +1,4 @@
-import CreateCloudRestReducer from '../core/CreateCloudRestReducer';
+import CreateCloudRestReducer from '../../core/CreateCloudRestReducer';
 import immutable from 'immutable';
 import Cursor from 'immutable/contrib/cursor';
 

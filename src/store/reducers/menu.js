@@ -3,7 +3,7 @@ import {
     GET_ALL_MENU,
     GET_ALL_MENU_SUCCESS,
     UPDATE_NAVPATH
-} from '../actions/menu';
+} from '../../actions/menu';
 
 const initialState = {
   currentIndex: 0,

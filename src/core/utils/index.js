@@ -65,6 +65,47 @@ export function createUUID() {
 //}
 
 
+/**
+ * a = {
+ *   b:{
+ *      c:{
+ *          d:1
+ *      }
+ *   }
+ * }
+ *
+ * str : b.c.d
+ * @param obj
+ * @param str
+ * @demo :
+ *  var d = getObjectValue(a,'b.c.d');
+ */
+export function getObjValueInPath(obj, str) {
+  try {
+    var propArr = str.split(".");
+    var tmpObj = obj;
+    var i = 0;
+    while (i < propArr.length) {
+      if (!tmpObj) {
+        return null;
+      }
+      var prop = propArr[i];
+      tmpObj = tmpObj[prop];
+      i++;
+    }
+    return tmpObj;
+  }catch (e){
+     console.log('[ERROR]',e);
+  }
+
+  return null;
+}
+
+
+export function isArray(x){
+  return Object.prototype.toString.call(x) ==='[object Array]';
+}
+
 export function shallowEqual(objA, objB) {
   if (objA === objB) {
     return true;

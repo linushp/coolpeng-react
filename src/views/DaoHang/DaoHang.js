@@ -2,32 +2,35 @@ import React, {PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import PureRenderComponent from '../../core/PureRenderComponent';
-import daohangActions from '../../actions/daohang';
+//import daohangActions from '../../actions/daohang';
 import DaohangCreate from './DaohangCreate';
 import DaoHangCategory from './DaoHangCategory';
+import ActionStoreHelper from '../Common/ActionStoreHelper';
 import './index.less';
 
 class DaoHang extends PureRenderComponent {
+
     constructor(props) {
         super(props);
     }
 
     componentWillMount() {
-        if(!this.isDataOk()){
+        if (!this.isDataOk()) {
             this.refreshCategoryList();
         }
     }
 
-    isDataOk(){
+    isDataOk() {
         const {daohang} = this.props;
-        if(!daohang || !daohang.get('categoryList') || daohang.get('categoryList').size===0){
+        if (!daohang || !daohang.get('categoryList') || daohang.get('categoryList').size === 0) {
             return false;
         }
         return true;
     }
 
-    refreshCategoryList(){
+    refreshCategoryList() {
         const {actions} = this.props;
+        debugger;
         actions.getCategoryList({type: 1});
     }
 
@@ -44,7 +47,7 @@ class DaoHang extends PureRenderComponent {
 
     render() {
 
-        if(!this.isDataOk()){
+        if (!this.isDataOk()) {
             return <div></div>
         }
 
@@ -73,16 +76,11 @@ DaoHang.contextTypes = {
     store: PropTypes.object.isRequired
 };
 
-const mapStateToProps = (state) => {
-    const {user,daohang} = state;
-    return {
-        user: user,
-        daohang: daohang
-    };
+DaoHang.STATE_CONFIG = {
+    user: 'user',
+    daohang: 'daohang'
 };
 
-function mapDispatchToProps(dispatch) {
-    return {actions: bindActionCreators(daohangActions, dispatch)};
-}
+DaoHang.ACTION_CONFIG = ['daohang!'];
 
-export default connect(mapStateToProps, mapDispatchToProps)(DaoHang);
+export default ActionStoreHelper()(DaoHang);

@@ -2,7 +2,7 @@ import {
     GET_MODULE_LIST_PENDING,
     GET_MODULE_LIST_SUCCESS,
     GET_MODULE_LIST_ERROR,
-} from '../actions/article';
+} from '../../actions/article';
 //import Immutable from 'immutable';
 
 const initialState = {

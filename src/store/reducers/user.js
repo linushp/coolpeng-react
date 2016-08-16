@@ -1,4 +1,4 @@
-import {getLocalStorage,setLocalStorage} from '../core/utils/index';
+import {getLocalStorage,setLocalStorage} from '../../core/utils/index';
 
 import {
     LOGIN_PENDING,
@@ -7,7 +7,7 @@ import {
     LOGOUT_SUCCESS,
     FETCH_PROFILE_PENDING,
     FETCH_PROFILE_SUCCESS
-} from '../actions/user';
+} from '../../actions/user';
 
 const STATE_STORAGE_KEY = "user_state";
 
