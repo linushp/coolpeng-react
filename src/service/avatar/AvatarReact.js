@@ -3,11 +3,12 @@
 
 /**
  * 支持一个入口页面,功能实现是异步加载的
+ * 异步加载js文件
  */
 export default class AvatarReact extends React.Component {
     constructor(props) {
         super(props);
-        this.isInited=false;
+        this.isInited = false;
     }
 
     componentWillMount() {
@@ -30,7 +31,7 @@ export default class AvatarReact extends React.Component {
     }
 
 
-    componentDidMount(){
+    componentDidMount() {
         this.initAvatarView();
     }
 
@@ -47,7 +48,7 @@ export default class AvatarReact extends React.Component {
             var AvatarView = require('./avatarView');
             console.log('Avatar initAvatarView2', new Date().getTime());
             var pageId = this.props.pageId || "test";
-            var actions = this.props.actions;
+            var setCurrentTempUser = this.props.setCurrentTempUser;
             var userInfo = this.getUserInfo();
 
             var avatarRoot = this.refs.avatarRoot.getDOMNode();//拿到了原生DOM
@@ -74,7 +75,7 @@ export default class AvatarReact extends React.Component {
                     u.uuid = "";
                     u.hasLogin = true;
                     u.isAdmin = false;
-                    actions.setCurrentTempUser(u);
+                    setCurrentTempUser(u);
                     view.outSetUserInfo(u);
                 }
             });
@@ -92,7 +93,7 @@ export default class AvatarReact extends React.Component {
         var user2 = userObjNext.userInfo || {};
         if (user1.id != user2.id || user1.nickname != user2.nickname
             || user1.mail != user2.mail
-            || user1.username != user2.username||user1.avatar != user2.avatar
+            || user1.username != user2.username || user1.avatar != user2.avatar
             || user1.lastLoginToken != user2.lastLoginToken) {
             return true;
         }
@@ -104,7 +105,7 @@ export default class AvatarReact extends React.Component {
             console.log('componentDidUpdate')
             var userInfo = this.getUserInfo();
             this.viewHandler.outSetUserInfo(userInfo);
-        }else {
+        } else {
             this.initAvatarView();
         }
     }

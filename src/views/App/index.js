@@ -1,13 +1,13 @@
 import React, {PropTypes} from 'react';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
-
+import ActionStoreHelper from '../Common/ActionStoreHelper';
 import NavPath from '../../components/fragment/NavPath'
 import Header from '../../components/fragment/Header'
 import Sidebar from '../../components/fragment/Sidebar'
 import Footer from '../../components/fragment/Footer'
 import LoginDialog from '../Dialogs/LoginDialog';
-import {fetchProfile, logout} from '../../actions/user';
+
+
+//import {fetchProfile, logout} from '../../actions/user';
 
 import './index.less';
 import '../Common/common.less';
@@ -45,8 +45,6 @@ class App extends React.Component {
                 <div className="page-content">
                     <NavPath user={user} actions={actions} />
                     <div className="clear"></div>
-                </div>
-                <div className="page-content">
                     {this.props.children}
                 </div>
                 <div className="page-footer">
@@ -70,15 +68,13 @@ App.contextTypes = {
     store: PropTypes.object.isRequired
 };
 
-const mapStateToProps = (state) => {
-    const {user} = state;
-    return {
-        user: user ? user : null
-    };
+App.STATE_CONFIG = {
+    user: 'user'
 };
 
-function mapDispatchToProps(dispatch) {
-    return {actions: bindActionCreators({fetchProfile, logout}, dispatch)};
-}
+App.ACTION_CONFIG = {
+    fetchProfile: 'user.fetchProfile',
+    logout:'user.logout'
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default ActionStoreHelper()(App);

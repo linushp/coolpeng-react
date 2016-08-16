@@ -30,7 +30,6 @@ class DaoHang extends PureRenderComponent {
 
     refreshCategoryList() {
         const {actions} = this.props;
-        debugger;
         actions.getCategoryList({type: 1});
     }
 

@@ -22,7 +22,7 @@ class Home extends React.Component {
         var user = this.props.user || {};
         return (
             <div>
-                <AvatarReact user={user} actions={actions}></AvatarReact>
+                <AvatarReact user={user} setCurrentTempUser={actions.setCurrentTempUser}></AvatarReact>
             </div>
         );
     }

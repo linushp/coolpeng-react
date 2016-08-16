@@ -8,7 +8,6 @@ function getObjectByConfig(obj, config) {
     if (!config || !obj) {
         return null;
     }
-
     if (isArray(config)) {
         for (var j = 0; j < config.length; j++) {
             var conf = config[j] || '';
@@ -20,7 +19,6 @@ function getObjectByConfig(obj, config) {
                 result[conf] = getObjValueInPath(obj, conf);
             }
         }
-
     } else {
         var keys = Object.keys(config);
         for (var i = 0; i < keys.length; i++) {
@@ -52,12 +50,15 @@ export default function () {
         //}
 
         function mapStateToProps(state) {
+            //console.log('mapStateToProps',state)
             //const {user,daohang} = state;
+            //每次数据变化时,都要重新执行此处代码
             return getObjectByConfig(state, stateConfig);
         }
 
         function mapDispatchToProps(dispatch) {
             var actions0 = getObjectByConfig(actions, actionConfig);
+            //每次数据变化时,不会执行此处代码
             return {actions: bindActionCreators(actions0, dispatch)};
         }
 
