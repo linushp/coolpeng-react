@@ -3,9 +3,9 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import PureRenderComponent from '../../core/PureRenderComponent';
 import daohangActions from '../../actions/daohang';
-
 import DaohangCreate from './DaohangCreate';
 import DaoHangCategory from './DaoHangCategory';
+import './index.less';
 
 class DaoHang extends PureRenderComponent {
     constructor(props) {
@@ -35,8 +35,9 @@ class DaoHang extends PureRenderComponent {
         var that = this;
         const {user, daohang, actions} = this.props;
         var result = [];
+        //refreshCategoryList={that.refreshCategoryList.bind(that)}
         categoryList.forEach(function (c, i) {
-            result.push(<DaoHangCategory category={c} user={user} actions={actions} refreshCategoryList={that.refreshCategoryList.bind(that)}></DaoHangCategory>);
+            result.push(<DaoHangCategory category={c} user={user} actions={actions} parent={that}></DaoHangCategory>);
         });
         return result;
     }
@@ -50,9 +51,11 @@ class DaoHang extends PureRenderComponent {
         const {user, daohang, actions} = this.props;
         var categoryList = daohang.get("categoryList") || [];
         return (
-            <div>
-                <DaohangCreate daohang={daohang} user={user} actions={actions} refreshCategoryList={this.refreshCategoryList.bind(this)}></DaohangCreate>
-                <div>
+            <div className="cp-daohang">
+                <div className="cp-daohang-create">
+                    <DaohangCreate daohang={daohang} user={user} actions={actions} parent={this}></DaohangCreate>
+                </div>
+                <div className="cp-daohang-ccs">
                     {this.renderCategoryList(categoryList)}
                 </div>
             </div>

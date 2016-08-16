@@ -19,12 +19,14 @@ export function getLocalStorage(name) {
   return null;
 }
 
+
 export function setLocalStorage(name,value) {
   if(value){
     value = JSON.stringify(value);
   }
   window.localStorage.setItem(name,value);
 }
+
 
 export function toQueryParam(paramObject) {
   paramObject = paramObject || {};
@@ -58,6 +60,59 @@ export function createUUID() {
 }
 
 
-export function getStaticURL(p){
-  return "http://image.coolpeng.cn/static/" + p;
+//export function getStaticURL(p){
+//  return "http://image.coolpeng.cn/static/" + p;
+//}
+
+
+export function shallowEqual(objA, objB) {
+  if (objA === objB) {
+    return true;
+  }
+
+  if (typeof objA !== 'object' || objA === null ||
+      typeof objB !== 'object' || objB === null) {
+    return false;
+  }
+
+  var keysA = Object.keys(objA);
+  var keysB = Object.keys(objB);
+
+  if (keysA.length !== keysB.length) {
+    return false;
+  }
+
+  // Test for A's keys different from B.
+  var bHasOwnProperty = Object.prototype.hasOwnProperty.bind(objB);
+  for (var i = 0; i < keysA.length; i++) {
+    if (!bHasOwnProperty(keysA[i]) || objA[keysA[i]] !== objB[keysA[i]]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+
+
+
+export function isAdmin(u){
+  if(!u){
+    return false;
+  }
+  if(u.permission==='admin'){
+    return true;
+  }
+  if (u.userInfo && u.userInfo.permission==='admin'){
+    return true
+  }
+  return false;
+}
+
+
+export function displayControl(isDisplay,component){
+  if(isDisplay){
+    return component;
+  }
+  return null;
 }

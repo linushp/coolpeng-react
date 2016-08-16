@@ -1,6 +1,30 @@
 import React, {PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
+import $ from 'jquery';
 import {connect} from 'react-redux';
+import {isAdmin} from '../../core/utils';
+
+
+function formInput(name,text){
+    return (
+        <label>
+            <span>{text}</span>
+            <input className="formInput" name={name} type="text" />
+        </label>
+    );
+}
+
+function formSelect(name,text,options){
+    return (
+        <label>
+            <span>{text}</span>
+            <select className="formInput" name={name}>
+                {options}
+            </select>
+        </label>
+    );
+}
+
 
 export default class CreateDaohang extends React.Component {
     constructor(props) {
@@ -10,23 +34,22 @@ export default class CreateDaohang extends React.Component {
     componentWillMount() {
     }
 
-    onSubmit(){
+    onSubmitAddLink(){
         var from  = this.refs['form'];
         var values = {};
-        $(from).find('input').each(function(){
+        $(from).find('.formInput').each(function(){
             var $this = $(this);
             var v = $this.val();
             var name = $this.attr('name');
             values[name] = v;
         });
-        const {user, actions,refreshCategoryList} = this.props;
+        const {user, actions,parent} = this.props;
         actions.insertOrUpdateDhItem({DhItem:values},function(){
-            refreshCategoryList()
+            parent.refreshCategoryList()
         });
-
     }
 
-    onSubmit2(){
+    onSubmitAddCategory(){
         var from  = this.refs['form2'];
         var values = {};
         $(from).find('input').each(function(){
@@ -35,38 +58,45 @@ export default class CreateDaohang extends React.Component {
             var name = $this.attr('name');
             values[name] = v;
         });
-        const {user, actions,refreshCategoryList} = this.props;
+        const {user, actions,parent} = this.props;
         actions.insertOrUpdateDhCategory({DhCategory:values},function(){
-            refreshCategoryList()
+            parent.refreshCategoryList()
         });
-
     }
 
     render() {
-        const {user, actions} = this.props;
+        const {user, actions,daohang} = this.props;
+
+        if(!isAdmin(user)){
+            return <div></div>
+        }
+
+        var categoryList = daohang.get("categoryList") || [];
+        var selectOptions = categoryList.map(function(c){
+            var text = c.get('text');
+            var id = c.get('id');
+            return <option value={id}>{text}</option>
+        });
+
         return (
             <div>
-                <div>
+
+                <div className="cp-dh-create1">
                     <div ref="form">
-                        categoryId <input name="categoryId" type="text" />
-                        text <input name="text" type="text" />
-                        desc <input name="desc" type="text"  />
-                        link <input name="link" type="text"  />
-                        <input name="order" type="text"  value="1" />
-                        <input name="type" type="text"  value="1" />
+                        {formSelect('categoryId','分类',selectOptions)}
+                        {formInput('text','文字')}
+                        {formInput('desc','描述')}
+                        {formInput('link','链接')}
                     </div>
-                    <button onClick={this.onSubmit.bind(this)}>添加</button>
+                    <button onClick={this.onSubmitAddLink.bind(this)}>添加链接</button>
                 </div>
 
-                <div>
+                <div className="cp-dh-create2">
                     <div ref="form2">
-                        text  <input name="text" type="text" />
-                        desc  <input name="desc" type="text" />
-                        <input name="link" type="text"  value="#"/>
-                        <input name="order" type="text"  value="1"/>
-                        type <input name="type" type="text" value="1" />
+                        {formInput('text','文字')}
+                        {formInput('desc','描述')}
                     </div>
-                    <button onClick={this.onSubmit2.bind(this)}>添加</button>
+                    <button onClick={this.onSubmitAddCategory.bind(this)}>添加分类</button>
                 </div>
 
             </div>

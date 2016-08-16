@@ -14,7 +14,7 @@ const STATE_STORAGE_KEY = "user_state";
 var oldState = getLocalStorage(STATE_STORAGE_KEY) || {};
 
 var defaultInitState = {
-    user: {
+    userInfo: {
         admin: false,
         avatar: "",
         createTime: "",
@@ -32,6 +32,7 @@ var defaultInitState = {
         updateUserId: "",
         username: ""
     },
+
     isTempUser: false,
     isLogged: false,
     loggingShow: false,
@@ -48,7 +49,7 @@ window.COOLPENG_USER_STATE = initialState;
 function receiveUserInfo(state, response) {
     if (response.responseCode === 0) {
         var newState = Object.assign({}, state, {
-            user: response.data,
+            userInfo: response.data,
             loggingIn: false,
             loggingOut: false,
             loginErrors: null,
@@ -57,7 +58,7 @@ function receiveUserInfo(state, response) {
         });
     } else {
         var newState = Object.assign({}, state, {
-            user: null,
+            userInfo: null,
             loggingIn: false,
             loggingOut: false,
             loginErrors: response.responseText
@@ -77,13 +78,13 @@ function receiveTempUserInfo(state, payload) {
     if (!data) {
         return state;
     }
-    var user = Object.assign({}, state.user, {
+    var userInfo = {
         avatar: data.avatar,
         nickname: data.nickname,
         mail: data.email
-    });
+    };
     var newState = Object.assign({}, state, {
-        user: user,
+        userInfo: userInfo,
         loggingIn: false,
         loggingOut: false,
         loginErrors: null,

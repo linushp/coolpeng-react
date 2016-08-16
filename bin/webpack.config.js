@@ -56,9 +56,9 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
         output: {
             path: path.join(__appPath, 'dist'),
             publicPath: '/',
-            //publicPath: 'http://www.coolpeng.cn/',
-            filename: 'release/[name].[chunkhash].js',//hash
-            chunkFilename: 'release/module.[name].[chunkhash].js',
+            publicPath: '/',
+            filename: 'static/app/[name].[hash].js',//hash
+            chunkFilename: 'static/app/module.[name].[hash].js',
             library: ['CoolpengApp', '[name]'],
             pathInfo: true
         },
@@ -105,6 +105,7 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
 
         externals: {
             jquery: "window.jQuery",
+            jQuery: "window.jQuery",
             $: "window.jQuery",
             react:"window.React",
             ReactDOM:"window.ReactDOM",
@@ -123,7 +124,7 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
 
         plugins: [
             new webpack.optimize.CommonsChunkPlugin({
-                name: "/shared",
+                name: "shared",
                 minChunks: 3
             }),
             new HtmlWebpackPlugin({

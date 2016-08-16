@@ -11,7 +11,7 @@ export default class Header extends React.Component {
 
     renderRightLogin(){
         const {user} = this.props;
-        var userInfo = user.user;
+        var userInfo = user.userInfo;
         if(userInfo && user.isLogged){
             return (
                 <div>

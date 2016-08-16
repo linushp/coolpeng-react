@@ -11,7 +11,6 @@ import Home from './views/Home';
 import Article from './views/Article/Article';
 import ArticleList from './views/Article/ArticleList';
 import ArticleSingle from './views/Article/ArticleSingle';
-
 import DaoHangIndex from './views/DaoHang/index';
 
 var history = useRouterHistory(createHistory)({ basename: '' });
@@ -21,8 +20,6 @@ if(window.COOPENG_USE_HASH_HISTORY){
 }
 
 import {getCookie} from './core/utils';
-
-
 const store = configureStore();
 
 const validate = function (next, replace, callback) {
@@ -41,7 +38,7 @@ ReactDOM.render(
                         <Route path="list/" component={ArticleList}/>
                         <Route path="single/:id" component={ArticleSingle}/>
                     </Route>
-                    <Route path="daohang" getComponent={DaoHangIndex.getComponent}> </Route>
+                    <Route path="daohang" getComponent={DaoHangIndex.getComponent} > </Route>
                 </Route>
             </Route>
         </Router>

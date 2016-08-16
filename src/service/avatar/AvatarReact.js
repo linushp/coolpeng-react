@@ -16,16 +16,16 @@ export default class AvatarReact extends React.Component {
 
     getUserInfo() {
         var userObj = this.props.user || {};
-        var user = userObj.user;
+        var userInfo = userObj.userInfo;
         return {
-            nickname: user.nickname,
-            email: user.mail,
-            avatar: user.avatar,
-            tokenId: user.lastLoginToken,
-            devicePlatform: user.lastLoginDevPlatform,
-            uuid: user.lastLoginDevUid,
+            nickname: userInfo.nickname,
+            email: userInfo.mail,
+            avatar: userInfo.avatar,
+            tokenId: userInfo.lastLoginToken,
+            devicePlatform: userInfo.lastLoginDevPlatform,
+            uuid: userInfo.lastLoginDevUid,
             hasLogin: userObj.isLogged,
-            isAdmin: user.permission === 'admin'
+            isAdmin: userInfo.permission === 'admin'
         };
     }
 
@@ -46,12 +46,8 @@ export default class AvatarReact extends React.Component {
 
             var AvatarView = require('./avatarView');
             console.log('Avatar initAvatarView2', new Date().getTime());
-
-            var userObj = this.props.user || {};
-            var user = userObj.user;
             var pageId = this.props.pageId || "test";
             var actions = this.props.actions;
-
             var userInfo = this.getUserInfo();
 
             var avatarRoot = this.refs.avatarRoot.getDOMNode();//拿到了原生DOM
@@ -92,8 +88,8 @@ export default class AvatarReact extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         var userObj = this.props.user || {};
         var userObjNext = nextProps.user || {};
-        var user1 = userObj.user || {};
-        var user2 = userObjNext.user || {};
+        var user1 = userObj.userInfo || {};
+        var user2 = userObjNext.userInfo || {};
         if (user1.id != user2.id || user1.nickname != user2.nickname
             || user1.mail != user2.mail
             || user1.username != user2.username||user1.avatar != user2.avatar
@@ -115,8 +111,7 @@ export default class AvatarReact extends React.Component {
 
     render() {
         return (
-            <div className="avatar-react-root" ref='avatarRoot'>
-            </div>
+            <div className="avatar-react-root" ref='avatarRoot'></div>
         );
     }
 }

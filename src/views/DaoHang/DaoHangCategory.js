@@ -1,4 +1,5 @@
 import PureRenderComponent from '../../core/PureRenderComponent';
+import {isAdmin,displayControl} from '../../core/utils';
 
 export default class DaoHangCategory extends PureRenderComponent {
     constructor(props) {
@@ -6,8 +7,8 @@ export default class DaoHangCategory extends PureRenderComponent {
     }
 
     componentWillMount() {
-        //const {actions} = this.props;
-        //actions.getCategoryList({type:1});
+        const {actions} = this.props;
+        actions.getCategoryList({type:1});
     }
 
     deleteItem(item,i){
@@ -16,24 +17,43 @@ export default class DaoHangCategory extends PureRenderComponent {
         actions.deleteDhItem(item.toJS());
     }
 
+    editItem(item,i){
+
+    }
+
+
     deleteDhCategory(category){
-        const {actions,refreshCategoryList} = this.props;
+        const {actions,parent} = this.props;
         actions.deleteDhCategory(category.toJS(),function () {
-            refreshCategoryList()
+            parent.refreshCategoryList()
         });
     }
 
-    renderItemList(){
+
+    editDhCategory(category){
+
+    }
+
+    addCategoryItem(category){
+
+    }
+
+
+    renderItemList(category,adminControl){
         var that = this;
-        const {user, actions,category} = this.props;
         var itemList = category.get('items');
         var resultList = [];
         if(itemList){
             itemList.forEach(function(item,i){
                 resultList.push (
-                    <div>
+                    <div className="cp-daohang-aa">
                         <a href={item.get("link")} target="_blank">{item.get("text")}</a>
-                        <button onClick={that.deleteItem.bind(that,item,i)}> 删除</button>
+                        {adminControl(
+                            <span>
+                                <button className="del" onClick={that.deleteItem.bind(that,item,i)}> 删除</button>
+                                <button className="edit" onClick={that.editItem.bind(that,item,i)}> 编辑</button>
+                            </span>
+                        )}
                     </div>
                 );
             });
@@ -43,13 +63,25 @@ export default class DaoHangCategory extends PureRenderComponent {
 
     render() {
         const {user, actions,category} = this.props;
+        var isAdminUser = isAdmin(user);
+        var adminControl = displayControl.bind(this,isAdminUser);
+
         var that = this;
         return (
-            <div>
-                <h2>{category.get('text')}========={category.get('id')}
-                    <button onClick={that.deleteDhCategory.bind(that,category)}> 删除</button>
+            <div className="cp-daohang-cc">
+                <h2>
+                    <span>{category.get('text')}</span>
+                    {adminControl(
+                        <span>
+                            <button onClick={that.deleteDhCategory.bind(that,category)}> 删除</button>
+                            <button onClick={that.editDhCategory.bind(that,category)}> 编辑</button>
+                            <button onClick={that.addCategoryItem.bind(that,category)}> 添加链接</button>
+                        </span>)
+                    }
                 </h2>
-                <div>{this.renderItemList()}</div>
+                <div className="cp-daohang-link">
+                    {this.renderItemList(category,adminControl)}
+                </div>
             </div>
         );
     }
