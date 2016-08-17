@@ -306,7 +306,7 @@ function AvatarView(config) {
             '       <div class="cp-reply2-header">' +
             '           <a class="cp-reply2-name">' + toHtmlEncode(obj.createNickname) + '</a> : &nbsp;' +
             '           <i class="cp-reply2-time">' + toPrettyDate(obj.createTime) + '</i>' +
-            '           <i class="cp-reply2-delete">删除</i>' +
+            '           '+(isAdmin()?'<i class="cp-reply2-delete">删除</i>':'') +
             '       </div>' +
             '       <div class="cp-reply2-text">' + toHtmlEncode(obj.replyContent) + '</div>' +
             '   </div>' +
