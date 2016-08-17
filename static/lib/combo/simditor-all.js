@@ -576,6 +576,18 @@ Uploader = (function(superClass) {
     return randomStr + new Date().getTime();
   }
 
+  function getSuffix (url) {
+    if(!url){
+      return "";
+    }
+    try {
+      var index = url.lastIndexOf('.');
+      if (index <= 0) return '';
+      return url.substr(index);
+    }catch (e){
+      return '';
+    }
+  }
 
   Uploader.prototype._xhrUpload = function(file) {
 
@@ -607,7 +619,7 @@ Uploader = (function(superClass) {
       };
 
       //var saveName = new Date().getTime() + '' + Math.floor(Math.random() * 1000000) + key;
-      var saveName = new Date().getTime() + '' + createUUID();
+      var saveName = new Date().getTime() + '' + createUUID()+getSuffix(key);
 
       client.putObjectFromBlob(bucket, saveName, blob, options)
           .then(function (res) {
