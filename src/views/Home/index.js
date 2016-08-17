@@ -12,18 +12,35 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            content:""
         };
     }
 
     componentWillMount() {
     }
 
+//    onClickSetRandomButton(){
+//        var x = Math.random();
+//        this.setState({
+//            content:x
+//        });
+//    }
+//
+//    onClickGetValueButton(){
+//        var editor = this.refs['SimditorReact'];
+//        var x = editor.getContentValue();
+//        alert(x);
+//    }
+//<button onClick={this.onClickSetRandomButton.bind(this)}> setRandom </button>
+//<button onClick={this.onClickGetValueButton.bind(this)}> getValue </button>
+//
     render() {
         var actions = this.props.actions;
         var user = this.props.user || {};
         return (
             <div>
-                <SimditorReact></SimditorReact>
+
+                <SimditorReact ref="SimditorReact" content={this.state.content}></SimditorReact>
                 <AvatarReact user={user} setCurrentTempUser={actions.setCurrentTempUser}></AvatarReact>
             </div>
         );

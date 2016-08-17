@@ -493,7 +493,6 @@ Uploader = (function(superClass) {
   })();
 
   Uploader.prototype.upload = function(file, opts) {
-    debugger;
     var f, i, key, len;
     if (opts == null) {
       opts = {};

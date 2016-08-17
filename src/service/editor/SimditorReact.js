@@ -1,9 +1,6 @@
 import $ from 'jquery';
-
-//import a from '../../../static/lib/combo/simditor-all';
-
 import {loadStaticJS,loadStaticCSS} from '../../core/utils/index';
-
+import './index.less';
 /**
  * 支持一个入口页面,功能实现是异步加载的
  * 异步加载js文件
@@ -12,6 +9,8 @@ export default class SimditorReact extends React.Component {
     constructor(props) {
         super(props);
         this.isInited = false;
+        this.editor = null;
+        this.contentValue = null;
     }
 
     componentWillMount() {
@@ -20,10 +19,14 @@ export default class SimditorReact extends React.Component {
 
 
     componentDidMount() {
-        this.initSimditorView();
+        var that = this;
+        that.initSimditorView(function(){
+            var content = that.props.content || '';
+            that.setContentValue(content);
+        });
     }
 
-    initSimditorView() {
+    initSimditorView(callback) {
 
         if (this.isInited === true) {
             return;
@@ -31,36 +34,82 @@ export default class SimditorReact extends React.Component {
 
         var that = this;
 
-        loadStaticCSS('/static/lib/combo/simditor.css',function(){
-            loadStaticJS('/static/lib/combo/simditor-all.js',function(){
+        loadStaticCSS('/static/lib/combo/simditor.css', function () {
+            loadStaticJS('/static/lib/combo/simditor-all.min.js', function () {
                 this.isInited = true;
                 var Simditor = window.Simditor;
-                console.log('Simditor:::',Simditor);
-
+                console.log('Simditor:::', Simditor);
+                toolbar = ['title', 'bold', 'italic', 'underline', 'strikethrough', 'fontScale', 'color', '|', 'ol', 'ul', 'blockquote', 'code', 'table', '|', 'link', 'image', 'hr', '|', 'indent', 'outdent', 'alignment'];
                 var simditorRoot = this.refs.simditorRoot.getDOMNode();//拿到了原生DOM
                 var $textarea = $(simditorRoot).find('textarea');
-                var editor = new Simditor({
+                this.editor = new Simditor({
                     textarea: $textarea,
-                    upload:true,
-                    pasteImage:true,
-                    defaultImage:'http://image.coolpeng.cn/static/images/editor-default-img.png'
+                    upload: true,
+                    pasteImage: true,
+                    defaultImage: 'http://image.coolpeng.cn/static/images/editor-default-img.png',
+                    toolbar: toolbar,
+                    toolbarFloat: false
                 });
+
+                callback && callback();
             }.bind(that));
         });
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return false;
+    setContentValue(contentValue){
+
+        if (this.contentValue === contentValue) {
+            return;
+        }
+        var that = this;
+        if (that.editor) {
+            that.editor.setValue(contentValue);
+            console.log('that.editor.setValue(contentValue);111111');
+            this.contentValue = contentValue;
+        } else {
+            that.initSimditorView(function () {
+                that.editor.setValue(contentValue);
+                this.contentValue = contentValue;
+                console.log('that.editor.setValue(contentValue);22222');
+            })
+        }
     }
 
-    componentDidUpdate() {
 
+    getContentValue(){
+        var that = this;
+        if (that.editor) {
+            return that.editor.getValue();
+        }
+        return null;
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        //不允许重绘DOM
+        return false;
+    }
+    componentWillReceiveProps(nextProps) {
+        var content = nextProps.content || '';
+        this.setContentValue(content);
+    }
+    componentWillUnmount(){
+        if (this.editor) {
+            this.editor.destroy();
+        }
+        this.isInited = false;
+        this.editor = null;
+        this.contentValue = null;
+        console.log('SimditorReact componentWillUnmount')
     }
 
     render() {
         return (
             <div className="simditor-react-root" ref='simditorRoot'>
-                <textarea className="simditor-react-textarea" placeholder="这里输入内容" autofocus></textarea>
+                <div className="wrapper">
+                    <section>
+                        <textarea className="simditor-react-textarea" placeholder="这里输入内容" autofocus></textarea>
+                    </section>
+                </div>
             </div>
         );
     }
