@@ -1,47 +1,46 @@
-
 export function isPromise(value) {
-  if (value !== null && typeof value === 'object') {
-    return value.promise && typeof value.promise.then === 'function';
-  }
+    if (value !== null && typeof value === 'object') {
+        return value.promise && typeof value.promise.then === 'function';
+    }
 }
 
 export function getCookie(name) {
-  var value = "; " + document.cookie;
-  var parts = value.split("; " + name + "=");
-  if (parts.length == 2) return parts.pop().split(";").shift();
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
 }
 
 export function getLocalStorage(name) {
-  var value = window.localStorage.getItem(name);
-  if (value) {
-    return JSON.parse(value);
-  }
-  return null;
+    var value = window.localStorage.getItem(name);
+    if (value) {
+        return JSON.parse(value);
+    }
+    return null;
 }
 
 
-export function setLocalStorage(name,value) {
-  if(value){
-    value = JSON.stringify(value);
-  }
-  window.localStorage.setItem(name,value);
+export function setLocalStorage(name, value) {
+    if (value) {
+        value = JSON.stringify(value);
+    }
+    window.localStorage.setItem(name, value);
 }
 
 
 export function toQueryParam(paramObject) {
-  paramObject = paramObject || {};
-  var keys = Object.getOwnPropertyNames(paramObject) || [];
+    paramObject = paramObject || {};
+    var keys = Object.getOwnPropertyNames(paramObject) || [];
 
-  var paramArray = keys.map(function (key, i) {
-    var value = paramObject[key];
-    return key + "=" + encodeURIComponent(value);
-  });
+    var paramArray = keys.map(function (key, i) {
+        var value = paramObject[key];
+        return key + "=" + encodeURIComponent(value);
+    });
 
-  if (paramArray && paramArray.length > 0) {
-    return "?" + paramArray.join("&");
-  }
+    if (paramArray && paramArray.length > 0) {
+        return "?" + paramArray.join("&");
+    }
 
-  return "";
+    return "";
 }
 
 
@@ -52,11 +51,11 @@ export function toQueryParam(paramObject) {
  * @returns {string}
  */
 export function createUUID() {
-  var randomStr =  'xxxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-    return v.toString(16);
-  });
-  return randomStr + new Date().getTime();
+    var randomStr = 'xxxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+    return randomStr + new Date().getTime();
 }
 
 
@@ -81,79 +80,115 @@ export function createUUID() {
  *  var d = getObjectValue(a,'b.c.d');
  */
 export function getObjValueInPath(obj, str) {
-  try {
-    var propArr = str.split(".");
-    var tmpObj = obj;
-    var i = 0;
-    while (i < propArr.length) {
-      if (!tmpObj) {
-        return null;
-      }
-      var prop = propArr[i];
-      tmpObj = tmpObj[prop];
-      i++;
+    try {
+        var propArr = str.split(".");
+        var tmpObj = obj;
+        var i = 0;
+        while (i < propArr.length) {
+            if (!tmpObj) {
+                return null;
+            }
+            var prop = propArr[i];
+            tmpObj = tmpObj[prop];
+            i++;
+        }
+        return tmpObj;
+    } catch (e) {
+        console.log('[ERROR]', e);
     }
-    return tmpObj;
-  }catch (e){
-     console.log('[ERROR]',e);
-  }
 
-  return null;
+    return null;
 }
 
 
-export function isArray(x){
-  return Object.prototype.toString.call(x) ==='[object Array]';
+export function isArray(x) {
+    return Object.prototype.toString.call(x) === '[object Array]';
 }
 
 export function shallowEqual(objA, objB) {
-  if (objA === objB) {
-    return true;
-  }
-
-  if (typeof objA !== 'object' || objA === null ||
-      typeof objB !== 'object' || objB === null) {
-    return false;
-  }
-
-  var keysA = Object.keys(objA);
-  var keysB = Object.keys(objB);
-
-  if (keysA.length !== keysB.length) {
-    return false;
-  }
-
-  // Test for A's keys different from B.
-  var bHasOwnProperty = Object.prototype.hasOwnProperty.bind(objB);
-  for (var i = 0; i < keysA.length; i++) {
-    if (!bHasOwnProperty(keysA[i]) || objA[keysA[i]] !== objB[keysA[i]]) {
-      return false;
+    if (objA === objB) {
+        return true;
     }
-  }
 
-  return true;
-}
+    if (typeof objA !== 'object' || objA === null ||
+        typeof objB !== 'object' || objB === null) {
+        return false;
+    }
 
+    var keysA = Object.keys(objA);
+    var keysB = Object.keys(objB);
 
+    if (keysA.length !== keysB.length) {
+        return false;
+    }
 
+    // Test for A's keys different from B.
+    var bHasOwnProperty = Object.prototype.hasOwnProperty.bind(objB);
+    for (var i = 0; i < keysA.length; i++) {
+        if (!bHasOwnProperty(keysA[i]) || objA[keysA[i]] !== objB[keysA[i]]) {
+            return false;
+        }
+    }
 
-export function isAdmin(u){
-  if(!u){
-    return false;
-  }
-  if(u.permission==='admin'){
     return true;
-  }
-  if (u.userInfo && u.userInfo.permission==='admin'){
-    return true
-  }
-  return false;
 }
 
 
-export function displayControl(isDisplay,component){
-  if(isDisplay){
-    return component;
-  }
-  return null;
+export function isAdmin(u) {
+    if (!u) {
+        return false;
+    }
+    if (u.permission === 'admin') {
+        return true;
+    }
+    if (u.userInfo && u.userInfo.permission === 'admin') {
+        return true
+    }
+    return false;
+}
+
+
+export function displayControl(isDisplay, component) {
+    if (isDisplay) {
+        return component;
+    }
+    return null;
+}
+
+var loadStaticCache = {};
+export function loadStaticJS(url, callback) {
+
+    if (loadStaticCache[url]) {
+        callback();
+        return;
+    }
+
+    var script = document.createElement("script");
+    script.src = url;
+    script.type = 'text/javascript';
+    script.language = 'javascript';
+    script.onload = script.onreadstatechange = function () {
+        callback();
+        loadStaticCache[url] = true;
+    };
+    document.getElementsByTagName("body")[0].appendChild(script);
+}
+
+
+export function loadStaticCSS(url, callback) {
+
+    if (loadStaticCache[url]) {
+        callback();
+        return;
+    }
+
+    var link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.type = "text/css";
+    link.href = url;
+    link.onload = link.onreadstatechange = function () {
+        callback();
+        loadStaticCache[url] = true;
+    };
+    document.getElementsByTagName("head")[0].appendChild(link);
 }

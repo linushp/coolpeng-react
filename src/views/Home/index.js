@@ -1,6 +1,7 @@
 import React from 'react'
 import PanelBox from '../../components/PanelBox';
 import AvatarReact from '../../service/avatar/AvatarReact';
+import SimditorReact from '../../service/editor/SimditorReact';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import ActionStoreHelper from '../Common/ActionStoreHelper';
@@ -22,6 +23,7 @@ class Home extends React.Component {
         var user = this.props.user || {};
         return (
             <div>
+                <SimditorReact></SimditorReact>
                 <AvatarReact user={user} setCurrentTempUser={actions.setCurrentTempUser}></AvatarReact>
             </div>
         );

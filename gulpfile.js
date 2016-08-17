@@ -72,3 +72,22 @@ gulp.task('minifyCommonJS2', function() {
         .pipe(uglify())
         .pipe(gulp.dest('./static/lib/combo'))
 });
+
+
+//压缩js
+gulp.task('minifySimditorJS', function() {
+
+
+    var jsArray = [
+        './static/lib/simditor-2.3.6/scripts/module.js',
+        './static/lib/simditor-2.3.6/scripts/hotkeys.js',
+        './static/lib/simditor-2.3.6/scripts/uploader-bce.js',
+        './static/lib/simditor-2.3.6/scripts/simditor.js'
+    ];
+
+    return gulp.src(jsArray).pipe(concat('simditor-all.js'))
+        .pipe(gulp.dest('./static/lib/combo'))
+        .pipe(rename({suffix: '.min'}))
+        .pipe(uglify())
+        .pipe(gulp.dest('./static/lib/combo'))
+});

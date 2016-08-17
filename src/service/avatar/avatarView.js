@@ -12,6 +12,8 @@ var viewIdIndex = 0;
 var clearTimeout = window.clearTimeout;
 var setTimeout = window.setTimeout;
 
+var CONST_createReplyContent = 'createReplyContent';
+
 function AvatarView(config) {
 
     var pageId = config.pageId;
@@ -260,7 +262,7 @@ function AvatarView(config) {
             '   </div>' +
             '   <div class="cp-reply-cc" style="width: 90%;">' +
             '       <div class="createReplyContentWrap">' +
-            '           <textarea class="createReplyContent"></textarea>' +
+            '           <textarea class="'+CONST_createReplyContent+'"></textarea>' +
             '           <div class="createReplyContent_1">' +
             '               <div class="tempUserInfo">' +
             '                   邮箱:<input type="input" class="createReplyEmail" />' +
@@ -472,7 +474,7 @@ function AvatarView(config) {
 
 
     function onReplyReplySuccess(d, $replyItem, boxCreateReply, replyId) {
-        findDOMByClass('createReplyContent', boxCreateReply).val("");
+        findDOMByClass(CONST_createReplyContent, boxCreateReply).val("");
         var $resultMsg = findDOMByClass('cp-reply2-input-msg', $replyItem);
         if (d.responseCode !== 0) {
             showCreateMessage(replyId, $resultMsg, d.responseText, false);
@@ -504,7 +506,7 @@ function AvatarView(config) {
         var isOK = d.responseCode === 0;
         var $resultMsg = findDOMByClass('cp-reply-msg');
         if (isOK) {
-            findDOMByClass('createReplyContent', boxCreateReply).val("");
+            findDOMByClass(CONST_createReplyContent, boxCreateReply).val("");
 
             var cloudReply = d.data;
             //更新数据
@@ -533,7 +535,7 @@ function AvatarView(config) {
 
 
             var img = findDOMByClass('boxCreateReplyImg', boxCreateReply).attr('src');
-            var msg = findDOMByClass('createReplyContent', boxCreateReply).val();
+            var msg = findDOMByClass(CONST_createReplyContent, boxCreateReply).val();
             var email = findDOMByClass('createReplyEmail', boxCreateReply).val();
             var nickname = findDOMByClass('createReplyNickname', boxCreateReply).val();
 
