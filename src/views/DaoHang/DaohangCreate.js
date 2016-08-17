@@ -45,7 +45,8 @@ export default class CreateDaohang extends React.Component {
         });
         const {user, actions,parent} = this.props;
         actions.insertOrUpdateDhItem({DhItem:values},function(){
-            parent.refreshCategoryList()
+            parent.refreshCategoryList();
+            $(from).find('input').val('');
         });
     }
 

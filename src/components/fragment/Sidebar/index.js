@@ -6,52 +6,49 @@ import { getAllMenu, updateNavPath } from '../../../actions/menu'
 
 import './index.less'
 
-const defaultProps = {
-  items: [],
-  currentIndex: 0
-}
-
-const propTypes = {
-  items: PropTypes.array,
-  currentIndex: PropTypes.number
-}
 
 class Sidebar extends React.Component {
   constructor (props) {
     super(props)
 
-    this.menuClickHandle = this.menuClickHandle.bind(this);
   }
-
   componentDidMount () {
-    this.props.getAllMenu()
   }
 
-  menuClickHandle (item) {
-    this.props.updateNavPath(item.keyPath, item.key)
-  }
 
   render () {
-    const { items } = this.props;
-    let openKey = [];
-    return (<div>Sidebar</div>)
+    var {user} = this.props;
+    var {userInfo,isLogged} = user;
+     return (
+         <div className="cp-sidebar">
+
+           <div className="avatar-wrapper">
+               <div className="avatar-bg1"></div>
+               <img className="avatar" src={userInfo.avatar} />
+               <div className="avatar-bg2"></div>
+           </div>
+
+           <div class="side-menus">
+
+           </div>
+
+         </div>
+     )
   }
 }
 
-Sidebar.propTypes = propTypes;
-Sidebar.defaultProps = defaultProps;
 
 function mapStateToProps(state) {
   return {
-    items: state.menu.items,
-    currentIndex: state.menu.currentIndex
+    //items: state.menu.items,
+    //currentIndex: state.menu.currentIndex
   }
 }
 
 function mapDispatchToProps(dispatch,ownProps) {
   return {
-    getAllMenu: bindActionCreators(getAllMenu, dispatch),
-    updateNavPath: bindActionCreators(updateNavPath, dispatch)
+    //getAllMenu: bindActionCreators(getAllMenu, dispatch),
+    //updateNavPath: bindActionCreators(updateNavPath, dispatch)
   }
 }
 

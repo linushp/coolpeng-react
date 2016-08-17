@@ -13,7 +13,7 @@ export function shallowCompare(component, nextProps, nextState) {
 export default class PureRenderComponent extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         var isOk =  shallowCompare(this, nextProps, nextState);
-        console.log('shallowCompare',isOk)
+        //console.log('shallowCompare',isOk)
         return isOk;
     }
 }

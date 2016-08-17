@@ -228,6 +228,12 @@ function AvatarView(config) {
             findDOMByClass('loginUserInfo').html(userInfo.nickname);
             findDOMByClass("boxCreateReplyImg").attr('src', userInfo.avatar);
         }
+
+        if(isAdmin()){
+            findDOMByClass('cc-btnDelete').show();
+        }else {
+            findDOMByClass('cc-btnDelete').hide();
+        }
     }
 
 
@@ -292,7 +298,7 @@ function AvatarView(config) {
 
     function renderReplyReplyItem(obj) {
         var html = '' +
-            '<div class="cp-reply2-item">' +
+            '<div class="cp-reply2-item" fno="'+obj.floorNumber+'">' +
             '   <a class="cp-reply2-avatar">' +
             '       <img src="' + obj.createAvatar + '"  >' +
             '   </a>' +
@@ -300,6 +306,7 @@ function AvatarView(config) {
             '       <div class="cp-reply2-header">' +
             '           <a class="cp-reply2-name">' + toHtmlEncode(obj.createNickname) + '</a> : &nbsp;' +
             '           <i class="cp-reply2-time">' + toPrettyDate(obj.createTime) + '</i>' +
+            '           <i class="cp-reply2-delete">删除</i>' +
             '       </div>' +
             '       <div class="cp-reply2-text">' + toHtmlEncode(obj.replyContent) + '</div>' +
             '   </div>' +
@@ -347,11 +354,12 @@ function AvatarView(config) {
         var createIpStr = (m.createIpStr || "").replace(/;/gm, "");
 
         return '' +
-            '<div class="cp-reply-item" data-id="' + m.id + '">' +
+            '<div class="cp-reply-item" mid="'+m.id+'" data-id="' + m.id + '">' +
             '   <div class="cp-reply-avatar">' +
             '       <img src="' + m.createAvatar + '" />' +
             '   </div>' +
             '   <span class="cc-floorNumber"> ' + m.floorNumber + ' 楼 </span>' +
+            '   <span class="cc-btnDelete"> 删除 </span>' +
             '   <div class="cp-reply-cc">' +
             '       <span class="cc-header register-' + (!!createUserId) + '"> ' + toHtmlEncode(m.createNickname) + '</span>' +
             '       <span class="cc-ipAddr"> ' + createIpStr + '</span>' +
@@ -360,7 +368,7 @@ function AvatarView(config) {
             '           <span class="cc-time"> ' + toPrettyDate(m.createTime) + '</span>' +
             '           <a class="cc-like"> 赞(<span>' + m.likeCount + '</span>) </a>' +
             '           <a class="cc-reply"> 回复 </a>' +
-            '           <a class="cc-reply-view cp-reply-btn-layer"  mid="' + m.id + '"> 查看回复(<span>' + m.maxFloorNumber + '</span>) </a>' +
+            '           <a class="cc-reply-view cp-reply-btn-layer"  mid="' + m.id + '"> 查看回复(<span>' +  getReplyReplyCount(m) + '</span>) </a>' +
             '       </div>' +
             '       <i class="clear"></i>' +
             '   </div>' +
@@ -420,6 +428,11 @@ function AvatarView(config) {
         return findDOM("." + className, rootElement);
     }
 
+    function getReplyReplyCount(replyObj){
+        replyObj = replyObj || {};
+        var replyList = replyObj.replyList || [];
+        return replyList.length;
+    }
 
     function showAvatarLoading($dom) {
         var $loading = $dom.closest(".cp-loading-wrap").find('.cp-loading');
@@ -477,7 +490,7 @@ function AvatarView(config) {
             replyObj.maxFloorNumber = replyNew.maxFloorNumber;
 
             //DOM更新COUNT
-            findDOMByClass('cc-reply-view', $replyItem).find('span').html(d.data.maxFloorNumber);
+            findDOMByClass('cc-reply-view', $replyItem).find('span').html(getReplyReplyCount(replyObj));
             if (IS_SHOW_REPLY2) {
                 //DOM更新LIST
                 var html = renderReplyReplyList(d.data, MAX_SHOW_REPLY2_COUNT);
@@ -626,6 +639,22 @@ function AvatarView(config) {
             });
         });
 
+        //点击删除留言按钮
+        onClickClazzName('cc-btnDelete',function(){
+            var $btn = $(this);
+            var $item = $btn.closest('.cp-reply-item');
+            var mid = $item.attr('mid');
+            avatarApi.deleteReply({
+                replyId: mid,
+            }, function (d) {
+                if(d.responseCode===0){
+                    $item.addClass('cp-reply-deleted');
+                }
+            });
+        });
+
+
+
         onClick(".cp-reply-pagination a", function (e) {
             e.stopPropagation();
             e.preventDefault();
@@ -643,7 +672,44 @@ function AvatarView(config) {
             hideReplyLayer();
         });
 
+
+        //删除二级回复按钮
+        $(document).on('click', '.cp-reply2-delete', function () {
+            var $btn = $(this);
+            var $item2 = $btn.closest('.cp-reply2-item');
+            var $item = $btn.closest('.cp-reply-item');
+            var replyId = $item.attr('mid');
+            var floorNumber = $item2.attr('fno');
+
+            avatarApi.deleteReplyReply({
+                replyId: replyId,
+                floorNumber:floorNumber
+            }, function (d) {
+                if(d.responseCode===0){
+                    var replyNew = d.data;
+                    //1、数据更新
+                    var replyObj = getReplyObjById(replyId) || {};
+                    replyObj.replyList = replyNew.replyList;
+                    replyObj.hot = replyNew.hot;
+                    replyObj.maxFloorNumber = replyNew.maxFloorNumber;
+
+
+                    var $replyItem = getViewRootDOM().find('.cp-reply-item[mid='+replyId+']');
+                    //2、DOM更新COUNT
+                    findDOMByClass('cc-reply-view', $replyItem).find('span').html(getReplyReplyCount(replyObj));
+                    if (IS_SHOW_REPLY2) {
+                        //DOM更新LIST
+                        var html = renderReplyReplyList(d.data, MAX_SHOW_REPLY2_COUNT);
+                        findDOMByClass('cp-reply2-list', $replyItem).html(html);
+                    }
+                    var html = renderItemView(replyObj, 99999, true);
+                    showReplyLayer(html);
+                }
+            });
+        });
+
     }
+
 
 
     function initOutAPI(obj) {

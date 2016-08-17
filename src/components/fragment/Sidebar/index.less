@@ -1,20 +1,39 @@
-.ant-layout-aside .ant-layout-logo {
-  width: 150px;
-  height: 32px;
-  background: #333;
-  border-radius: 6px;
-  margin: 16px 24px 16px 28px;
+
+.cp-sidebar{
+  img.avatar{
+    border-radius: 10000px;
+    display: block;
+    //margin: 0 auto;
+    width: 100px;
+    top: 50px;
+    left: 75px;
+    z-index: 2;
+    position: absolute;
+    border: 2px solid #FFFFFF;
+  }
+
+  .avatar-wrapper{
+    position: relative;
+    height: 200px;
+  }
+
+  div.avatar-bg1{
+    background: url("http://image.coolpeng.cn/avatar/lz-0001-1000/lz-0944.jpg") no-repeat;
+    background-size: cover;
+    height: 100px;
+    z-index: 0;
+    position: absolute;
+    width: 100%;
+    opacity: 0.5;
+  }
+  div.avatar-bg2{
+    z-index: 1;
+    position: absolute;
+    height: 100px;
+    width: 100%;
+    bottom:0;
+    background: #e9e8e8;
+    opacity: 0.5;
+  }
 }
 
-.ant-layout-aside .ant-layout-sider {
-  width: 224px;
-  background: #404040;
-  position: absolute;
-  overflow: auto;
-  padding-bottom: 24px;
-  height: 100%;
-}
-
-.ant-layout-aside .ant-layout-sider > .ant-menu {
-  margin-bottom: 20px;
-}
