@@ -550,116 +550,45 @@ Uploader = (function(superClass) {
   };
 
 
-
-  var loadStaticCache = {};
-  function loadStaticJS(url, callback) {
-    if (loadStaticCache[url]) {
-      callback();
-      return;
-    }
-    var script = document.createElement("script");
-    script.src = url;
-    script.type = 'text/javascript';
-    script.language = 'javascript';
-    script.onload = script.onreadstatechange = function () {
-      callback();
-      loadStaticCache[url] = true;
-    };
-    document.getElementsByTagName("body")[0].appendChild(script);
-  };
-
-  function createUUID() {
-    var randomStr = 'xxxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
-    return randomStr + new Date().getTime();
-  }
-
-  function getSuffix (url) {
-    if(!url){
-      return "";
-    }
-    try {
-      var index = url.lastIndexOf('.');
-      if (index <= 0) return '';
-      return url.substr(index);
-    }catch (e){
-      return '';
-    }
-  }
-
   Uploader.prototype._xhrUpload = function(file) {
 
     var _this = this;
 
-    loadStaticJS('/static/lib/bce-bos-uploader.bundle.min.js',function(){
 
-      var bosConfig = {
-        credentials: {
-          ak: 'f0131c5559d3415e956706caf01d1051',
-          sk: 'ba90fcb9ee2441faa32f49a909192cc9'
-        },
-        endpoint: 'http://ubibi.gz.bcebos.com' // 根据您选用bos服务的区域配置相应的endpoint
-      };
-      var bucket = 'upload'; // 设置您想要操作的bucket
-      var client = new baidubce.sdk.BosClient(bosConfig);
+    var onSuccess = function(result){
+      // 上传完成，添加您的代码
+      //console.log('上传成功');
+      //var result = {
+      //  success: true,
+      //  msg: null,
+      //  file_path: 'http://ubibi.coolpeng.cn/upload/' + saveName
+      //};
+      _this.trigger('uploadprogress', [file, 100, 100]);
+      _this.trigger('uploadcomplete', [file]);
+      _this.trigger('uploadsuccess', [file, result]);
+      jQuery(document).trigger('uploadsuccess', [file, result, _this]);
+    };
 
-      //var file = evt.target.files[0]; // 获取要上传的文件
-      var key = file.name; // 保存到bos时的key，您可更改，默认以文件名作为key
-      var blob = file.obj;
 
-      var ext = key.split(/\./g).pop();
-      var mimeType = baidubce.sdk.MimeType.guess(ext);
-      if (/^text\//.test(mimeType)) {
-        mimeType += '; charset=UTF-8';
-      }
-      var options = {
-        'Content-Type': mimeType
-      };
 
-      //var saveName = new Date().getTime() + '' + Math.floor(Math.random() * 1000000) + key;
-      var saveName = new Date().getTime() + '' + createUUID()+getSuffix(key);
+    var onError = function(msg){
+      _this.trigger('uploadcomplete', [file]);
+      _this.trigger('uploaderror', [file, {
+        statusText: '',
+        responseText: JSON.stringify({
+          msg: msg || '上传失败'
+        })
+      }]);
+    };
 
-      client.putObjectFromBlob(bucket, saveName, blob, options)
-          .then(function (res) {
-            // 上传完成，添加您的代码
-            console.log('上传成功');
-            var result = {
-              success: true,
-              msg: null,
-              file_path: 'http://ubibi.coolpeng.cn/upload/' + saveName
-            };
-            _this.trigger('uploadprogress', [file, 100, 100]);
-            _this.trigger('uploadcomplete', [file]);
-            _this.trigger('uploadsuccess', [file, result]);
-            $(document).trigger('uploadsuccess', [file, result, _this]);
-          })
-          .catch(function (err) {
-            // 上传失败，添加您的代码
-            console.error(err);
+    var onProgress = function(loaded,total){
+        // 添加您的代码
+        var percentage = (loaded /total) * 100;
+        console.log('上传中，已上传了' + percentage + '%');
+        _this.trigger('uploadprogress', [file, loaded, total]);
+    };
 
-            _this.trigger('uploadcomplete', [file]);
-
-            _this.trigger('uploaderror', [file, {
-              statusText: '',
-              responseText: JSON.stringify({
-                msg: '上传失败'
-              })
-            }]);
-          });
-
-      client.on('progress', function (evt) {
-        // 监听上传进度
-        if (evt.lengthComputable) {
-          // 添加您的代码
-          var percentage = (evt.loaded / evt.total) * 100;
-          console.log('上传中，已上传了' + percentage + '%');
-          _this.trigger('uploadprogress', [file, evt.loaded, evt.total]);
-        }
-      });
-
-    })
+    _this.opts.onXhrUpload(file,_this,onSuccess,onError,onProgress);
 
   };
 
