@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import {loadStaticJS,loadStaticCSS,createUUID} from '../../core/utils/index';
+import StaticConfig from '../../core/utils/StaticConfig';
 import './index.less';
 /**
  * 支持一个入口页面,功能实现是异步加载的
@@ -22,7 +23,7 @@ function getSuffix (url) {
 
 function onXhrUpload(file,_this,onSuccess,onError,onProgress) {
 
-    loadStaticJS('/static/lib/bce-bos-uploader.bundle.min.js', function () {
+    loadStaticJS(StaticConfig.BCE_UPLOADER_JS, function () {
 
         var baidubce = window.baidubce;
 
@@ -111,8 +112,8 @@ export default class SimditorReact extends React.Component {
 
         var that = this;
 
-        loadStaticCSS('/static/lib/combo/simditor.css', function () {
-            loadStaticJS('/static/lib/combo/simditor-all.js', function () {
+        loadStaticCSS(StaticConfig.SIMDITOR_CSS, function () {
+            loadStaticJS(StaticConfig.SIMDITOR_JS, function () {
                 this.isInited = true;
                 var Simditor = window.Simditor;
                 console.log('Simditor:::', Simditor);

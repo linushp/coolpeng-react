@@ -8,9 +8,12 @@ import configureStore from './store/configureStore';
 
 import App from './views/App';
 import Home from './views/Home';
-import Article from './views/Article/Article';
-import ArticleList from './views/Article/ArticleList';
-import ArticleSingle from './views/Article/ArticleSingle';
+
+import NoteApp from './views/Note/NoteApp';
+import NoteList from './views/Note/NoteList';
+import NoteSingle from './views/Note/NoteSingle';
+import NoteSideBar from './views/Note/NoteSideBar';
+
 import DaoHangIndex from './views/DaoHang/index';
 
 var history = useRouterHistory(createHistory)({ basename: '' });
@@ -33,10 +36,9 @@ ReactDOM.render(
                 <IndexRedirect to="daohang"/>
                 <Route component={App}>
                     <Route path="home" component={Home}/>
-                    <Route path="article" component={Article}>
-                        <IndexRedirect to="list/"/>
-                        <Route path="list/" component={ArticleList}/>
-                        <Route path="single/:id" component={ArticleSingle}/>
+                    <Route path="note"  components={{content:NoteApp,sidebar:NoteSideBar}}>
+                        <IndexRedirect to="index"/>
+                        <Route path="index" component={NoteList}/>
                     </Route>
                     <Route path="daohang" getComponent={DaoHangIndex.getComponent} > </Route>
                 </Route>

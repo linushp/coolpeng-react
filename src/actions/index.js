@@ -1,10 +1,10 @@
-import * as article from './article';
+import * as note from './note';
 import * as daohang from './daohang';
 import * as menu from './menu';
 import * as user from './user';
 
 export default {
-    article:article,
+    note:note,
     daohang:daohang,
     menu:menu,
     user:user

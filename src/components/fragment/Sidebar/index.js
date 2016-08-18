@@ -29,7 +29,7 @@ class Sidebar extends React.Component {
            </div>
 
            <div class="side-menus">
-
+               {this.props.sidebar}
            </div>
 
          </div>

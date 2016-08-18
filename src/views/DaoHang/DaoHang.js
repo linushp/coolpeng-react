@@ -2,10 +2,9 @@ import React, {PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import PureRenderComponent from '../../core/PureRenderComponent';
-//import daohangActions from '../../actions/daohang';
+import ActionStoreHelper from '../Common/ActionStoreHelper';
 import DaohangCreate from './DaohangCreate';
 import DaoHangCategory from './DaoHangCategory';
-import ActionStoreHelper from '../Common/ActionStoreHelper';
 import './index.less';
 
 class DaoHang extends PureRenderComponent {

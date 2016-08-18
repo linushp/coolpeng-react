@@ -45,6 +45,11 @@ export default class Header extends React.Component {
                     <Link to="/daohang">
                         daohang
                     </Link>
+
+                    &nbsp;&nbsp;&nbsp;
+                    <Link to="/note/index">
+                        Note
+                    </Link>
                     <div className="float-l">
                     </div>
                     <div className="float-r login-btn">
