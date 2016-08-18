@@ -41,8 +41,12 @@ export default CreateCloudRestReducer({
         },
         'getNoteById': function (state, res, restState, meta) {
             if (restState.isSuccess()) {
-                var NoteVO = Immutable.fromJS(res.data || {});
-                state = state.set('NoteVO', NoteVO);
+                if(res.data){
+                    var NoteVO = Immutable.fromJS(res.data);
+                    state = state.set('NoteVO', NoteVO);
+                }else {
+                    state = state.set('NoteVO', null);
+                }
             }
             return state;
         },

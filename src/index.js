@@ -10,8 +10,6 @@ import App from './views/App';
 import Home from './views/Home';
 
 import NoteApp from './views/Note/NoteApp';
-import NoteList from './views/Note/NoteList';
-import NoteSingle from './views/Note/NoteSingle';
 import NoteSideBar from './views/Note/NoteSideBar';
 
 import DaoHangIndex from './views/DaoHang/index';
@@ -36,10 +34,8 @@ ReactDOM.render(
                 <IndexRedirect to="daohang"/>
                 <Route component={App}>
                     <Route path="home" component={Home}/>
-                    <Route path="note"  components={{content:NoteApp,sidebar:NoteSideBar}}>
-                        <IndexRedirect to="index"/>
-                        <Route path="index" component={NoteList}/>
-                    </Route>
+                    <Route path="note"  components={{content:NoteApp,sidebar:NoteSideBar}} />
+                    <Route path="note/:currentPath"  components={{content:NoteApp,sidebar:NoteSideBar}} />
                     <Route path="daohang" getComponent={DaoHangIndex.getComponent} > </Route>
                 </Route>
             </Route>

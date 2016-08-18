@@ -15,8 +15,8 @@ export default class AvatarReact extends React.Component {
 
     }
 
-    getUserInfo() {
-        var userObj = this.props.user || {};
+    getUserInfo(props) {
+        var userObj = props.user || {};
         var userInfo = userObj.userInfo;
         return {
             nickname: userInfo.nickname,
@@ -32,10 +32,10 @@ export default class AvatarReact extends React.Component {
 
 
     componentDidMount() {
-        this.initAvatarView();
+        this.initAvatarView(this.props);
     }
 
-    initAvatarView() {
+    initAvatarView(props) {
 
         if (this.isInited === true) {
             return;
@@ -47,9 +47,10 @@ export default class AvatarReact extends React.Component {
 
             var AvatarView = require('./avatarView');
             console.log('Avatar initAvatarView2', new Date().getTime());
-            var pageId = this.props.pageId || "test";
-            var setCurrentTempUser = this.props.setCurrentTempUser;
-            var userInfo = this.getUserInfo();
+            var pageId = props.pageId || "test";
+            var setCurrentTempUser = props.setCurrentTempUser;
+            var userInfo = this.getUserInfo(props);
+
 
             var avatarRoot = this.refs.avatarRoot.getDOMNode();//拿到了原生DOM
             var view = new AvatarView({
@@ -87,6 +88,10 @@ export default class AvatarReact extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        return false;
+    }
+
+    isUserChanged(nextProps){
         var userObj = this.props.user || {};
         var userObjNext = nextProps.user || {};
         var user1 = userObj.userInfo || {};
@@ -100,15 +105,30 @@ export default class AvatarReact extends React.Component {
         return false;
     }
 
-    componentDidUpdate() {
-        if (this.viewHandler) {
-            console.log('componentDidUpdate')
-            var userInfo = this.getUserInfo();
-            this.viewHandler.outSetUserInfo(userInfo);
-        } else {
-            this.initAvatarView();
+
+    componentWillReceiveProps(nextProps){
+        var that = this;
+        var pageId1 = nextProps.pageId;
+        var pageId2 = this.props.pageId;
+        var isPageIdChanged = pageId1!=pageId2;
+        var isUserChanged = this.isUserChanged(nextProps);
+        if(isPageIdChanged || isUserChanged){
+            if (that.viewHandler) {
+                window.setTimeout(function(){
+                    if(isPageIdChanged){
+                        that.viewHandler.outSetPageIdAndRender(pageId1);
+                    }
+                    if(isUserChanged){
+                        that.userInfo = that.getUserInfo(nextProps);
+                        that.viewHandler.outSetUserInfo(userInfo);
+                    }
+                },100);
+            }else {
+                that.initAvatarView(nextProps);
+            }
         }
     }
+
 
     render() {
         return (

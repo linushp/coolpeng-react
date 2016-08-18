@@ -714,10 +714,21 @@ function AvatarView(config) {
 
 
 
-    function initOutAPI(obj) {
-        obj.outSetUserInfo = function (newInfo) {
+    function initOutAPI(that) {
+        that.outSetUserInfo = function (newInfo) {
             userInfo = Object.assign({}, userInfo, newInfo);
             renderUserInfo();
+        };
+        that.outSetPageIdAndRender = function(pid){
+            pageId = pid;
+            queryCondition = {
+                pageId: pageId,
+                pageSize:  30,
+                pageNumber:  1,
+                orderType:  1  //最新1，最早2，最热3
+            };
+            hideReplyLayer();
+            queryAndView(that);
         }
     }
 

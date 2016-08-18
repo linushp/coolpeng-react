@@ -25,7 +25,7 @@ function getObjectByConfig(obj, config) {
             var key = keys[i];
             var path = config[key] || '';
             result[key] = getObjValueInPath(obj, path);
-            if (!result[key]) {
+            if (result[key]===undefined) {
                 console.log(`[ERROR]cannot get Object by key : ${key} and path: ${path} `);
             }
         }

@@ -1,3 +1,6 @@
+var _undefined = window.undefined;
+
+
 export function isPromise(value) {
     if (value !== null && typeof value === 'object') {
         return value.promise && typeof value.promise.then === 'function';
@@ -63,6 +66,20 @@ export function createUUID() {
 //  return "http://image.coolpeng.cn/static/" + p;
 //}
 
+export function getDataFromImmutableOrPlain(obj, key) {
+    if (!obj) {
+        return null;
+    }
+    var value = _undefined;
+    if (isFunction(obj.get)) {
+        value = obj.get(key);
+    }
+    if (value === _undefined) {
+        value = obj[key];
+    }
+
+    return value;
+}
 
 /**
  * a = {
@@ -89,9 +106,7 @@ export function getObjValueInPath(obj, str) {
                 return null;
             }
             var prop = propArr[i];
-
-            tmpObj = tmpObj[prop];
-
+            tmpObj = getDataFromImmutableOrPlain(tmpObj, prop);
             i++;
         }
         return tmpObj;
@@ -102,6 +117,9 @@ export function getObjValueInPath(obj, str) {
     return null;
 }
 
+export function isFunction(x) {
+    return Object.prototype.toString.call(x) === '[object Function]';
+}
 
 export function isArray(x) {
     return Object.prototype.toString.call(x) === '[object Array]';
@@ -196,14 +214,34 @@ export function loadStaticCSS(url, callback) {
 }
 
 
-
-export function immutableListMap(itemList,callback){
+export function immutableListMap(itemList, callback) {
     var resultList = [];
-    if(itemList){
-        itemList.forEach(function(item,i){
-            resultList.push(callback(item,i));
+    if (itemList) {
+        itemList.forEach(function (item, i) {
+            resultList.push(callback(item, i));
         });
     }
-    debugger;
     return resultList;
+}
+
+
+export function className(obj) {
+    var arr = [];
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            var value = obj[key];
+            if (value === true) {
+                arr.push(key);
+            }
+        }
+    }
+    return arr.join(' ');
+}
+
+export function globalVar(key,value){
+    window['COOLPENG_TEMP_VAR'] = window['COOLPENG_TEMP_VAR'] || {};
+    if(value!=undefined){
+        window['COOLPENG_TEMP_VAR'][key] = value;
+    }
+    return window['COOLPENG_TEMP_VAR'][key];
 }
