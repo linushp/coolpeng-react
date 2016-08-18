@@ -56,7 +56,12 @@ class NoteSingle extends PureRenderComponent {
 
     render() {
         const {NoteVO,user,actions,isEditing} = this.props;
-        console.log('NoteVO,isEditing',NoteVO,isEditing);
+        try {
+            console.log('NoteVO,isEditing',NoteVO.get('id'),isEditing);
+        }catch (e){
+
+        }
+
         if(!isEditing){
             if(!NoteVO){
                 return <div className="note-blank"></div>

@@ -82,7 +82,11 @@ function onXhrUpload(file,_this,onSuccess,onError,onProgress) {
 }
 
 
-
+/**
+ * 可以直接使用
+ * <SimditorReact ref="SimditorReact" content={content}></SimditorReact>
+ * content 的内容变化后,会自动重新渲染.
+ */
 export default class SimditorReact extends React.Component {
     constructor(props) {
         super(props);
