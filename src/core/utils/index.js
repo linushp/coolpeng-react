@@ -89,7 +89,9 @@ export function getObjValueInPath(obj, str) {
                 return null;
             }
             var prop = propArr[i];
+
             tmpObj = tmpObj[prop];
+
             i++;
         }
         return tmpObj;
@@ -191,4 +193,17 @@ export function loadStaticCSS(url, callback) {
         loadStaticCache[url] = true;
     };
     document.getElementsByTagName("head")[0].appendChild(link);
+}
+
+
+
+export function immutableListMap(itemList,callback){
+    var resultList = [];
+    if(itemList){
+        itemList.forEach(function(item,i){
+            resultList.push(callback(item,i));
+        });
+    }
+    debugger;
+    return resultList;
 }
