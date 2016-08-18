@@ -20,9 +20,9 @@ function getSuffix (url) {
     }
 }
 
-function onXhrUpload(file,_this,onSuccess,onError,onProgress){
+function onXhrUpload(file,_this,onSuccess,onError,onProgress) {
 
-    loadStaticJS('/static/lib/bce-bos-uploader.bundle.min.js',function(){
+    loadStaticJS('/static/lib/bce-bos-uploader.bundle.min.js', function () {
 
         var baidubce = window.baidubce;
 
@@ -50,7 +50,7 @@ function onXhrUpload(file,_this,onSuccess,onError,onProgress){
         };
 
         //var saveName = new Date().getTime() + '' + Math.floor(Math.random() * 1000000) + key;
-        var saveName = new Date().getTime() + '' + createUUID()+getSuffix(key);
+        var saveName = new Date().getTime() + '' + createUUID() + getSuffix(key);
 
         client.putObjectFromBlob(bucket, saveName, blob, options)
             .then(function (res) {
