@@ -4,6 +4,7 @@ import PureRenderComponent from '../../core/PureRenderComponent';
 import ActionStoreHelper from '../Common/ActionStoreHelper';
 import {immutableListMap,className,globalVar} from '../../core/utils/index';
 import {toPathParamString} from './NoteFunctions';
+import ReactForm from '../../components/form/ReactForm';
 import './index.less';
 
 function getViewNoteURLPagination(pn) {
@@ -23,7 +24,11 @@ class NoteList extends PureRenderComponent {
 
     constructor(props) {
         super(props);
+        this.SearchFormLayout = [
+            {name: 'Search', type: 'input'}
+        ];
     }
+
 
     componentWillMount() {
         const {actions} = this.props;
@@ -40,8 +45,16 @@ class NoteList extends PureRenderComponent {
         this.context.router.push(url);
     }
 
+
+    onSearchNoteList(){
+        var searchText = this.getReactFormValue('SearchForm','Search');
+        const {reloadNoteListByCategory} = this.props;
+        reloadNoteListByCategory(searchText);
+    }
+
+
     render() {
-        const {NoteList,NoteListTotalCount,NoteListPageSize,NoteListPageNumber,pathParams} = this.props;
+        const {NoteList,NoteListTotalCount,NoteListPageSize,NoteListPageNumber,pathParams,NoteListSearchTitleLike} = this.props;
 
         var path = '/note/';
         if (pathParams.g) {
@@ -52,9 +65,19 @@ class NoteList extends PureRenderComponent {
         }
         var createPath = path + '-e1';
         var that  = this;
+
+        var searchFormValues = {
+            Search:NoteListSearchTitleLike
+        };
+
         return (
             <div>
                 <Link to={createPath}>新建Note</Link>
+
+                <div>
+                    <ReactForm ref="SearchForm" layout={this.SearchFormLayout} values={searchFormValues}></ReactForm>
+                    <button onClick={this.onSearchNoteList.bind(this)}>查找</button>
+                </div>
 
                 <div className="note-list-list">
                     {immutableListMap(NoteList, function (v) {

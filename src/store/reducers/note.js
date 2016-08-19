@@ -12,6 +12,7 @@ const initialState = Immutable.fromJS({
     NoteListTotalCount: 0,
     NoteListPageSize: 0,
     NoteListPageNumber: 0,
+    NoteListSearchTitleLike:'',
 
     //当前显示的文章
     NoteVO: null
@@ -50,6 +51,9 @@ export default CreateCloudRestReducer({
          * @returns {*}
          */
         'getNoteListByCategory': function (state, res, restState, meta) {
+
+            state = state.set('NoteListSearchTitleLike',meta.reqData.titleLike || '');
+
             if (restState.isSuccess()) {
                 var NoteList = Immutable.fromJS(res.data || []);
                 state = state.set('NoteList', NoteList);
@@ -119,8 +123,21 @@ export default CreateCloudRestReducer({
                 state = removeImmutableListObj(state,'NoteList',finder);
             }
             return state;
-        }
-    },
+        },
 
-    switchType: {}
+
+        /**
+         *
+         * @param state
+         * @param res
+         * @param restState
+         * @param meta
+         */
+        changeSearchText:function(state, res, restState, meta){
+            var data = res.data || '';
+            state = state.set('NoteListSearchTitleLike',data);
+            return state;
+        }
+
+    }
 });

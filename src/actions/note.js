@@ -1,4 +1,10 @@
 import CloudRestAction from '../core/CloudRestAction';
+
+
+var staticFunc = [
+    "changeSearchText"
+];
+
 var funcNameList = [
     'getNoteCategory',
     'getNoteListByCategory',
@@ -6,6 +12,7 @@ var funcNameList = [
     'saveOrUpdateNote',
     'deleteNote'
 ];
+
 var prefix = "note";
-var restAction = new CloudRestAction(prefix,funcNameList);
-export default restAction;
+var actions = new CloudRestAction(prefix,funcNameList,staticFunc);
+export default actions;

@@ -151,11 +151,11 @@ export default class SimditorReact extends React.Component {
         if (that.editor) {
             that.editor.setValue(contentValue);
             console.log('that.editor.setValue(contentValue);111111');
-            this.contentValue = contentValue;
+            that.contentValue = contentValue;
         } else {
             that.initSimditorView(function () {
                 that.editor.setValue(contentValue);
-                this.contentValue = contentValue;
+                that.contentValue = contentValue;
                 console.log('that.editor.setValue(contentValue);22222');
             })
         }

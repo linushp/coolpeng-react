@@ -1,7 +1,7 @@
 import {Link} from 'react-router'
 import PureRenderComponent from '../../core/PureRenderComponent';
 import ActionStoreHelper from '../Common/ActionStoreHelper';
-import {immutableListMap,className,globalVar} from '../../core/utils/index';
+import {immutableListMap,className,globalVar,isEmpty,_undefined} from '../../core/utils/index';
 import {parsePathParams,getCurrentCategoryByPath,isPathParamChanged} from './NoteFunctions';
 import NoteListWgt from './NoteListWgt';
 import NoteSingleWgt from './NoteSingleWgt';
@@ -16,19 +16,43 @@ class NoteApp extends PureRenderComponent {
     componentWillMount() {
         let currentPath = this.props.routeParams.currentPath;
         let pathParams = parsePathParams(currentPath);
-        let {actions,user} = this.props;
+        let {actions,user,NoteListSearchTitleLike} = this.props;
         var userInfo = user.userInfo || {};
-        actions.getNoteCategory({ownerUserId: userInfo.id});
-        actions.getNoteListByCategory({pathParams: pathParams, pageSize: pathParams.ps, pageNumber: pathParams.pn});
-        actions.getNoteById({id: pathParams.n});//nextParams.n 有可能为null
+        if (isEmpty(this.props.CategoryList)) {
+            actions.getNoteCategory({ownerUserId: userInfo.id});
+        }
+        if (isEmpty(this.props.NoteList)) {
+            var titleLike = NoteListSearchTitleLike;
+            actions.getNoteListByCategory({
+                pathParams: pathParams,
+                pageSize: pathParams.ps,
+                pageNumber: pathParams.pn,
+                titleLike: titleLike
+            });
+        }
+        if (isEmpty(this.props.NoteVO)) {
+            actions.getNoteById({id: pathParams.n});//nextParams.n 有可能为null
+        }
     }
 
 
-    reloadNoteListByCategory() {
+    /**
+     * 重新加载下文章列表
+     * @param titleLike
+     */
+    reloadNoteListByCategory(titleLike) {
         let currentPath = this.props.routeParams.currentPath;
         let pathParams = parsePathParams(currentPath);
-        let {actions,user} = this.props;
-        actions.getNoteListByCategory({pathParams: pathParams, pageSize: pathParams.ps, pageNumber: pathParams.pn});
+        let {actions,user,NoteListSearchTitleLike} = this.props;
+        if (titleLike === _undefined) {
+            titleLike = NoteListSearchTitleLike;
+        }
+        actions.getNoteListByCategory({
+            pathParams: pathParams,
+            pageSize: pathParams.ps,
+            pageNumber: pathParams.pn,
+            titleLike: titleLike
+        });
     }
 
 
@@ -36,12 +60,18 @@ class NoteApp extends PureRenderComponent {
         var nextPath = nextProps.routeParams.currentPath;
         var currentPath = this.props.routeParams.currentPath;
 
-        let {actions} = this.props;
+        let {actions,NoteListSearchTitleLike} = this.props;
         let nextParams = parsePathParams(nextPath);
         var paramChanged = isPathParamChanged(nextPath, currentPath);
 
+        //左边改变了路由
         if (paramChanged.g || paramChanged.m || paramChanged.ps || paramChanged.pn) {
-            actions.getNoteListByCategory({pathParams: nextParams, pageSize: nextParams.ps, pageNumber: nextParams.pn});
+            actions.getNoteListByCategory({
+                pathParams: nextParams,
+                pageSize: nextParams.ps,
+                pageNumber: nextParams.pn,
+                titleLike: (paramChanged.g || paramChanged.m)?'':NoteListSearchTitleLike
+            });
         }
 
         if (paramChanged.n) {
@@ -51,7 +81,7 @@ class NoteApp extends PureRenderComponent {
     }
 
     render() {
-        const {NoteVO,NoteList,NoteListTotalCount,NoteListPageSize,NoteListPageNumber,CategoryList,user,actions} = this.props;
+        const {NoteVO,NoteList,NoteListTotalCount,NoteListPageSize,NoteListPageNumber,NoteListSearchTitleLike,CategoryList,user,actions} = this.props;
         //g1-m2-n3
         let currentPath = this.props.routeParams.currentPath;
         let pathParams = parsePathParams(currentPath);
@@ -66,8 +96,10 @@ class NoteApp extends PureRenderComponent {
                         NoteListTotalCount,
                         NoteListPageSize,
                         NoteListPageNumber,
+                        NoteListSearchTitleLike,
                         pathParams,
-                        actions
+                        actions,
+                        reloadNoteListByCategory
                     }} ></NoteListWgt>
                 </div>
                 <div className="note-content">
@@ -85,9 +117,9 @@ NoteApp.STATE_CONFIG = {
     NoteListTotalCount: 'note.NoteListTotalCount',
     NoteListPageSize: 'note.NoteListPageSize',
     NoteListPageNumber: 'note.NoteListPageNumber',
+    NoteListSearchTitleLike: 'note.NoteListSearchTitleLike',
     CategoryList: 'note.CategoryList',
     NoteVO: 'note.NoteVO',
-
     user: 'user'
 };
 
@@ -97,6 +129,7 @@ NoteApp.ACTION_CONFIG = {
     'getNoteById': 'note.getNoteById',
     'saveOrUpdateNote': 'note.saveOrUpdateNote',
     'deleteNote': 'note.deleteNote',
+    'changeSearchText': 'note.changeSearchText',
     'setCurrentTempUser': 'user.setCurrentTempUser'
 };
 

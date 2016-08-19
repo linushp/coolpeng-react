@@ -210,6 +210,10 @@ export default class ReactForm extends React.Component {
         return values;
     }
 
+    getValue(name){
+        return this.getValues()[name];
+    }
+
     isValuesChanged(values) {
         if (this.values === values) {
             return false;

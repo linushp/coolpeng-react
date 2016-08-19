@@ -21,12 +21,32 @@ function createCloudRestAction(prefix, funcName) {
     }
 }
 
+
+function createCloudStaticAction(prefix, funcName){
+    return function (data) {
+        return {
+            type: prefix + '_' + funcName,
+            payload: {
+                data: data
+            }
+        }
+    }
+}
+
+
 export default class CloudRestAction {
-    constructor(prefix, funcNameList) {
+    constructor(prefix, funcNameList,staticFunc) {
         var that = this;
         for (var i = 0; i < funcNameList.length; i++) {
             var funcName = funcNameList[i];
             that[funcName] = createCloudRestAction(prefix, funcName);
+        }
+
+        if(staticFunc && staticFunc.length>0){
+            for (var j = 0; j < staticFunc.length; j++) {
+                var funcName2 = staticFunc[j];
+                that[funcName2] = createCloudStaticAction(prefix, funcName2);
+            }
         }
     }
 }

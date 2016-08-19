@@ -16,4 +16,11 @@ export default class PureRenderComponent extends React.Component {
         //console.log('shallowCompare',isOk)
         return isOk;
     }
+
+
+    getReactFormValue(refName,formItemName){
+        var ref = this.refs[refName];
+        return ref.getValue(formItemName);
+    }
+
 }

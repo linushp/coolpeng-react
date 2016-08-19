@@ -139,12 +139,37 @@ export function getObjValueInPath(obj, str) {
     return null;
 }
 
+export function isType(x,type){
+    type = type.trim();
+    return Object.prototype.toString.call(x) === '[object '+type+']';
+}
+
 export function isFunction(x) {
-    return Object.prototype.toString.call(x) === '[object Function]';
+    return isType(x,'Function');
 }
 
 export function isArray(x) {
-    return Object.prototype.toString.call(x) === '[object Array]';
+    return isType(x,'Array');
+}
+
+export function isNumber(x){
+    return isType(x,'Number');
+}
+
+export function isEmpty(x){
+    if(!x){
+        return true;
+    }
+
+    if(isFunction(x.isEmpty)){
+        return x.isEmpty();
+    }
+
+    if(!isFunction(x.toJS) && x.length===0){
+        return true;
+    }
+
+    return false;
 }
 
 export function shallowEqual(objA, objB) {

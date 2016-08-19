@@ -12,11 +12,15 @@ export default function CloudRestReducer(config) {
      * @returns {*}
      */
     function getReducer(actionType) {
+
         var typeArr = actionType.split("_");//daohang   insert   SUCCESS
+
+        var prefix = typeArr[0];
+        var restName = typeArr[1];
+        var restState = typeArr[2];
+
+        //后台处理的操作
         if (typeArr.length === 3) {
-            var prefix = typeArr[0];
-            var restName = typeArr[1];
-            var restState = typeArr[2];
             if (prefix === switchRestPrefix) {
                 var func = switchRestType[restName];
                 if (func && containSuffix(restState)) {
@@ -25,8 +29,20 @@ export default function CloudRestReducer(config) {
             }
         }
 
+
+        //对于不需要后台处理的操作
+        if (typeArr.length === 2) {
+            if (prefix === switchRestPrefix) {
+                var func = switchRestType[restName];
+                if (func) {
+                    return [func,createRestState(STATE_SUFFIX_LIST[1])];
+                }
+            }
+        }
+
         return [null, null];
     }
+
 
     function containSuffix(suffix) {
         for (var i = 0; i < STATE_SUFFIX_LIST.length; i++) {
