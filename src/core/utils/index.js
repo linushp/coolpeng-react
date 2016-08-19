@@ -224,6 +224,24 @@ export function immutableListMap(itemList, callback) {
     return resultList;
 }
 
+export function updateImmutableList(state,listName,finder,newData){
+    var listObj = state.get(listName);
+    var indexList = [];
+    listObj.forEach(function (item, i) {
+        if (finder(item, i)) {
+            indexList.push(i);
+        }
+    });
+
+    for (var i = 0; i < indexList.length; i++) {
+        var index = indexList[i];
+        listObj = listObj.set(index, newData);
+    }
+
+    state = state.set(listName, listObj);
+    return state;
+}
+
 
 export function className(obj) {
     var arr = [];
@@ -239,9 +257,13 @@ export function className(obj) {
 }
 
 export function globalVar(key,value){
-    window['COOLPENG_TEMP_VAR'] = window['COOLPENG_TEMP_VAR'] || {};
+    var COOLPENG_TEMP_VAR = 'COOLPENG_TEMP_VAR';
+    window[COOLPENG_TEMP_VAR] = window[COOLPENG_TEMP_VAR] || {};
     if(value!=undefined){
-        window['COOLPENG_TEMP_VAR'][key] = value;
+        window[COOLPENG_TEMP_VAR][key] = value;
     }
-    return window['COOLPENG_TEMP_VAR'][key];
+    return window[COOLPENG_TEMP_VAR][key];
 }
+
+
+

@@ -1,5 +1,6 @@
 import CreateCloudRestReducer from '../../core/CreateCloudRestReducer';
 import Immutable from 'immutable';
+import {updateImmutableList} from '../../core/utils/index';
 
 const initialState = Immutable.fromJS({
 
@@ -52,7 +53,13 @@ export default CreateCloudRestReducer({
         },
         'saveOrUpdateNote': function (state, res, restState, meta) {
             if (restState.isSuccess()) {
-
+                if(res.data){
+                    var NoteVO = Immutable.fromJS(res.data);
+                    state = state.set('NoteVO', NoteVO);
+                    state = updateImmutableList(state,'NoteList',((v)=> v.get('id')===NoteVO.get('id')),NoteVO);
+                }else {
+                    state = state.set('NoteVO', null);
+                }
             }
             return state;
         },

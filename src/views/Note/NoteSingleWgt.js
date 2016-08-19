@@ -4,6 +4,7 @@ import {immutableListMap,className,globalVar} from '../../core/utils/index';
 import {toPathParamString} from './NoteFunctions';
 import AvatarReact from '../../service/avatar/AvatarReact';
 import SimditorReact from '../../service/editor/SimditorReact';
+import ReactForm from '../../components/form/ReactForm';
 import './index.less';
 
 
@@ -24,11 +25,18 @@ class NoteSingle extends PureRenderComponent {
 
     onSaveNote(NoteVO){
         const {actions} = this.props;
+
+        var TitleForm = this.refs['TitleForm'];
+        var TitleFormValue = TitleForm.getValues();
+        var postTitle = TitleFormValue.postTitle;
+
         var editor = this.refs['SimditorReact'];
+
         var content = editor.getContentValue();
         var vo = NoteVO.toJS();
         var that = this;
         vo.postContent = content;
+        vo.postTitle = postTitle;
         actions.saveOrUpdateNote({NoteVO:vo},function(){
             alert('保存成功')
             var pathParams = globalVar('pathParams');
@@ -42,12 +50,19 @@ class NoteSingle extends PureRenderComponent {
     renderEditing(NoteVO,user,actions,isEditing){
 
         var content = "";
+        var postTitle = "";
         if(NoteVO){
             content = NoteVO.get('postContent');
+            postTitle = NoteVO.get('postTitle');
         }
         console.log('renderEditing')
+
+        var TitleFormLayout = [ { name:'postTitle',text:'标题',type:'input'} ];
+        var TitleFormValues = {postTitle:postTitle};
+
         return (
             <div>
+                <ReactForm ref="TitleForm" layout={TitleFormLayout} values={TitleFormValues}></ReactForm>
                 <SimditorReact ref="SimditorReact" content={content}></SimditorReact>
                 <button onClick={this.onSaveNote.bind(this,NoteVO)}> 保存</button>
             </div>
