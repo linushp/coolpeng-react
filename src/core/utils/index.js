@@ -1,12 +1,12 @@
 import EventBus from './EventBus';
+import StringUtils from './StringUtils';
 
 exports.EventBus = EventBus;
 
-
+exports.StringUtils = StringUtils;
 
 var _undefined = window.undefined;
 exports._undefined = _undefined;
-
 
 
 var uniqueIdNumber = 0;

@@ -5,6 +5,7 @@ import {toPathParamString} from './NoteFunctions';
 import AvatarReact from '../../service/avatar/AvatarReact';
 import SimditorReact from '../../service/editor/SimditorReact';
 import ReactForm from '../../components/form/ReactForm';
+import $ from 'jquery';
 import './index.less';
 
 
@@ -39,10 +40,12 @@ class NoteSingle extends PureRenderComponent {
         var editor = this.refs['SimditorReact'];
 
         var content = editor.getContentValue();
-
+        var imageList = editor.getContentImageList(content);
+        debugger;
         return {
             postContent: content,
-            postTitle: postTitle
+            postTitle: postTitle,
+            imageList:imageList
         };
     }
 

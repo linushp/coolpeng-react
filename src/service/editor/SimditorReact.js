@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import {loadStaticJS,loadStaticCSS,createUUID} from '../../core/utils/index';
+import {loadStaticJS,loadStaticCSS,createUUID,StringUtils} from '../../core/utils/index';
 import StaticConfig from '../../core/utils/StaticConfig';
 import './index.less';
 /**
@@ -79,6 +79,24 @@ function onXhrUpload(file,_this,onSuccess,onError,onProgress) {
         });
 
     })
+}
+
+
+var supporyImageHostName = [
+    'http://coolpeng.bj.bcebos.com',
+    'http://ubibi.coolpeng.cn',
+    'http://image.coolpeng.cn'
+];
+
+
+function isImageUploadSupport(url){
+    for(var i=0;i<supporyImageHostName.length;i++){
+        var hostName = supporyImageHostName[i];
+        if(StringUtils.startsWith(url,hostName)){
+            return true;
+        }
+    }
+    return false;
 }
 
 
@@ -168,6 +186,26 @@ export default class SimditorReact extends React.Component {
             return that.editor.getValue();
         }
         return null;
+    }
+
+
+    /**
+     * 获取文章中所有的上传的图片,不包含外链图片
+     * @param content
+     */
+    getContentImageList(content){
+        content = content || this.getContentValue();
+        var $content = $('<div>'+content+'</div>');
+        var $imgs = $content.find('img');
+        var imageList = [];
+        $imgs.each(function(){
+            var $img = $(this);
+            var url = $img.attr('src');
+            if(isImageUploadSupport(url)){
+                imageList.push(url);
+            }
+        });
+        return imageList;
     }
 
     shouldComponentUpdate(nextProps, nextState) {
