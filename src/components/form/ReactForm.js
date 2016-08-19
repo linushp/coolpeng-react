@@ -180,6 +180,12 @@ function getFromItemValue($formItem) {
 }
 
 
+
+
+
+
+
+/***************ReactForm**************/
 export default class ReactForm extends React.Component {
     constructor(props) {
         super(props);
@@ -259,8 +265,8 @@ export default class ReactForm extends React.Component {
         );
     }
 }
-//
-//
+
+
 ////function test(){
 ////
 ////    var layout = [
@@ -279,8 +285,8 @@ export default class ReactForm extends React.Component {
 ////    var values = {
 ////        name:'luan', //input
 ////        like:['food','women'], //checkbox
-//          sex:'m' //radio
-//          city:'nanjing' //select
+////        sex:'m' //radio
+////        city:'nanjing' //select
 ////    };
 ////
 ////    return (
