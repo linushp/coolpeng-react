@@ -125,7 +125,7 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
         plugins: [
             new webpack.optimize.CommonsChunkPlugin({
                 name: "shared",
-                minChunks: 3
+                minChunks: 2
             }),
             new HtmlWebpackPlugin({
                 inject: true,

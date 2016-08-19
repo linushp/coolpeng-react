@@ -16,6 +16,7 @@ function isFunction(obj) {
  *   {
  *      pageNumber:1,
  *      pageCount:10,
+ *      pageSize:20,
  *      linkRender:function(p){
  *          return "<a>"
  *      }
@@ -26,6 +27,7 @@ function isFunction(obj) {
  *   {
  *      pageNumber:1,
  *      recordCount:10,
+ *      pageSize:20,
  *      linkRender:"/blog/dsds?pn="
  *   }
  * @param config

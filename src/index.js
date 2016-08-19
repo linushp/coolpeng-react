@@ -4,6 +4,8 @@ import {Provider} from 'react-redux';
 import {Router, Route, IndexRedirect,useRouterHistory} from 'react-router';
 import {createHistory,createHashHistory} from 'history'
 import configureStore from './store/configureStore';
+import {EventBus} from './core/utils/index'
+import $ from 'jquery';
 
 
 import App from './views/App';
@@ -43,3 +45,9 @@ ReactDOM.render(
     </Provider>,
     document.getElementById('root')
 );
+
+$(function(){
+    $(document).on('click',function(evt){
+        EventBus.emit('EVENT_DOCUMENT_CLICK',evt,this);
+    });
+});

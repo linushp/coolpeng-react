@@ -1,6 +1,6 @@
 import CreateCloudRestReducer from '../../core/CreateCloudRestReducer';
 import Immutable from 'immutable';
-import {updateImmutableList} from '../../core/utils/index';
+import {updateImmutableList,removeImmutableListObj} from '../../core/utils/index';
 
 const initialState = Immutable.fromJS({
 
@@ -23,6 +23,15 @@ export default CreateCloudRestReducer({
     initialState: initialState,
     switchRestPrefix: "note",
     switchRestType: {
+
+        /**
+         *
+         * @param state
+         * @param res
+         * @param restState
+         * @param meta
+         * @returns {*}
+         */
         'getNoteCategory': function (state, res, restState, meta) {
             if (restState.isSuccess()) {
                 var categoryList = Immutable.fromJS(res.data || {});
@@ -30,6 +39,16 @@ export default CreateCloudRestReducer({
             }
             return state;
         },
+
+
+        /**
+         *
+         * @param state
+         * @param res
+         * @param restState
+         * @param meta
+         * @returns {*}
+         */
         'getNoteListByCategory': function (state, res, restState, meta) {
             if (restState.isSuccess()) {
                 var NoteList = Immutable.fromJS(res.data || []);
@@ -40,6 +59,15 @@ export default CreateCloudRestReducer({
             }
             return state;
         },
+
+        /**
+         *
+         * @param state
+         * @param res
+         * @param restState
+         * @param meta
+         * @returns {*}
+         */
         'getNoteById': function (state, res, restState, meta) {
             if (restState.isSuccess()) {
                 if(res.data){
@@ -51,21 +79,44 @@ export default CreateCloudRestReducer({
             }
             return state;
         },
+
+
+        /**
+         *
+         * @param state
+         * @param res
+         * @param restState
+         * @param meta
+         * @returns {*}
+         */
         'saveOrUpdateNote': function (state, res, restState, meta) {
             if (restState.isSuccess()) {
                 if(res.data){
+                    var finder = ((v)=> v.get('id')===NoteVO.get('id'));
                     var NoteVO = Immutable.fromJS(res.data);
                     state = state.set('NoteVO', NoteVO);
-                    state = updateImmutableList(state,'NoteList',((v)=> v.get('id')===NoteVO.get('id')),NoteVO);
+                    state = updateImmutableList(state,'NoteList',finder,NoteVO);
                 }else {
                     state = state.set('NoteVO', null);
                 }
             }
             return state;
         },
+
+
+        /**
+         *
+         * @param state
+         * @param res
+         * @param restState
+         * @param meta
+         * @returns {*}
+         */
         'deleteNote': function (state, res, restState, meta) {
             if (restState.isSuccess()) {
-
+                var noteId = res.data;
+                var finder = ((v)=> v.get('id')===noteId);
+                state = removeImmutableListObj(state,'NoteList',finder);
             }
             return state;
         }

@@ -59,9 +59,13 @@ export default function promiseMiddleware(config = {}) {
                     });
                 }
             ).then(function (resolved) {
-                actionSourceCallback(resolved, resolved.payload);
+                try {
+                    var data = resolved.payload.data;
+                    actionSourceCallback(resolved, resolved.payload,true,data);
+                }catch (e){
+                }
             }, function (rejected) {
-                actionSourceCallback(rejected, rejected.payload);
+                actionSourceCallback(rejected, rejected.payload,false);
             });
 
             return action;

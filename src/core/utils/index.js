@@ -1,4 +1,24 @@
+import EventBus from './EventBus';
+
+exports.EventBus = EventBus;
+
+
+
 var _undefined = window.undefined;
+exports._undefined = _undefined;
+
+
+
+var uniqueIdNumber = 0;
+export function uniqueId(prefix){
+    uniqueIdNumber++;
+    if(prefix){
+        return prefix + '' + uniqueIdNumber;
+    }else {
+        return uniqueIdNumber;
+    }
+}
+
 
 
 export function isPromise(value) {
@@ -53,12 +73,14 @@ export function toQueryParam(paramObject) {
  * 2.userId + guid 共同确定(同一时刻用户只能在一个终端登录,guid并且是根据时间生成,再随机,所以guid是安全的)
  * @returns {string}
  */
-export function createUUID() {
+export function createUUID(userId) {
     var randomStr = 'xxxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
     });
-    return randomStr + new Date().getTime();
+
+    userId = userId ? userId + '-' : '';
+    return userId + randomStr + uniqueId();
 }
 
 
@@ -224,23 +246,56 @@ export function immutableListMap(itemList, callback) {
     return resultList;
 }
 
-export function updateImmutableList(state,listName,finder,newData){
-    var listObj = state.get(listName);
+export function listMap(itemList, callback){
+    if (!itemList) {
+        return [];
+    }
+
+    if (itemList.map) {
+        return itemList.map(callback);
+    } else {
+        var resultList = [];
+        if (itemList) {
+            for (var i = 0; i < itemList.length; i++) {
+                var item = itemList[i];
+                resultList.push(callback(item, i));
+            }
+        }
+        return resultList;
+    }
+}
+
+
+export function findImmutableListObj(listObj,finder){
     var indexList = [];
     listObj.forEach(function (item, i) {
         if (finder(item, i)) {
             indexList.push(i);
         }
     });
+    return indexList;
+}
 
+export function updateImmutableList(state,listName,finder,newData){
+    var listObj = state.get(listName);
+    var indexList = findImmutableListObj(listObj,finder);
     for (var i = 0; i < indexList.length; i++) {
         var index = indexList[i];
         listObj = listObj.set(index, newData);
     }
-
     state = state.set(listName, listObj);
     return state;
 }
+
+export function removeImmutableListObj(state,listName,finder){
+    var listObj = state.get(listName);
+    listObj = listObj.filterNot(function(v,i){
+        return finder(v,i);
+    });
+    state = state.set(listName,listObj);
+    return state;
+}
+
 
 
 export function className(obj) {
@@ -267,3 +322,15 @@ export function globalVar(key,value){
 
 
 
+
+
+export function isEventInTarget(evt,targetId){
+    var $ = window.jQuery;
+    var $target = $(evt.target);
+    var p = $target.closest("#" + targetId);
+    if (p && p.length > 0) {
+        //点击到
+        return true;
+    }
+    return false;
+}

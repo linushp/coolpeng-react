@@ -8,8 +8,6 @@ import NoteSingleWgt from './NoteSingleWgt';
 import './index.less';
 
 
-
-
 class NoteApp extends PureRenderComponent {
     constructor(props) {
         super(props);
@@ -21,26 +19,34 @@ class NoteApp extends PureRenderComponent {
         let {actions,user} = this.props;
         var userInfo = user.userInfo || {};
         actions.getNoteCategory({ownerUserId: userInfo.id});
-        actions.getNoteListByCategory({pathParams: pathParams,pageSize:pathParams.ps,pageNumber:pathParams.pn});
-        actions.getNoteById({id:pathParams.n});//nextParams.n 有可能为null
-
+        actions.getNoteListByCategory({pathParams: pathParams, pageSize: pathParams.ps, pageNumber: pathParams.pn});
+        actions.getNoteById({id: pathParams.n});//nextParams.n 有可能为null
     }
 
-    componentWillReceiveProps(nextProps){
+
+    reloadNoteListByCategory() {
+        let currentPath = this.props.routeParams.currentPath;
+        let pathParams = parsePathParams(currentPath);
+        let {actions,user} = this.props;
+        actions.getNoteListByCategory({pathParams: pathParams, pageSize: pathParams.ps, pageNumber: pathParams.pn});
+    }
+
+
+    componentWillReceiveProps(nextProps) {
         var nextPath = nextProps.routeParams.currentPath;
         var currentPath = this.props.routeParams.currentPath;
 
         let {actions} = this.props;
         let nextParams = parsePathParams(nextPath);
-        var paramChanged = isPathParamChanged(nextPath,currentPath);
+        var paramChanged = isPathParamChanged(nextPath, currentPath);
 
-        if(paramChanged.g || paramChanged.m || paramChanged.ps ||paramChanged.pn){
-            actions.getNoteListByCategory({pathParams: nextParams,pageSize:nextParams.ps,pageNumber:nextParams.pn});
+        if (paramChanged.g || paramChanged.m || paramChanged.ps || paramChanged.pn) {
+            actions.getNoteListByCategory({pathParams: nextParams, pageSize: nextParams.ps, pageNumber: nextParams.pn});
         }
 
-        if(paramChanged.n){
+        if (paramChanged.n) {
             //nextParams.n 有可能为null
-            actions.getNoteById({id:nextParams.n});
+            actions.getNoteById({id: nextParams.n});
         }
     }
 
@@ -49,15 +55,23 @@ class NoteApp extends PureRenderComponent {
         //g1-m2-n3
         let currentPath = this.props.routeParams.currentPath;
         let pathParams = parsePathParams(currentPath);
-        globalVar('pathParams',pathParams);
+        globalVar('pathParams', pathParams);
         var isEditing = (!!pathParams.e);
+        var reloadNoteListByCategory = this.reloadNoteListByCategory.bind(this);
         return (
             <div className="note-page">
                 <div className="note-list">
-                    <NoteListWgt {...{NoteList,NoteListTotalCount,NoteListPageSize,NoteListPageNumber,pathParams}} ></NoteListWgt>
+                    <NoteListWgt {...{
+                        NoteList,
+                        NoteListTotalCount,
+                        NoteListPageSize,
+                        NoteListPageNumber,
+                        pathParams,
+                        actions
+                    }} ></NoteListWgt>
                 </div>
                 <div className="note-content">
-                    <NoteSingleWgt {...{NoteVO,user,actions,isEditing}}></NoteSingleWgt>
+                    <NoteSingleWgt {...{NoteVO, user, actions, isEditing, reloadNoteListByCategory}}></NoteSingleWgt>
                 </div>
                 <div className="clear"></div>
             </div>
@@ -71,18 +85,19 @@ NoteApp.STATE_CONFIG = {
     NoteListTotalCount: 'note.NoteListTotalCount',
     NoteListPageSize: 'note.NoteListPageSize',
     NoteListPageNumber: 'note.NoteListPageNumber',
-    CategoryList:'note.CategoryList',
-    NoteVO:'note.NoteVO',
+    CategoryList: 'note.CategoryList',
+    NoteVO: 'note.NoteVO',
 
-    user:'user'
+    user: 'user'
 };
 
 NoteApp.ACTION_CONFIG = {
-    'getNoteListByCategory':'note.getNoteListByCategory',
-    'getNoteCategory':'note.getNoteCategory',
-    'getNoteById':'note.getNoteById',
-    'saveOrUpdateNote':'note.saveOrUpdateNote',
-    setCurrentTempUser: 'user.setCurrentTempUser'
+    'getNoteListByCategory': 'note.getNoteListByCategory',
+    'getNoteCategory': 'note.getNoteCategory',
+    'getNoteById': 'note.getNoteById',
+    'saveOrUpdateNote': 'note.saveOrUpdateNote',
+    'deleteNote': 'note.deleteNote',
+    'setCurrentTempUser': 'user.setCurrentTempUser'
 };
 
 export default ActionStoreHelper()(NoteApp);
