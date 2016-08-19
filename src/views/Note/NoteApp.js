@@ -37,7 +37,9 @@ class NoteApp extends PureRenderComponent {
 
 
     /**
-     * 重新加载下文章列表
+     * 两个功能:
+     *      1. 中间文章列表,搜索功能点击,需要传入titleLike参数
+     *      2. 文章编辑或新建完成后,重新加载文章列表.不会传入titleLike参数
      * @param titleLike
      */
     reloadNoteListByCategory(titleLike) {
@@ -56,6 +58,10 @@ class NoteApp extends PureRenderComponent {
     }
 
 
+    /**
+     *
+     * @param nextProps
+     */
     componentWillReceiveProps(nextProps) {
         var nextPath = nextProps.routeParams.currentPath;
         var currentPath = this.props.routeParams.currentPath;
@@ -64,7 +70,13 @@ class NoteApp extends PureRenderComponent {
         let nextParams = parsePathParams(nextPath);
         var paramChanged = isPathParamChanged(nextPath, currentPath);
 
-        //左边改变了路由
+        /**
+         *
+         * 两个功能可以触发:
+         *  1. 点击左侧分类目录. 改变 g m ,清除掉搜索条件
+         *  2. 文章分页按钮点击, 不该表gm
+         *
+         */
         if (paramChanged.g || paramChanged.m || paramChanged.ps || paramChanged.pn) {
             actions.getNoteListByCategory({
                 pathParams: nextParams,
