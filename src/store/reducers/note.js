@@ -1,7 +1,8 @@
 import CreateCloudRestReducer from '../../core/CreateCloudRestReducer';
 import Immutable from 'immutable';
-import {updateImmutableList,removeImmutableListObj} from '../../core/utils/index';
+import {updateImmutableList,removeImmutableListObj,updateImmutableObject} from '../../core/utils/index';
 
+var Record = Immutable.Record;
 const initialState = Immutable.fromJS({
 
     //分类目录
@@ -150,6 +151,8 @@ export default CreateCloudRestReducer({
         },
 
 
+
+
         /**
          *
          * @param state
@@ -157,10 +160,52 @@ export default CreateCloudRestReducer({
          * @param restState
          * @param meta
          */
-        changeSearchText:function(state, res, restState, meta){
-            var data = res.data || '';
-            state = state.set('NoteListSearchTitleLike',data);
-            return state;
+        staticCreateNoteCategory:function(state, res, restState, meta){
+            var data = res.data || {};
+            var inputItem = Immutable.fromJS(data);
+            var parentId = data.parentId;
+            if(!parentId){
+                var categoryList = state.get('CategoryList');
+                categoryList = categoryList.push(inputItem);
+                state = state.set('CategoryList',categoryList);
+                return state;
+            }
+            else {
+                var finder = function(c){
+                    return c.get('id')===parentId;
+                };
+                var categoryList = state.get('CategoryList');
+                var index = categoryList.findIndex(finder);
+                var parentCategory = categoryList.find(finder);
+                var children = parentCategory.get('children');
+                if(!children){
+                    children = Immutable.fromJS([]);
+                }
+                children = children.push(inputItem)
+                parentCategory = parentCategory.set('children',children);
+                categoryList = categoryList.set(index,parentCategory);
+                state = state.set('CategoryList',categoryList);
+                return state;
+            }
+        },
+
+
+        /**
+         * 修改分类的属性
+         * @param state
+         * @param res
+         * @param restState
+         * @param meta
+         */
+        'staticUpdateNoteCategory':function(state, res, restState, meta){
+            var data = res.data || {};
+
+            var finder = data.finder;
+            var newValue = data.newValue;
+            debugger;
+            var CategoryList = state.get('CategoryList');
+            CategoryList = updateImmutableObject(CategoryList,finder,newValue);
+            return state.set('CategoryList',CategoryList);
         }
 
     }

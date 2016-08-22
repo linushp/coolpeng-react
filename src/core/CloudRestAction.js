@@ -3,11 +3,11 @@ import api from './api'
 
 function createCloudRestAction(prefix, funcName) {
 
-    return function (data, callback) {
+    return function (data, callback, reqSeqId) {
         var url = '/cloud/' + prefix + '/' + funcName + '.json';
         var type = prefix + '_' + funcName;
         return {
-            type: prefix + '_' + funcName,
+            type: type,
             payload: {
                 promise: api.post(url, data)
             },
@@ -15,6 +15,9 @@ function createCloudRestAction(prefix, funcName) {
                 reqData: data,
                 reqUrl: url,
                 reqType: type,
+                reqActionPrefix: prefix,
+                reqActionFuncName: funcName,
+                reqSeqId: reqSeqId || '',
                 actionSourceCallback: callback
             }
         }
@@ -22,12 +25,15 @@ function createCloudRestAction(prefix, funcName) {
 }
 
 
-function createCloudStaticAction(prefix, funcName){
+function createCloudStaticAction(prefix, funcName) {
     return function (data) {
         return {
             type: prefix + '_' + funcName,
             payload: {
                 data: data
+            },
+            meta: {
+                reqActionPrefix: prefix
             }
         }
     }
@@ -35,14 +41,14 @@ function createCloudStaticAction(prefix, funcName){
 
 
 export default class CloudRestAction {
-    constructor(prefix, funcNameList,staticFunc) {
+    constructor(prefix, funcNameList, staticFunc) {
         var that = this;
         for (var i = 0; i < funcNameList.length; i++) {
             var funcName = funcNameList[i];
             that[funcName] = createCloudRestAction(prefix, funcName);
         }
 
-        if(staticFunc && staticFunc.length>0){
+        if (staticFunc && staticFunc.length > 0) {
             for (var j = 0; j < staticFunc.length; j++) {
                 var funcName2 = staticFunc[j];
                 that[funcName2] = createCloudStaticAction(prefix, funcName2);

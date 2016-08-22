@@ -2,6 +2,8 @@ import {getDataFromImmutableOrPlain,isArray,immutableListMap,shallowEqual} from 
 import React, {PropTypes} from 'react';
 import $ from 'jquery';
 
+var _undefined = window.undefined;
+
 function formInput(name, text, options) {
     return (
         <input className="formInput" name={name} type="text"/>
@@ -9,6 +11,10 @@ function formInput(name, text, options) {
 }
 
 function formInputSetter(value, $formItem) {
+
+    if (value === null || value === _undefined) {
+        value = "";
+    }
     var $input = $formItem.find('input');
     $input.val(value);
 }

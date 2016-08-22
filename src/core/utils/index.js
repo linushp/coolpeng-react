@@ -103,6 +103,29 @@ export function getDataFromImmutableOrPlain(obj, key) {
     return value;
 }
 
+
+export function setData(obj,key,value){
+    if (!obj) {
+        return null;
+    }
+    if (isFunction(obj.set)) {
+        obj = obj.set(key,value);
+    }
+    else{
+        obj[key] = value;
+    }
+    return obj;
+}
+
+export function isImmutable(obj){
+    if (isFunction(obj.set) &&
+        isFunction(obj.get) &&
+        isFunction(obj.toJS)) {
+        return true;
+    }
+    return false;
+}
+
 /**
  * a = {
  *   b:{
@@ -299,6 +322,45 @@ export function findImmutableListObj(listObj,finder){
         }
     });
     return indexList;
+}
+
+
+export function isImmutableObjHasKV(immutableObj,kvObj){
+    for(var k in kvObj){
+        if(kvObj.hasOwnProperty(k)){
+            var v = kvObj[k];
+            var iValue = immutableObj.get(k);
+            if(v!==iValue){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+export function updateImmutableObject(origin,finderObject,newData){
+    var Immutable = window.Immutable;
+    var Map = Immutable.Map;
+    var List = Immutable.List;
+    if(Map.isMap(origin)){
+        if(isImmutableObjHasKV(origin,finderObject)){
+            origin = origin.merge(newData);
+        }
+    }
+
+    if(List.isList(origin)){
+        //origin = origin.forEach(function(m){
+        //    updateImmutableObject(m,finderObject,newData);
+        //});
+        var size = origin.size;
+        for(var i =0;i<size;i++){
+            origin = origin.update(i,function(v){
+                return updateImmutableObject(v,finderObject,newData);
+            });
+        }
+    }
+
+    return origin;
 }
 
 export function updateImmutableList(state,listName,finder,newData){

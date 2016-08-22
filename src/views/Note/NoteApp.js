@@ -141,7 +141,6 @@ NoteApp.ACTION_CONFIG = {
     'getNoteByIdWithReply': 'note.getNoteByIdWithReply',
     'saveOrUpdateNote': 'note.saveOrUpdateNote',
     'deleteNote': 'note.deleteNote',
-    'changeSearchText': 'note.changeSearchText',
     'setCurrentTempUser': 'user.setCurrentTempUser'
 };
 

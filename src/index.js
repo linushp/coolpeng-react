@@ -12,7 +12,7 @@ import App from './views/App';
 import Home from './views/Home';
 
 import NoteApp from './views/Note/NoteApp';
-import NoteSideBar from './views/Note/NoteSideBar';
+import NoteSideBar from './views/Note/NoteSideBar/NoteSideBar';
 
 import DaoHangIndex from './views/DaoHang/index';
 

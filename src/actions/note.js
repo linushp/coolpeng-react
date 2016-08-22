@@ -2,7 +2,8 @@ import CloudRestAction from '../core/CloudRestAction';
 
 
 var staticFunc = [
-    "changeSearchText"
+    "staticCreateNoteCategory",
+    "staticUpdateNoteCategory"
 ];
 
 var funcNameList = [
