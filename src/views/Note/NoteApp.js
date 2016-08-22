@@ -31,7 +31,7 @@ class NoteApp extends PureRenderComponent {
             });
         }
         if (isEmpty(this.props.NoteVO)) {
-            actions.getNoteById({id: pathParams.n});//nextParams.n 有可能为null
+            actions.getNoteByIdWithReply({id: pathParams.n});//nextParams.n 有可能为null
         }
     }
 
@@ -88,7 +88,7 @@ class NoteApp extends PureRenderComponent {
 
         if (paramChanged.n) {
             //nextParams.n 有可能为null
-            actions.getNoteById({id: nextParams.n});
+            actions.getNoteByIdWithReply({id: nextParams.n});
         }
     }
 
@@ -138,7 +138,7 @@ NoteApp.STATE_CONFIG = {
 NoteApp.ACTION_CONFIG = {
     'getNoteListByCategory': 'note.getNoteListByCategory',
     'getNoteCategory': 'note.getNoteCategory',
-    'getNoteById': 'note.getNoteById',
+    'getNoteByIdWithReply': 'note.getNoteByIdWithReply',
     'saveOrUpdateNote': 'note.saveOrUpdateNote',
     'deleteNote': 'note.deleteNote',
     'changeSearchText': 'note.changeSearchText',

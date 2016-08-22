@@ -8,9 +8,13 @@ var staticFunc = [
 var funcNameList = [
     'getNoteCategory',
     'getNoteListByCategory',
-    'getNoteById',
+    'getNoteByIdWithReply',
     'saveOrUpdateNote',
-    'deleteNote'
+    'saveOrUpdateNoteReply',
+    'saveOrUpdateNoteCategory',
+    'deleteNoteCategory',
+    'deleteNote',
+    'deleteNoteReply'
 ];
 
 var prefix = "note";

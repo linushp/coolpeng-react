@@ -72,7 +72,7 @@ export default CreateCloudRestReducer({
          * @param meta
          * @returns {*}
          */
-        'getNoteById': function (state, res, restState, meta) {
+        'getNoteByIdWithReply': function (state, res, restState, meta) {
             if (restState.isSuccess()) {
                 if(res.data){
                     var NoteVO = Immutable.fromJS(res.data);
@@ -107,6 +107,30 @@ export default CreateCloudRestReducer({
             return state;
         },
 
+
+        'saveOrUpdateNoteReply': function (state, res, restState, meta) {
+            if (restState.isSuccess()) {
+            }
+            return state;
+        },
+
+        'saveOrUpdateNoteCategory':function (state, res, restState, meta) {
+            if (restState.isSuccess()) {
+            }
+            return state;
+        },
+
+        'deleteNoteCategory':function (state, res, restState, meta) {
+            if (restState.isSuccess()) {
+            }
+            return state;
+        },
+
+        'deleteNoteReply':function (state, res, restState, meta) {
+            if (restState.isSuccess()) {
+            }
+            return state;
+        },
 
         /**
          *
