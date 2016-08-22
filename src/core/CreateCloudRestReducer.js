@@ -72,8 +72,15 @@ export default function CloudRestReducer(config) {
         var [reducer,restState] = getReducer(action.type);
         if (reducer) {
             var newState = reducer(state, action.payload, restState, action.meta);
-            if(newState){
+            if (newState) {
                 return newState;
+            } else {
+                console.error('[ERROR] cannot get newState of the reducer ', action);
+            }
+        } else {
+            var meta = action.meta || {};
+            if (switchRestPrefix === meta.reqActionPrefix) {
+                console.error('[ERROR] cannot get the reducer ', action);
             }
         }
         return state;
