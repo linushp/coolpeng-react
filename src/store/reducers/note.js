@@ -199,10 +199,8 @@ export default CreateCloudRestReducer({
          */
         'staticUpdateNoteCategory':function(state, res, restState, meta){
             var data = res.data || {};
-
             var finder = data.finder;
             var newValue = data.newValue;
-            debugger;
             var CategoryList = state.get('CategoryList');
             CategoryList = updateImmutableObject(CategoryList,finder,newValue);
             return state.set('CategoryList',CategoryList);

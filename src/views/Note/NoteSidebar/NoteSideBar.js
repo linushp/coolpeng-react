@@ -97,6 +97,7 @@ class NoteSidebar extends PureRenderComponent {
 
     onClickRenameCategory(item, s) {
         var m = (s||item).toJS();
+        //TODO 二级分类点击时没有反应,.
         var actions = this.props.actions;
         actions.staticUpdateNoteCategory({
             finder:{
