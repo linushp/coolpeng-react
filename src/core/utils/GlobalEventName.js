@@ -1,0 +1,3 @@
+module.exports = {
+    EVENT_DOCUMENT_CLICK:'EVENT_DOCUMENT_CLICK'
+};

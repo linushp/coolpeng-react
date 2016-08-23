@@ -42,10 +42,12 @@ export default class PopupOperation extends React.Component {
     }
 
     documentClickListener0(evt, self) {
-        if (!isEventInTarget(evt, this.uniqueId)) {
-            this.setState({
-                show: false
-            });
+        if(this.state.show){
+            if (!isEventInTarget(evt, this.uniqueId)) {
+                this.setState({
+                    show: false
+                });
+            }
         }
     }
 

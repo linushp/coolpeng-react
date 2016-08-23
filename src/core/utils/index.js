@@ -1,5 +1,8 @@
 import EventBus from './EventBus';
+import GlobalEventName from './GlobalEventName';
 import StringUtils from './StringUtils';
+
+exports.GlobalEventName = GlobalEventName;
 
 exports.EventBus = EventBus;
 
@@ -325,33 +328,57 @@ export function findImmutableListObj(listObj,finder){
 }
 
 
-export function isImmutableObjHasKV(immutableObj,kvObj){
-    for(var k in kvObj){
-        if(kvObj.hasOwnProperty(k)){
-            var v = kvObj[k];
-            var iValue = immutableObj.get(k);
-            if(v!==iValue){
-                return false;
+export function isImmutableObjHasKV(immutableObj,finderObject){
+    if(isFunction(finderObject)){
+        return finderObject(immutableObj);
+    }
+    else {
+        for(var k in finderObject){
+            if(finderObject.hasOwnProperty(k)){
+                var v = finderObject[k];
+                var iValue = immutableObj.get(k);
+                if(v!==iValue){
+                    return false;
+                }
             }
         }
+        return true;
     }
-    return true;
 }
 
+
+/**
+ * 更新一个Immutable对象中复合条件的子对象.
+ * @param origin Map 或 List
+ * @param finderObject 条件对象或函数
+ * @param newData 对象或函数.将复合条件的对象替换为新的对象.
+ * @returns {*}
+ */
 export function updateImmutableObject(origin,finderObject,newData){
     var Immutable = window.Immutable;
     var Map = Immutable.Map;
     var List = Immutable.List;
     if(Map.isMap(origin)){
         if(isImmutableObjHasKV(origin,finderObject)){
-            origin = origin.merge(newData);
+            if(isFunction(newData)){
+                origin = origin.merge(newData(origin));
+            }else {
+                origin = origin.merge(newData);
+            }
         }
+
+        var entrySeq = origin.entrySeq();
+        entrySeq.forEach(function(v,i){
+            var key = v[0];
+            var value = v[1];
+            var newValue = updateImmutableObject(value,finderObject,newData);
+            if(value!==newValue){
+                origin = origin.set(key,newValue);
+            }
+        });
     }
 
     if(List.isList(origin)){
-        //origin = origin.forEach(function(m){
-        //    updateImmutableObject(m,finderObject,newData);
-        //});
         var size = origin.size;
         for(var i =0;i<size;i++){
             origin = origin.update(i,function(v){
@@ -359,19 +386,7 @@ export function updateImmutableObject(origin,finderObject,newData){
             });
         }
     }
-
     return origin;
-}
-
-export function updateImmutableList(state,listName,finder,newData){
-    var listObj = state.get(listName);
-    var indexList = findImmutableListObj(listObj,finder);
-    for (var i = 0; i < indexList.length; i++) {
-        var index = indexList[i];
-        listObj = listObj.set(index, newData);
-    }
-    state = state.set(listName, listObj);
-    return state;
 }
 
 export function removeImmutableListObj(state,listName,finder){
@@ -382,7 +397,6 @@ export function removeImmutableListObj(state,listName,finder){
     state = state.set(listName,listObj);
     return state;
 }
-
 
 
 export function className(obj) {

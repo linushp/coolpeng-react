@@ -2,7 +2,7 @@ import {Link} from 'react-router'
 import PureRenderComponent from '../../core/PureRenderComponent';
 import ActionStoreHelper from '../Common/ActionStoreHelper';
 import {immutableListMap,className,globalVar,isEmpty,_undefined} from '../../core/utils/index';
-import {parsePathParams,getCurrentCategoryByPath,isPathParamChanged} from './NoteFunctions';
+import {parsePathParams,isPathParamChanged} from './NoteFunctions';
 import NoteListWgt from './NoteListWgt';
 import NoteSingleWgt from './NoteSingleWgt';
 import './index.less';
@@ -24,7 +24,7 @@ class NoteApp extends PureRenderComponent {
         if (isEmpty(this.props.NoteList)) {
             var titleLike = NoteListSearchTitleLike;
             actions.getNoteListByCategory({
-                pathParams: pathParams,
+                categoryId: pathParams.c,
                 pageSize: pathParams.ps,
                 pageNumber: pathParams.pn,
                 titleLike: titleLike
@@ -50,7 +50,7 @@ class NoteApp extends PureRenderComponent {
             titleLike = NoteListSearchTitleLike;
         }
         actions.getNoteListByCategory({
-            pathParams: pathParams,
+            categoryId: pathParams.c,
             pageSize: pathParams.ps,
             pageNumber: pathParams.pn,
             titleLike: titleLike
@@ -77,12 +77,12 @@ class NoteApp extends PureRenderComponent {
          *  2. 文章分页按钮点击, 不该表gm
          *
          */
-        if (paramChanged.g || paramChanged.m || paramChanged.ps || paramChanged.pn) {
+        if (paramChanged.c|| paramChanged.ps || paramChanged.pn) {
             actions.getNoteListByCategory({
-                pathParams: nextParams,
+                categoryId: nextParams.c,
                 pageSize: nextParams.ps,
                 pageNumber: nextParams.pn,
-                titleLike: (paramChanged.g || paramChanged.m)?'':NoteListSearchTitleLike
+                titleLike: (paramChanged.c)?'':NoteListSearchTitleLike
             });
         }
 
@@ -115,7 +115,7 @@ class NoteApp extends PureRenderComponent {
                     }} ></NoteListWgt>
                 </div>
                 <div className="note-content">
-                    <NoteSingleWgt {...{NoteVO, user, actions, isEditing, reloadNoteListByCategory}}></NoteSingleWgt>
+                    <NoteSingleWgt {...{NoteVO, user, actions, isEditing, reloadNoteListByCategory,CategoryList}}></NoteSingleWgt>
                 </div>
                 <div className="clear"></div>
             </div>

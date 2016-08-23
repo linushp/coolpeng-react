@@ -10,7 +10,7 @@ import './index.less';
 function getViewNoteURLPagination(pn) {
     var pathParams = globalVar('pathParams');
     var nn = Object.assign({}, pathParams, {pn: pn});
-    var mm = toPathParamString(nn, ['g', 'm', 'n', 'ps', 'pn']);
+    var mm = toPathParamString(nn, ['c', 'n', 'ps', 'pn']);
     var link = '/note/' + mm;
     return link;
 }
@@ -52,18 +52,19 @@ class NoteList extends PureRenderComponent {
         reloadNoteListByCategory(searchText);
     }
 
+    getCreateRoutePath(){
+        const {pathParams} = this.props;
+        var path = '/note/';
+        if (pathParams.c) {
+            path += 'c' + pathParams.c;
+        }
+        return path + '-e1';
+    }
+
 
     render() {
         const {NoteList,NoteListTotalCount,NoteListPageSize,NoteListPageNumber,pathParams,NoteListSearchTitleLike} = this.props;
 
-        var path = '/note/';
-        if (pathParams.g) {
-            path += 'g' + pathParams.g;
-        }
-        if (pathParams.m) {
-            path += '-m' + pathParams.m;
-        }
-        var createPath = path + '-e1';
         var that  = this;
 
         var searchFormValues = {
@@ -72,7 +73,7 @@ class NoteList extends PureRenderComponent {
 
         return (
             <div>
-                <Link to={createPath}>新建Note</Link>
+                <Link to={this.getCreateRoutePath()}>新建Note</Link>
 
                 <div>
                     <ReactForm ref="SearchForm" layout={this.SearchFormLayout} values={searchFormValues}></ReactForm>
@@ -82,7 +83,7 @@ class NoteList extends PureRenderComponent {
                 <div className="note-list-list">
                     {immutableListMap(NoteList, function (v) {
                         var nn = Object.assign({}, pathParams, {n: v.get('id')});
-                        var mm = toPathParamString(nn, ['g', 'm', 'n', 'ps', 'pn']);
+                        var mm = toPathParamString(nn, ['c', 'n', 'ps', 'pn']);
                         var link = '/note/' + mm;
                         return (
                             <div>

@@ -1,7 +1,7 @@
 import PureRenderComponent from '../../core/PureRenderComponent';
 import ActionStoreHelper from '../Common/ActionStoreHelper';
 import {immutableListMap,className,globalVar} from '../../core/utils/index';
-import {toPathParamString} from './NoteFunctions';
+import {toPathParamString,getCategoryIdPath} from './NoteFunctions';
 import AvatarReact from '../../service/avatar/AvatarReact';
 import SimditorReact from '../../service/editor/SimditorReact';
 import ReactForm from '../../components/form/ReactForm';
@@ -12,7 +12,7 @@ import './index.less';
 function getViewNoteURL(noteId) {
     var pathParams = globalVar('pathParams');
     var nn = Object.assign({}, pathParams, {n: noteId});
-    var mm = toPathParamString(nn, ['g', 'm', 'n', 'ps', 'pn']);
+    var mm = toPathParamString(nn, ['c', 'n', 'ps', 'pn']);
     var link = '/note/' + mm;
     return link;
 }
@@ -38,11 +38,11 @@ class NoteSingle extends PureRenderComponent {
         var TitleFormValue = TitleForm.getValues();
         var postTitle = TitleFormValue.postTitle;
         var editor = this.refs['SimditorReact'];
-
+        var pathParams = globalVar('pathParams');
         var content = editor.getContentValue();
         var imageList = editor.getContentImageList(content);
-        debugger;
         return {
+            categoryId: pathParams.c,
             postContent: content,
             postTitle: postTitle,
             imageList:imageList
@@ -50,19 +50,16 @@ class NoteSingle extends PureRenderComponent {
     }
 
     onSaveNote(NoteVO) {
-        var pathParams = globalVar('pathParams');
         const {actions} = this.props;
         var editorContent = this.getEditorContent();
-        var vo = {
-            forumModuleId: pathParams.m
-        };
+        var vo = {};
         if (NoteVO) {
             vo = NoteVO.toJS();
         }
 
         var that = this;
         vo = Object.assign(vo, editorContent);
-
+        vo.replyPageResult = null;
         actions.saveOrUpdateNote({NoteVO: vo}, function (resolved, payload,data,isSuccess) {
             if(isSuccess){
                 alert("保存成功");

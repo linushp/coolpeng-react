@@ -254,8 +254,10 @@ export default class ReactForm extends React.Component {
 
         var layout = this.props.layout;
 
+        var id = this.props.id || "";
+
         return (
-            <div ref="formRef">
+            <div ref="formRef" id={id}>
                 {immutableListMap(layout, function (obj) {
                     var text = getDataFromImmutableOrPlain(obj, 'text');
                     var name = getDataFromImmutableOrPlain(obj, 'name');

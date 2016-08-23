@@ -1,3 +1,5 @@
+import {d} from '../../core/utils/index';
+
 var parseInt = window.parseInt;
 
 function parsePathParams(currentPath) {
@@ -8,13 +10,9 @@ function parsePathParams(currentPath) {
     var pathArr = currentPath.split('-');
     for (var i = 0; i < pathArr.length; i++) {
         var p = pathArr[i];
-        if ((/^g/i).test(p)) {
-            var num = p.replace('g', '');
-            result['g'] = num;
-        }
-        if ((/^m/i).test(p)) {
-            var num = p.replace('m', '');
-            result['m'] = num;
+        if ((/^c/i).test(p)) {
+            var num = p.replace('c', '');
+            result['c'] = num;
         }
         if ((/^n/i).test(p)) {
             var num = p.replace('n', '');
@@ -61,8 +59,7 @@ function isPathParamChanged(p1, p2) {
     var pp1 = parsePathParams(p1);
     var pp2 = parsePathParams(p2);
     return {
-        g: numberNotEqual(pp1.g, pp2.g),
-        m: numberNotEqual(pp1.m, pp2.m),
+        c: numberNotEqual(pp1.c, pp2.c),
         n: numberNotEqual(pp1.n, pp2.n),
         ps: numberNotEqual(pp1.ps, pp2.ps),
         pn: numberNotEqual(pp1.pn, pp2.pn),
@@ -83,34 +80,59 @@ function toPathParamString(p,paramKeyArr) {
     return arr.join('-');
 }
 
-
-/**
- *
- * @param pathParams
- * @param CategoryList ImmutableJS List
- */
-function getCurrentCategoryByPath(pathParams, CategoryList) {
-    if (pathParams.g) {
-        var mm, gg;
-        gg = CategoryList.find(function (v, k) {
-            return v.get('id') === pathParams.g;
+function toMapCategoryList(CategoryList,map){
+    if(CategoryList){
+        CategoryList.forEach(function(c) {
+            var id = c.get('id');
+            map[id] = c;
+            var children = c.get('children');
+            if(children){
+                toMapCategoryList(children,map);
+            }
         });
-        if (pathParams.m && gg) {
-            var children = gg.get('children');
-            mm = children.find(function (v) {
-                return v.get('id') === pathParams.m;
-            });
-        }
-        return mm || gg || null;
     }
+}
 
-    return null;
+function getCategoryPath(M,CategoryList){
+    var map = {};
+    toMapCategoryList(CategoryList,map);
+    var result = [];
+    result.push(M.toJS());
+    var parentId = M.get('parentId');
+    if(parentId){
+        var parentObj = map[parentId];
+        while (parentObj){
+            result.push(parentObj.toJS());
+            parentId = parentObj.get('parentId');
+            if(parentId){
+                parentObj = map[parentId];
+            }else {
+                parentObj = null;
+            }
+        }
+    }
+    return result;
 }
 
 
+function getCategoryIdPath(id,CategoryList){
+    var map = {};
+    toMapCategoryList(CategoryList,map);
+    var M = map[id];
+    var categoryPath = getCategoryPath(M,CategoryList);
+    var path = categoryPath.map(function(c){
+        return "S"+c[id]+"E";
+    });
+    return path.join(" ")
+}
+
+
+
+
 module.exports = {
+    getCategoryIdPath:getCategoryIdPath,
+    getCategoryPath:getCategoryPath,
     parsePathParams: parsePathParams,
-    getCurrentCategoryByPath: getCurrentCategoryByPath,
     isPathParamChanged: isPathParamChanged,
     toPathParamString: toPathParamString
 };
