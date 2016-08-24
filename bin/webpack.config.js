@@ -56,7 +56,6 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
         output: {
             path: path.join(__appPath, 'dist'),
             publicPath: '/',
-            publicPath: '/',
             filename: 'static/app/[name].[hash].js',//hash
             chunkFilename: 'static/app/module.[name].[hash].js',
             library: ['CoolpengApp', '[name]'],

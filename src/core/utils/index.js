@@ -1,6 +1,7 @@
 import EventBus from './EventBus';
 import GlobalEventName from './GlobalEventName';
 import StringUtils from './StringUtils';
+import $ from 'jquery';
 
 exports.GlobalEventName = GlobalEventName;
 
@@ -423,10 +424,7 @@ export function globalVar(key,value){
 
 
 
-
-
 export function isEventInTarget(evt,targetId){
-    var $ = window.jQuery;
     var $target = $(evt.target);
     var p = $target.closest("#" + targetId);
     if (p && p.length > 0) {
@@ -434,4 +432,19 @@ export function isEventInTarget(evt,targetId){
         return true;
     }
     return false;
+}
+
+
+export function getOrCreateElementById(id){
+    var $elem = $('#'+id);
+    if($elem && $elem.length > 0 ){
+        return $elem[0];
+    }
+
+    var div = '<div id="'+id+'"></div>';
+    $('body').append(div);
+    $elem = $('#'+id);
+    if($elem && $elem.length > 0 ){
+        return $elem[0];
+    }
 }

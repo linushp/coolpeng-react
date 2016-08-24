@@ -46,7 +46,7 @@ class DaoHang extends PureRenderComponent {
     render() {
 
         if (!this.isDataOk()) {
-            return <div></div>
+            return <div>loading...</div>
         }
 
         const {user, daohang, actions} = this.props;

@@ -14,8 +14,6 @@ import Home from './views/Home';
 import NoteApp from './views/Note/NoteApp';
 import NoteSideBar from './views/Note/NoteSideBar/NoteSideBar';
 
-import DaoHangIndex from './views/DaoHang/index';
-
 var history = useRouterHistory(createHistory)({ basename: '' });
 
 if(window.COOPENG_USE_HASH_HISTORY){
@@ -29,6 +27,16 @@ const validate = function (next, replace, callback) {
     callback()
 };
 
+const getComponent = function(src){
+    return function (nextState, cb){
+        require.ensure([], (require) => {
+            cb(null, require(src))
+        })
+    }
+};
+
+
+
 ReactDOM.render(
     <Provider store={store}>
         <Router history={history}>
@@ -38,7 +46,7 @@ ReactDOM.render(
                     <Route path="home" component={Home}/>
                     <Route path="note"  components={{content:NoteApp,sidebar:NoteSideBar}} />
                     <Route path="note/:currentPath"  components={{content:NoteApp,sidebar:NoteSideBar}} />
-                    <Route path="daohang" getComponent={DaoHangIndex.getComponent} > </Route>
+                    <Route path="daohang" getComponent={getComponent('./views/DaoHang/DaoHang')} > </Route>
                 </Route>
             </Route>
         </Router>
