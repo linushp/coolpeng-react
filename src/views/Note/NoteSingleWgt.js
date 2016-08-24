@@ -52,7 +52,7 @@ class NoteSingle extends PureRenderComponent {
     onSaveNote(NoteVO) {
         const {actions} = this.props;
         var editorContent = this.getEditorContent();
-        var vo = {};
+        var vo = {accessControl:'private'};
         if (NoteVO) {
             vo = NoteVO.toJS();
         }

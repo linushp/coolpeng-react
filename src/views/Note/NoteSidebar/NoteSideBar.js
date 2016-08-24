@@ -2,7 +2,7 @@ import {Link} from 'react-router'
 import PureRenderComponent from '../../../core/PureRenderComponent';
 import ActionStoreHelper from '../../Common/ActionStoreHelper';
 import {immutableListMap,className,getDataFromImmutableOrPlain,isImmutable,uniqueId} from '../../../core/utils/index';
-import {parsePathParams,isPathParamChanged,getCategoryPath} from '../NoteFunctions';
+import {parsePathParams,isPathParamChanged,getCategoryAllChildrenId} from '../NoteFunctions';
 import ReactForm from '../../../components/form/ReactForm';
 import NoteCategoryItem from './NoteCategoryItem';
 import './index.less';
@@ -150,17 +150,22 @@ class NoteSidebar extends PureRenderComponent {
     }
 
 
-    isMenuSelect(M,CategoryList) {
+    getMenuSelectType(M,CategoryList) {
         var pathname = window.location.pathname;
         pathname = pathname.replace('/note/', '');
         var routeParams = parsePathParams(pathname);
-        var cc = "S" + routeParams.c + "E"; //S1212E
-        var pathObjList = getCategoryPath(M, CategoryList);
-        var pathList = pathObjList.map(function (p) {
-            return "S" + p.id + "E"
-        });
-        var path = pathList.join(' ');
-        return path.indexOf(cc) !== -1;
+        var routeCId = routeParams.c;
+        if(routeCId===M.get('id')){
+            return 'cur';
+        }
+
+        var childrenId = getCategoryAllChildrenId(M);
+        if(childrenId.indexOf(routeCId)>=0){
+            return 'child';
+        }
+
+        return 'not';
+
     }
 
     createNoteCategoryItemCallbacks(_this){
@@ -179,14 +184,16 @@ class NoteSidebar extends PureRenderComponent {
         var noteCategoryItemCallbacks = that.createNoteCategoryItemCallbacks(that);
         var createPopupOperation = that.createPopupOperation.bind(that);
         var noteSideBarUniqueId = that.noteSideBarUniqueId;
-        var isMenuSelect = that.isMenuSelect.bind(that);
+        var getMenuSelectType = that.getMenuSelectType.bind(that);
         return (
             <ul>
                 {immutableListMap(children, function (item, i) {
                     var link1 = toLinkURL(item);
                     var name = item.get('name');
-                    var classObj = {'menu-select': isMenuSelect(item, CategoryList)};
+                    var menuSelectType = getMenuSelectType(item,CategoryList);
+                    var classObj = {};
                     classObj['menu-level-' + deep] = true;
+                    classObj['menu-select-' + menuSelectType] = true;
                     var classMenu1 = className(classObj);
                     return (
                         <li>

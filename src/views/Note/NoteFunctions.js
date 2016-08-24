@@ -127,9 +127,21 @@ function getCategoryIdPath(id,CategoryList){
 }
 
 
+function getCategoryAllChildrenId(M){
+    var result = [];
+    var children  = M.get('children');
+    if(children && children.size>0){
+        children.forEach(function(c){
+            result.push(c.get('id'));
+            result = result.concat(getCategoryAllChildrenId(c));
+        });
+    }
+    return result;
+}
 
 
 module.exports = {
+    getCategoryAllChildrenId:getCategoryAllChildrenId,
     getCategoryIdPath:getCategoryIdPath,
     getCategoryPath:getCategoryPath,
     parsePathParams: parsePathParams,
