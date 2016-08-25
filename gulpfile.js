@@ -18,6 +18,7 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     rename = require('gulp-rename'),
     del = require('del');
+var through2=require("through2");
 
 var rev = require('gulp-rev');
 //- 对文件名加MD5后缀
@@ -91,3 +92,38 @@ gulp.task('minifySimditorJS', function() {
         .pipe(uglify())
         .pipe(gulp.dest('./static/lib/combo'))
 });
+
+
+
+//压缩js
+gulp.task('remini', function() {
+
+
+    function replaceDefaultStr(s){
+        var ss = s.replace(/"default"/gm,'DEFAULT_CONST_STRING');
+        ss = ss.replace(/"__esModule"/gm,'ES_MODULE_CONST_STRING');
+        var mm = '(function(){  var DEFAULT_CONST_STRING = "default"; var ES_MODULE_CONST_STRING = "__esModule";  '+ss+' })()';
+        return mm;
+    }
+
+    function modify(modifier) {
+        return through2.obj(function (file, encoding, done) {
+            var content = modifier(String(file.contents));
+            file.contents = new Buffer(content);
+            this.push(file);
+            done();
+        });
+    }
+
+    var jsArray = [
+        './dist/static/app/*.js'
+    ];
+
+    return gulp.src(jsArray).pipe(concat('mm.js'))
+        .pipe(modify(replaceDefaultStr))
+        .pipe(gulp.dest('./dist/static/app5/'))
+        .pipe(rename({suffix: '.min'}))
+        .pipe(uglify())
+        .pipe(gulp.dest('./dist/static/app5/'))
+});
+

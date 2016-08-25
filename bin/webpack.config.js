@@ -73,21 +73,14 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
                 {test: /\.scss$/, loaders: ["style", "css", "sass"]},
                 {
                     test: /\.less?$/,
-                    loaders: [
-                        'style-loader',
-                        'css-loader',
-                        'less-loader?{"sourceMap":true}'
-                    ],
+                    loader: ExtractTextPlugin.extract("style-loader", "css-loader!less-loader"),
+                    //loaders: [ 'style-loader','css-loader','less-loader?{"sourceMap":true}'],
                     include: __appPath
                 },
                 {
-                    test: /\.css$/, loader: ExtractTextPlugin.extract(
-                    "style-loader",
-                    "css-loader?sourceMap",
-                    {
-                        publicPath: "../"
-                    }
-                )
+                    test: /\.css$/,
+                    loader: ExtractTextPlugin.extract("style-loader", "css-loader")
+                    //loader: ExtractTextPlugin.extract("style-loader","css-loader?sourceMap",{publicPath: "../"})
                 },
                 {test: /\.(jpg|png|gif)$/, loader: 'url?limit=100000'},
                 {test: /\.(woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000'},
@@ -142,7 +135,7 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
                     'NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
                 }
             }),
-            new ExtractTextPlugin("css/[hash]-[name].css", {
+            new ExtractTextPlugin("static/css/[hash]-[name].css", {
                 disable: false,
                 allChunks: true
             }),
