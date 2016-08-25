@@ -42,9 +42,11 @@ class NoteSingle extends PureRenderComponent {
         var content = editor.getContentValue();
         var imageList = editor.getContentImageList(content);
         return {
+            myCategoryId:pathParams.c,
             categoryId: pathParams.c,
             postContent: content,
             postTitle: postTitle,
+            summary:'',
             imageList:imageList
         };
     }
