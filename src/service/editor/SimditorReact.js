@@ -41,6 +41,7 @@ export default class SimditorReact extends React.Component {
         this.isInited = false;
         this.editor = null;
         this.contentValue = null;
+        this.callbackList = [];
     }
 
     componentWillMount() {
@@ -50,29 +51,30 @@ export default class SimditorReact extends React.Component {
 
     componentDidMount() {
         var that = this;
-        that.initSimditorView(function(){
-            var content = that.props.content || '';
-            that.setContentValue(content);
-        });
+        var content = that.props.content || '';
+        that.setContentValue(content);
     }
 
     initSimditorView(callback) {
 
-        if (this.isInited === true) {
+        if(callback){
+            this.callbackList.push(callback);
+        }
+
+        if (this.editor) {
+            this.runInitedCallback();
             return;
         }
 
         var that = this;
 
         loadStaticCSS(StaticConfig.SIMDITOR_CSS, function () {
-            loadStaticJS(StaticConfig.SIMDITOR_JS, function () {
-                this.isInited = true;
+            loadStaticJS(StaticConfig.SIMDITOR_JS, function (isNewLoad) {
                 var Simditor = window.Simditor;
-                console.log('Simditor:::', Simditor);
                 toolbar = ['title', 'bold', 'italic', 'underline', 'strikethrough', 'fontScale', 'color', '|', 'ol', 'ul', 'blockquote', 'code', 'table', '|', 'link', 'image', 'hr', '|', 'indent', 'outdent', 'alignment'];
                 var simditorRoot = this.refs.simditorRoot.getDOMNode();//拿到了原生DOM
                 var $textarea = $(simditorRoot).find('textarea');
-                this.editor = new Simditor({
+                that.editor = new Simditor({
                     textarea: $textarea,
                     upload: {
                         onXhrUpload:function(file,_this,onSuccess,onError,onProgress){
@@ -85,28 +87,41 @@ export default class SimditorReact extends React.Component {
                     toolbarFloat: false
                 });
 
-                callback && callback();
+                if(isNewLoad){
+                    setTimeout(function(){
+                        that.runInitedCallback();
+                    },1000);
+                }else {
+                    that.runInitedCallback();
+                }
+
             }.bind(that));
         });
     }
 
-    setContentValue(contentValue){
+    runInitedCallback(){
+        var that = this;
+        var callbackList = that.callbackList || [];
+        for (var i = 0; i < callbackList.length; i++) {
+            var callback = callbackList[i];
+            callback.bind(that)();
+        }
+        that.callbackList = [];
+    }
 
+    setContentValue(contentValue){
         if (this.contentValue === contentValue) {
             return;
         }
         var that = this;
-        if (that.editor) {
+        that.initSimditorView(function () {
+            if (that.contentValue === contentValue) {
+                return;
+            }
             that.editor.setValue(contentValue);
-            console.log('that.editor.setValue(contentValue);111111');
             that.contentValue = contentValue;
-        } else {
-            that.initSimditorView(function () {
-                that.editor.setValue(contentValue);
-                that.contentValue = contentValue;
-                console.log('that.editor.setValue(contentValue);22222');
-            })
-        }
+            console.log('that.editor.setValue(contentValue);22222');
+        });
     }
 
 
@@ -153,7 +168,6 @@ export default class SimditorReact extends React.Component {
         this.isInited = false;
         this.editor = null;
         this.contentValue = null;
-        console.log('SimditorReact componentWillUnmount')
     }
 
     render() {
@@ -161,7 +175,7 @@ export default class SimditorReact extends React.Component {
             <div className="simditor-react-root" ref='simditorRoot'>
                 <div className="wrapper">
                     <section>
-                        <textarea className="simditor-react-textarea" placeholder="这里输入内容" autofocus></textarea>
+                        <textarea className="simditor-react-textarea" placeholder="" autofocus></textarea>
                     </section>
                 </div>
             </div>

@@ -253,7 +253,7 @@ var loadStaticCache = {};
 export function loadStaticJS(url, callback) {
 
     if (loadStaticCache[url]) {
-        callback();
+        callback(false);
         return;
     }
 
@@ -262,7 +262,7 @@ export function loadStaticJS(url, callback) {
     script.type = 'text/javascript';
     script.language = 'javascript';
     script.onload = script.onreadstatechange = function () {
-        callback();
+        callback(true);
         loadStaticCache[url] = true;
     };
     document.getElementsByTagName("body")[0].appendChild(script);
@@ -272,7 +272,7 @@ export function loadStaticJS(url, callback) {
 export function loadStaticCSS(url, callback) {
 
     if (loadStaticCache[url]) {
-        callback();
+        callback(false);
         return;
     }
 
@@ -281,7 +281,7 @@ export function loadStaticCSS(url, callback) {
     link.type = "text/css";
     link.href = url;
     link.onload = link.onreadstatechange = function () {
-        callback();
+        callback(true);
         loadStaticCache[url] = true;
     };
     document.getElementsByTagName("head")[0].appendChild(link);

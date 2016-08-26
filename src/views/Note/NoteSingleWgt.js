@@ -5,6 +5,7 @@ import {toPathParamString,getCategoryIdPath} from './NoteFunctions';
 import AvatarReact from '../../service/avatar/AvatarReact';
 import SimditorReact from '../../service/editor/SimditorReact';
 import ReactForm from '../../components/form/ReactForm';
+import Dialog from '../../components/dialog/Dialog';
 import $ from 'jquery';
 import './index.less';
 
@@ -64,13 +65,15 @@ class NoteSingle extends PureRenderComponent {
         vo.replyPageResult = null;
         actions.saveOrUpdateNote({NoteVO: vo}, function (resolved, payload,data,isSuccess) {
             if(isSuccess){
-                alert("保存成功");
-                var noteId = payload.data.id;
-                var link = getViewNoteURL(noteId);
-                that.context.router.push(link);
-                that.props.reloadNoteListByCategory();
+                //alert("保存成功");
+                Dialog.showAlertSuccess('保存成功',function(){
+                    var noteId = payload.data.id;
+                    var link = getViewNoteURL(noteId);
+                    that.context.router.push(link);
+                    that.props.reloadNoteListByCategory();
+                });
             }else {
-                alert("保存失败");
+                Dialog.showAlertError('保存失败');
             }
         });
     }
@@ -83,11 +86,9 @@ class NoteSingle extends PureRenderComponent {
             content = NoteVO.get('postContent');
             postTitle = NoteVO.get('postTitle');
         }
-        console.log('renderEditing')
 
         var TitleFormLayout = [{name: 'postTitle', text: '标题', type: 'input'}];
         var TitleFormValues = {postTitle: postTitle};
-
         return (
             <div>
                 <ReactForm ref="TitleForm" layout={TitleFormLayout} values={TitleFormValues}></ReactForm>
@@ -100,7 +101,7 @@ class NoteSingle extends PureRenderComponent {
     render() {
         const {NoteVO,user,actions,isEditing} = this.props;
         try {
-            console.log('NoteVO,isEditing', NoteVO.get('id'), isEditing);
+            //console.log('NoteVO,isEditing', NoteVO.get('id'), isEditing);
         } catch (e) {
 
         }

@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 import './index.less';
 var document = window.document;
-
+var undefined = window.undefined;
 
 var DIALOG_TYPE_MODAL = 'modal';
 var DIALOG_TYPE_ALERT_INFO = 'alert info';
@@ -78,9 +78,14 @@ class Dialog extends React.Component {
         var data = this.props.data;
         var doCloseDialog = this.doCloseDialog.bind(this);
         if (data.callback) {
-            data.callback('close', null, data, btn,function(){
+            if(data.closeControl===true){
+                data.callback('close', null, data, btn,function(){
+                    doCloseDialog();
+                });
+            }else {
+                data.callback('close', null, data, btn);
                 doCloseDialog();
-            });
+            }
         }else {
             doCloseDialog();
         }
@@ -230,10 +235,14 @@ function getDialogManagerInstance() {
 }
 
 
-function createShowDialog(type,defaultTitle, defaultButtons) {
-    return function (content,callback,title, buttons, popStyle, popClass) {
+function createShowDialog(type,defaultTitle, defaultButtons,defaultCloseControl) {
+    return function (content,callback,title, buttons, popStyle, popClass,closeControl) {
         buttons = buttons || defaultButtons;
         title = title || defaultTitle;
+        if(closeControl===undefined){
+            closeControl = defaultCloseControl;
+        }
+
         getDialogManagerInstance().pushDialog({
             type: type,
             title: title,
@@ -241,7 +250,8 @@ function createShowDialog(type,defaultTitle, defaultButtons) {
             buttons: buttons,
             callback: callback,
             popStyle: popStyle,
-            popClass: popClass
+            popClass: popClass,
+            closeControl:closeControl
         });
     }
 }
@@ -251,23 +261,23 @@ var btnCancel = {text: '取消', name:'cancel', cls: '', action: 'close'};
 
 var defaultButton_1 = [btnOK];
 var defaultButton_2 = [btnCancel,btnOK];
-
+var NULL = null;
 module.exports = {
 
-    showModal: createShowDialog(DIALOG_TYPE_MODAL,'标题', defaultButton_2),
+    showModal: createShowDialog(DIALOG_TYPE_MODAL,'标题', defaultButton_2,true),
 
-    showAlertInfo: createShowDialog(DIALOG_TYPE_ALERT_INFO,'提示', defaultButton_1),
-    showAlertError: createShowDialog(DIALOG_TYPE_ALERT_ERROR,'错误', defaultButton_1),
-    showAlertSuccess: createShowDialog(DIALOG_TYPE_ALERT_SUCCESS,'成功', defaultButton_1),
-    showAlertPrompt: createShowDialog(DIALOG_TYPE_ALERT_PROMPT,'请确认?', defaultButton_2),
+    showAlertInfo: createShowDialog(DIALOG_TYPE_ALERT_INFO,'提示', defaultButton_1,false),
+    showAlertError: createShowDialog(DIALOG_TYPE_ALERT_ERROR,'错误', defaultButton_1,false),
+    showAlertSuccess: createShowDialog(DIALOG_TYPE_ALERT_SUCCESS,'成功', defaultButton_1,false),
+    showAlertPrompt: createShowDialog(DIALOG_TYPE_ALERT_PROMPT,'请确认?', defaultButton_2,false),
 
-    showFullScreen: createShowDialog(DIALOG_TYPE_FULL_SCREEN,'', defaultButton_1),
+    showFullScreen: createShowDialog(DIALOG_TYPE_FULL_SCREEN,'', defaultButton_1,true),
 
-    showMsgInfo: createShowDialog(DIALOG_TYPE_MSG_INFO),
-    showMsgSuccess: createShowDialog(DIALOG_TYPE_MSG_SUCCESS),
-    showMsgError: createShowDialog(DIALOG_TYPE_MSG_ERROR),
+    showMsgInfo: createShowDialog(DIALOG_TYPE_MSG_INFO,NULL,NULL,false),
+    showMsgSuccess: createShowDialog(DIALOG_TYPE_MSG_SUCCESS,NULL,NULL,false),
+    showMsgError: createShowDialog(DIALOG_TYPE_MSG_ERROR,NULL,NULL,false),
 
-    showNotification: createShowDialog(DIALOG_TYPE_NOTIFICATION),
+    showNotification: createShowDialog(DIALOG_TYPE_NOTIFICATION,NULL,NULL,false),
 
 
     Dialog: Dialog
