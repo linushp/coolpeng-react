@@ -79,11 +79,11 @@ class Dialog extends React.Component {
         var doCloseDialog = this.doCloseDialog.bind(this);
         if (data.callback) {
             if(data.closeControl===true){
-                data.callback('close', null, data, btn,function(){
+                data.callback(btn,data,function(){
                     doCloseDialog();
                 });
             }else {
-                data.callback('close', null, data, btn);
+                data.callback(btn,data);
                 doCloseDialog();
             }
         }else {

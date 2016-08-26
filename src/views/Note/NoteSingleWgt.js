@@ -65,15 +65,13 @@ class NoteSingle extends PureRenderComponent {
         vo.replyPageResult = null;
         actions.saveOrUpdateNote({NoteVO: vo}, function (resolved, payload,data,isSuccess) {
             if(isSuccess){
-                //alert("保存成功");
-                Dialog.showAlertSuccess('保存成功',function(){
-                    var noteId = payload.data.id;
-                    var link = getViewNoteURL(noteId);
-                    that.context.router.push(link);
-                    that.props.reloadNoteListByCategory();
-                });
+                var noteId = payload.data.id;
+                var link = getViewNoteURL(noteId);
+                that.context.router.push(link);
+                that.props.reloadNoteListByCategory();
+                Dialog.showMsgSuccess('保存成功');
             }else {
-                Dialog.showAlertError('保存失败');
+                Dialog.showMsgError('保存失败');
             }
         });
     }

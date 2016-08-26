@@ -5,6 +5,7 @@ import ActionStoreHelper from '../Common/ActionStoreHelper';
 import {immutableListMap,className,globalVar} from '../../core/utils/index';
 import {toPathParamString} from './NoteFunctions';
 import ReactForm from '../../components/form/ReactForm';
+import Dialog from '../../components/dialog/Dialog';
 import './index.less';
 
 function getViewNoteURLPagination(pn) {
@@ -36,8 +37,14 @@ class NoteList extends PureRenderComponent {
 
     onDeleteNote(noteItem){
         const {actions} = this.props;
-        var NoteVO = noteItem.toJS();
-        actions.deleteNote({NoteVO:NoteVO});
+        Dialog.showAlertPrompt('确定要删除吗?',function(btn){
+            if(btn.name==='ok'){
+                var NoteVO = noteItem.toJS();
+                actions.deleteNote({NoteVO:NoteVO},function(){
+                    Dialog.showMsgSuccess('删除成功');
+                });
+            }
+        });
     }
 
     onClickPagination(pn){
