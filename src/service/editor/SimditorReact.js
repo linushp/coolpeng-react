@@ -19,10 +19,10 @@ var supporyImageHostName = [
 ];
 
 
-function isImageUploadSupport(url){
-    for(var i=0;i<supporyImageHostName.length;i++){
+function isImageUploadSupport(url) {
+    for (var i = 0; i < supporyImageHostName.length; i++) {
         var hostName = supporyImageHostName[i];
-        if(StringUtils.startsWith(url,hostName)){
+        if (StringUtils.startsWith(url, hostName)) {
             return true;
         }
     }
@@ -51,13 +51,13 @@ export default class SimditorReact extends React.Component {
 
     componentDidMount() {
         var that = this;
-        var content = that.props.content || '';
+        var content = that.props.content;
         that.setContentValue(content);
     }
 
     initSimditorView(callback) {
 
-        if(callback){
+        if (callback) {
             this.callbackList.push(callback);
         }
 
@@ -77,8 +77,8 @@ export default class SimditorReact extends React.Component {
                 that.editor = new Simditor({
                     textarea: $textarea,
                     upload: {
-                        onXhrUpload:function(file,_this,onSuccess,onError,onProgress){
-                            onXhrUpload(file,onSuccess,onError,onProgress);
+                        onXhrUpload: function (file, _this, onSuccess, onError, onProgress) {
+                            onXhrUpload(file, onSuccess, onError, onProgress);
                         }
                     },
                     pasteImage: true,
@@ -87,11 +87,11 @@ export default class SimditorReact extends React.Component {
                     toolbarFloat: false
                 });
 
-                if(isNewLoad){
-                    setTimeout(function(){
+                if (isNewLoad) {
+                    setTimeout(function () {
                         that.runInitedCallback();
-                    },1000);
-                }else {
+                    }, 1000);
+                } else {
                     that.runInitedCallback();
                 }
 
@@ -99,7 +99,7 @@ export default class SimditorReact extends React.Component {
         });
     }
 
-    runInitedCallback(){
+    runInitedCallback() {
         var that = this;
         var callbackList = that.callbackList || [];
         for (var i = 0; i < callbackList.length; i++) {
@@ -109,12 +109,13 @@ export default class SimditorReact extends React.Component {
         that.callbackList = [];
     }
 
-    setContentValue(contentValue){
-        if (this.contentValue === contentValue) {
-            return;
-        }
+    setContentValue(contentValue) {
         var that = this;
         that.initSimditorView(function () {
+            if (contentValue === null || contentValue === undefined) {
+                return;
+            }
+
             if (that.contentValue === contentValue) {
                 return;
             }
@@ -125,7 +126,7 @@ export default class SimditorReact extends React.Component {
     }
 
 
-    getContentValue(){
+    getContentValue() {
         var that = this;
         if (that.editor) {
             return that.editor.getValue();
@@ -138,15 +139,15 @@ export default class SimditorReact extends React.Component {
      * 获取文章中所有的上传的图片,不包含外链图片
      * @param content
      */
-    getContentImageList(content){
+    getContentImageList(content) {
         content = content || this.getContentValue();
-        var $content = $('<div>'+content+'</div>');
+        var $content = $('<div>' + content + '</div>');
         var $imgs = $content.find('img');
         var imageList = [];
-        $imgs.each(function(){
+        $imgs.each(function () {
             var $img = $(this);
             var url = $img.attr('src');
-            if(isImageUploadSupport(url)){
+            if (isImageUploadSupport(url)) {
                 imageList.push(url);
             }
         });
@@ -157,11 +158,13 @@ export default class SimditorReact extends React.Component {
         //不允许重绘DOM
         return false;
     }
+
     componentWillReceiveProps(nextProps) {
-        var content = nextProps.content || '';
+        var content = nextProps.content;
         this.setContentValue(content);
     }
-    componentWillUnmount(){
+
+    componentWillUnmount() {
         if (this.editor) {
             this.editor.destroy();
         }

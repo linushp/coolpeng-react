@@ -80,10 +80,10 @@ class NoteSingle extends PureRenderComponent {
 
     renderEditing(NoteVO, user, actions, isEditing) {
 
-        var content = "";
+        var content = null;
         var postTitle = "";
         if (NoteVO) {
-            content = NoteVO.get('postContent');
+            content = NoteVO.get('postContent') || '';
             postTitle = NoteVO.get('postTitle');
         }
 
