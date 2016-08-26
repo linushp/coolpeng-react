@@ -18,6 +18,8 @@ var DIALOG_TYPE_MSG_ERROR = 'msg error';
 
 var DIALOG_TYPE_NOTIFICATION = 'notification';
 
+var btnOK = {text: '确定', name:'ok', cls: 'primary', action: 'close'};
+var btnCancel = {text: '取消', name:'cancel', cls: '', action: 'close'};
 
 var uniqueIdNumber = 0;
 var styleZIndex = 1000;
@@ -165,7 +167,7 @@ class Dialog extends React.Component {
                     <div className="cp-dialog-mask" style={{'zIndex':this.styleZIndex}}></div>
                     <div className={`cp-dialog-pop ${popClassDisplay} ${popClass}`} style={this.getPopStyle(popStyle)} >
                         <div className="cp-dialog-header"> {title} </div>
-                        <div className="cp-dialog-ico cp-dialog-close" onClick={this.onClickClose.bind(this)}
+                        <div className="cp-dialog-ico cp-dialog-close" onClick={this.onClickClose.bind(this,btnCancel)}
                              style={{'zIndex':(this.styleZIndex+2)}}></div>
                         <div className="cp-dialog-content">
                             <i className={this.getIconClass(type)}></i>
@@ -256,8 +258,6 @@ function createShowDialog(type,defaultTitle, defaultButtons,defaultCloseControl)
     }
 }
 
-var btnOK = {text: '确定', name:'ok', cls: 'primary', action: 'close'};
-var btnCancel = {text: '取消', name:'cancel', cls: '', action: 'close'};
 
 var defaultButton_1 = [btnOK];
 var defaultButton_2 = [btnCancel,btnOK];
