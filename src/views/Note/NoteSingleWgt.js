@@ -99,12 +99,19 @@ class NoteSingle extends PureRenderComponent {
     }
 
     render() {
-        const {NoteVO,user,actions,isEditing} = this.props;
+        const {NoteVO,user,actions,isEditing,pathParams} = this.props;
         try {
             //console.log('NoteVO,isEditing', NoteVO.get('id'), isEditing);
         } catch (e) {
 
         }
+
+        if(NoteVO){
+            if(pathParams.n!= NoteVO.get('id')){
+                return <div>loading...</div>
+            }
+        }
+
 
         if (!isEditing) {
             if (!NoteVO) {

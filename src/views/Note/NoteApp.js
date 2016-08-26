@@ -115,7 +115,7 @@ class NoteApp extends PureRenderComponent {
                     }} ></NoteListWgt>
                 </div>
                 <div className="note-content">
-                    <NoteSingleWgt {...{NoteVO, user, actions, isEditing, reloadNoteListByCategory,CategoryList}}></NoteSingleWgt>
+                    <NoteSingleWgt {...{NoteVO, user, actions, isEditing, reloadNoteListByCategory,CategoryList,pathParams}}></NoteSingleWgt>
                 </div>
                 <div className="clear"></div>
             </div>
