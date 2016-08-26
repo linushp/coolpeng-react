@@ -1,0 +1,192 @@
+.cp-dialog{
+  font-family: 'SimSun';
+  font-weight: normal;
+}
+
+.cp-dialog-mask {
+  background-color: #000;
+  opacity: 0.3;
+  filter: alpha(opacity=30);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  _position: absolute;
+  pointer-events: auto;
+}
+
+.cp-dialog-hidden{
+  opacity: 0 !important;
+}
+
+.cp-dialog-pop{
+  min-width: 260px;
+  min-height: 150px;
+  top: 35%;
+  left: 40%;
+  background-color: #fff;
+  -webkit-background-clip: content;
+  box-shadow: 1px 1px 50px rgba(0,0,0,.3);
+  position: fixed;
+  _position: absolute;
+  pointer-events: auto;
+  border-radius: 2px;
+  animation-duration: .3s;
+  opacity: 1;
+  transition: opacity 0.2s linear;
+}
+
+
+.cp-dialog-header{
+  padding: 0 80px 0 20px;
+  height: 42px;
+  line-height: 42px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background-color: #F8F8F8;
+  border-radius: 2px 2px 0 0;
+}
+
+.cp-dialog-content{
+  position: relative;
+  padding: 20px;
+  line-height: 24px;
+  word-break: break-all;
+  overflow: hidden;
+  font-size: 14px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+
+.cp-dialog-footer{
+  bottom: 0;
+  position: absolute;
+  padding: 0 10px 12px;
+  pointer-events: auto;
+  right: 0;
+}
+
+.cp-dialog-btn{
+  height: 28px;
+  line-height: 28px;
+  margin: 0 6px;
+  padding: 0 15px;
+  border: 1px #dedede solid;
+  background-color: #f1f1f1;
+  color: #333;
+  border-radius: 2px;
+  font-weight: 400;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.cp-dialog-btn-primary{
+  border-color: #4898d5;
+  background-color: #2e8ded;
+  color: #fff;
+}
+
+
+.cp-dialog-ico {
+  position: absolute;
+  top: 16px;
+  left: 15px;
+  _left: -40px;
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  vertical-align: top;
+  background: url(icon.png) no-repeat;
+}
+
+.cp-dialog-ico1{background-position:-30px 0 }
+.cp-dialog-ico2{background-position:-60px 0;}
+.cp-dialog-ico3{background-position:-90px 0;}
+.cp-dialog-ico4{background-position:-120px 0;}
+.cp-dialog-ico5{background-position:-150px 0;}
+.cp-dialog-ico6{background-position:-180px 0;}
+.cp-dialog-close{
+  background-position: 0 -40px;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  margin-left: 10px;
+  font-size: 12px;
+  z-index: 1002;
+  right: 8px;
+  top: 14px;
+  left: auto;
+}
+
+.cp-dialog-alert {
+
+  .cp-dialog-pop {
+  }
+
+
+  .cp-dialog-inner{
+    margin-left: 40px;
+  }
+
+}
+
+
+
+
+
+
+
+
+.cp-dialog-msg{
+  .cp-dialog-mask{
+    display: none;
+  }
+  .cp-dialog-header{
+    display: none;
+  }
+  .cp-dialog-footer{
+    display: none;
+  }
+
+  .cp-dialog-pop {
+    min-width: 260px;
+    min-height: 30px;
+    top: 50px;
+  }
+  .cp-dialog-inner{
+    margin-left: 35px;
+  }
+
+  .cp-dialog-close{
+    display: block;
+    top: 23px;
+  }
+
+  &.info{
+    .cp-dialog-pop {
+      background-color: rgba(0,0,0,0.6);
+    }
+    .cp-dialog-ico{
+      display: none;
+    }
+    .cp-dialog-close{
+      display: block;
+      top: 17px;
+    }
+    .cp-dialog-inner{
+      margin-left: 10px;
+      color: #FFFFFF;
+    }
+    .cp-dialog-content {
+      padding: 12px;
+    }
+  }
+
+}

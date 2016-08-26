@@ -5,6 +5,7 @@ import {Router, Route, IndexRedirect,useRouterHistory} from 'react-router';
 import {createHistory,createHashHistory} from 'history'
 import configureStore from './store/configureStore';
 import {EventBus} from './core/utils/index'
+import Dialog from './components/dialog/Dialog';
 import $ from 'jquery';
 
 
@@ -12,7 +13,7 @@ import App from './views/App';
 import Home from './views/Home';
 
 import NoteApp from './views/Note/NoteApp';
-import NoteSideBar from './views/Note/NoteSideBar/NoteSideBar';
+import NoteSideMenu from './views/Note/NoteSideMenu/NoteSideMenu';
 
 var history = useRouterHistory(createHistory)({ basename: '' });
 
@@ -35,8 +36,6 @@ const getComponent = function(src){
     }
 };
 
-
-
 ReactDOM.render(
     <Provider store={store}>
         <Router history={history}>
@@ -44,8 +43,8 @@ ReactDOM.render(
                 <IndexRedirect to="daohang"/>
                 <Route component={App}>
                     <Route path="home" component={Home}/>
-                    <Route path="note"  components={{content:NoteApp,sidebar:NoteSideBar}} />
-                    <Route path="note/:currentPath"  components={{content:NoteApp,sidebar:NoteSideBar}} />
+                    <Route path="note"  components={{content:NoteApp,sidebar:NoteSideMenu}} />
+                    <Route path="note/:currentPath"  components={{content:NoteApp,sidebar:NoteSideMenu}} />
                     <Route path="daohang" getComponent={getComponent('./views/DaoHang/DaoHang')} > </Route>
                 </Route>
             </Route>
@@ -55,6 +54,10 @@ ReactDOM.render(
 );
 
 $(function(){
+
+
+    window.COOLPENG_DIALOG = Dialog;
+
     $(document).on('click',function(evt){
         EventBus.emit('EVENT_DOCUMENT_CLICK',evt,this);
     });

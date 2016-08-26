@@ -5,15 +5,14 @@ import {immutableListMap,className,getDataFromImmutableOrPlain,isImmutable,uniqu
 import {parsePathParams,isPathParamChanged,getCategoryAllChildrenId} from '../NoteFunctions';
 import ReactForm from '../../../components/form/ReactForm';
 import NoteCategoryItem from './NoteCategoryItem';
-import './index.less';
+import './NoteSidebar.less';
 
 const LEVEL_GROUP = "group";
 const LEVEL_MODULE = "module";
 
 function toLinkURL(item) {
     try {
-        var link1 = '/note/c' + item.get('id');
-        return link1;
+        return '/note/c' + item.get('id');
     }catch (e){
         return '';
     }
@@ -24,7 +23,7 @@ function toLinkURLEditor(item) {
 }
 
 
-class NoteSidebar extends PureRenderComponent {
+class NoteSideMenu extends PureRenderComponent {
 
     static contextTypes = {
         router: React.PropTypes.object.isRequired
@@ -240,12 +239,12 @@ class NoteSidebar extends PureRenderComponent {
     }
 }
 
-NoteSidebar.STATE_CONFIG = {
+NoteSideMenu.STATE_CONFIG = {
     CategoryList: 'note.CategoryList',
     userInfo: 'user.userInfo'
 };
 
-NoteSidebar.ACTION_CONFIG = {
+NoteSideMenu.ACTION_CONFIG = {
     'staticUpdateNoteCategory':'note.staticUpdateNoteCategory',
     'staticCreateNoteCategory':'note.staticCreateNoteCategory',
     'saveOrUpdateNoteCategory':'note.saveOrUpdateNoteCategory',
@@ -253,4 +252,4 @@ NoteSidebar.ACTION_CONFIG = {
     'deleteNoteCategory':'note.deleteNoteCategory'
 };
 
-export default ActionStoreHelper()(NoteSidebar);
+export default ActionStoreHelper()(NoteSideMenu);

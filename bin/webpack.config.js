@@ -5,6 +5,11 @@ var webpack = require('webpack'),
     path = require('path'),
     fs = require('fs'),
     srcPath = path.join(__dirname, '../src');
+
+var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+
+
+
 var appPath = function(s){
     var x=  path.join(__dirname,"../");
     return path.join(x,s);
@@ -73,14 +78,14 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
                 {test: /\.scss$/, loaders: ["style", "css", "sass"]},
                 {
                     test: /\.less?$/,
-                    loader: ExtractTextPlugin.extract("style-loader", "css-loader!less-loader"),
-                    //loaders: [ 'style-loader','css-loader','less-loader?{"sourceMap":true}'],
+                    //loader: ExtractTextPlugin.extract("style-loader", "css-loader!less-loader"),
+                    loaders: [ 'style-loader','css-loader','less-loader?{"sourceMap":true}'],
                     include: __appPath
                 },
                 {
                     test: /\.css$/,
-                    loader: ExtractTextPlugin.extract("style-loader", "css-loader")
-                    //loader: ExtractTextPlugin.extract("style-loader","css-loader?sourceMap",{publicPath: "../"})
+                    loaders: [ 'style-loader','css-loader'],
+                    //loader: ExtractTextPlugin.extract("style-loader", "css-loader")
                 },
                 {test: /\.(jpg|png|gif)$/, loader: 'url?limit=100000'},
                 {test: /\.(woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000'},
@@ -115,6 +120,7 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
 
 
         plugins: [
+            new CaseSensitivePathsPlugin(),
             new webpack.optimize.CommonsChunkPlugin({
                 name: "shared",
                 minChunks: 2
@@ -144,7 +150,7 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
             })
         ],
         debug: isProduction() ? false : true,
-        devtool: isProduction() ? null: 'eval-cheap-module-source-map',
+        devtool: isProduction() ? null: 'cheap-module-source-map',
         devServer: {
             port: 4000,
             host: "0.0.0.0",
