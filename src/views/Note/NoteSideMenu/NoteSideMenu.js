@@ -1,14 +1,14 @@
 import {Link} from 'react-router'
 import PureRenderComponent from '../../../core/PureRenderComponent';
 import ActionStoreHelper from '../../Common/ActionStoreHelper';
+import PopupOperation from '../../../components/PopupOperation/PopupOperation';
 import {immutableListMap,className,getDataFromImmutableOrPlain,isImmutable,uniqueId} from '../../../core/utils/index';
-import {parsePathParams,isPathParamChanged,getCategoryAllChildrenId} from '../NoteFunctions';
+import {parsePathParams,getCategoryAllChildrenId} from '../NoteFunctions';
+import Icon from "../../../components/icons/Icon";
 import ReactForm from '../../../components/form/ReactForm';
 import NoteCategoryItem from './NoteCategoryItem';
 import './NoteSidebar.less';
 
-const LEVEL_GROUP = "group";
-const LEVEL_MODULE = "module";
 
 function toLinkURL(item) {
     try {
@@ -31,10 +31,15 @@ class NoteSideMenu extends PureRenderComponent {
 
     constructor(props) {
         super(props);
-        this.noteSideBarUniqueId = uniqueId('NoteSidebarSidebarUniqueId_')
+        this.noteSideBarUniqueId = uniqueId('NoteSidebarSidebarUniqueId_');
         this.state = {
-            isEditing:false
+            isEditing:false,
+            menuNoteExpand:true
         };
+    }
+
+    onClickUploadFile(){
+        
     }
 
     onClickCreateNote(item) {
@@ -55,6 +60,7 @@ class NoteSideMenu extends PureRenderComponent {
         });
 
         this.setState({isEditing:true});
+        this.setCategoryItemExpand(parentCategory,true);
     }
 
     onSaveCategory(item,name){
@@ -134,26 +140,42 @@ class NoteSideMenu extends PureRenderComponent {
         }
     }
 
-    createPopupOperation(item) {
+    getPopButtons(type,item) {
         var funcWrapperCancelALL = this.funcWrapperCancelALL.bind(this);
         var onClickCreateNote     = funcWrapperCancelALL(this.onClickCreateNote.bind(this, item));
         var onClickCreateCategory = funcWrapperCancelALL(this.onClickCreateCategory.bind(this, item));
         var onClickDeleteCategory = funcWrapperCancelALL(this.onClickDeleteCategory.bind(this, item));
         var onClickRenameCategory = funcWrapperCancelALL(this.onClickRenameCategory.bind(this, item));
-        return [
-            {text: '新建笔记', onClick: onClickCreateNote},
-            {text: '新建分类', onClick: onClickCreateCategory},
-            {text: '删除', onClick: onClickDeleteCategory},
-            {text: '重命名', onClick: onClickRenameCategory}
-        ];
+
+        if(type=="item"){
+            return [
+                {text: '新建笔记', onClick: onClickCreateNote},
+                {text: '新建分类', onClick: onClickCreateCategory},
+                {text: '删除', onClick: onClickDeleteCategory},
+                {text: '重命名', onClick: onClickRenameCategory}
+            ];
+        }
+
+        if(type=="topCreate"){
+            return [
+                {text: '新建笔记', onClick: onClickCreateNote},
+                {text: '新建分类', onClick: onClickCreateCategory}
+            ];
+        }
+
+        if(type=="topUpload"){
+            return [
+                {text: '上传图片', onClick: onClickCreateNote},
+                {text: '上传文件', onClick: onClickCreateCategory}
+            ];
+        }
+
     }
 
 
-    getMenuSelectType(M,CategoryList) {
-        var pathname = window.location.pathname;
-        pathname = pathname.replace('/note/', '');
-        var routeParams = parsePathParams(pathname);
-        var routeCId = routeParams.c;
+    getMenuSelectType(M,pathParams) {
+        var routeCId = pathParams.c;
+        console.log("getMenuSelectType",routeCId,M.get('id'))
         if(routeCId===M.get('id')){
             return 'cur';
         }
@@ -179,34 +201,62 @@ class NoteSideMenu extends PureRenderComponent {
     }
 
 
-    renderCategoryList(children, CategoryList, deep, that) {
+    onClickMenuToggle(stateName){
+        var oldValue = this.state[stateName];
+        var map = {};
+        map[stateName] = !oldValue;
+        this.setState(map);
+    }
+
+
+    isCategoryItemExpand(item){
+        var id = item.get('id');
+        return this.state["CategoryItemExpand_" + id] || false;
+    }
+
+    setCategoryItemExpand(item,isExpand){
+        var id = item.get('id');
+        var m = {};
+        m["CategoryItemExpand_" + id] = isExpand;
+        this.setState(m);
+    }
+
+
+
+    renderCategoryList(children, CategoryList, deep, that,isExpand) {
         var noteCategoryItemCallbacks = that.createNoteCategoryItemCallbacks(that);
-        var createPopupOperation = that.createPopupOperation.bind(that);
+        var getPopButtons = that.getPopButtons.bind(that);
         var noteSideBarUniqueId = that.noteSideBarUniqueId;
         var getMenuSelectType = that.getMenuSelectType.bind(that);
+        var isExpand = isExpand || false;
+        var pathParams = that.props.pathParams;
         return (
-            <ul>
+            <ul className={`menu-ul menu-ul-expand-${isExpand}`}>
                 {immutableListMap(children, function (item, i) {
                     var link1 = toLinkURL(item);
                     var name = item.get('name');
-                    var menuSelectType = getMenuSelectType(item,CategoryList);
+                    var menuSelectType = getMenuSelectType(item,pathParams);
                     var classObj = {};
+                    classObj['menu-level'] = true;
                     classObj['menu-level-' + deep] = true;
                     classObj['menu-select-' + menuSelectType] = true;
                     var classMenu1 = className(classObj);
+                    var isExpand = that.isCategoryItemExpand(item);
                     return (
                         <li>
                             <div className={classMenu1} key={link1}>
                                 <NoteCategoryItem
+                                    isExpand={isExpand}
                                     item={item}
                                     name={name}
                                     toLink={link1}
+                                    setCategoryItemExpand={that.setCategoryItemExpand.bind(that)}
                                     noteSideBarUniqueId={noteSideBarUniqueId}
-                                    btns={createPopupOperation(item)}
+                                    btns={getPopButtons("item",item)}
                                     callbacks={noteCategoryItemCallbacks}>
                                 </NoteCategoryItem>
                             </div>
-                            {that.renderCategoryList(item.get('children'), CategoryList, deep + 1, that)}
+                            {that.renderCategoryList(item.get('children'), CategoryList, deep + 1, that,isExpand)}
                         </li>
                     );
                 })}
@@ -222,17 +272,43 @@ class NoteSideMenu extends PureRenderComponent {
         var onClickCreateCategoryEmpty = function(){
             that.onClickCreateCategory();
         };
-
-
         var isDisableCreateCategory = this._isDisableCreateCategory();
         var noteSideBarUniqueId = this.noteSideBarUniqueId;
+        var getPopButtons = this.getPopButtons.bind(this);
         return (
             <div className="note-sidebar" id={noteSideBarUniqueId}>
-                <div>
+
+                <div className="top">
+                    <div className="top-create">
+                        <PopupOperation btns={getPopButtons("topCreate")}>
+                            <Icon type="creates" className="top-icon"></Icon>
+                            <span className="create-text">新建</span>
+                            <Icon type="arrow" className="top-icon2"></Icon>
+                        </PopupOperation>
+                    </div>
+                    <div className="top-upload">
+                        <PopupOperation btns={getPopButtons("topUpload")}>
+                            <Icon type="uploads" className="top-icon"></Icon>
+                            <span className="create-text">上传</span>
+                            <Icon type="arrow" className="top-icon2"></Icon>
+                        </PopupOperation>
+                    </div>
+                </div>
+
+
+                <div style={{display:'none'}}>
                     <button className="CreateCategory" disabled={isDisableCreateCategory} onClick={onClickCreateCategoryEmpty}>新建分类</button>
                 </div>
-                <div>
-                    {this.renderCategoryList(CategoryList,CategoryList,0,that)}
+                <div className={`menu cp-expand-${this.state.menuNoteExpand}`}>
+                    <div className="menu-name">
+                        <div className="menu-arrow" onClick={this.onClickMenuToggle.bind(this,"menuNoteExpand")}>
+                            <Icon type={`arrow-${this.state.menuNoteExpand}`}  />
+                        </div>
+                        <Icon type="folder1" className="menu-icon"/>
+                        <span>我的随笔</span>
+                    </div>
+                    
+                    {this.renderCategoryList(CategoryList,CategoryList,0,that,this.state.menuNoteExpand)}
                 </div>
             </div>
         );

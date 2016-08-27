@@ -1,12 +1,13 @@
 import {Link} from 'react-router'
 import PureRenderComponent from '../../../core/PureRenderComponent';
 import PopupOperation from '../../../components/PopupOperation/PopupOperation';
+import Icon from "../../../components/icons/Icon";
 import ActionStoreHelper from '../../Common/ActionStoreHelper';
-import {immutableListMap,className,getDataFromImmutableOrPlain,uniqueId,EventBus,GlobalEventName,isEventInTarget} from '../../../core/utils/index';
+import {immutableListMap,className,getDataFromImmutableOrPlain,uniqueId,isEmpty,EventBus,GlobalEventName,isEventInTarget} from '../../../core/utils/index';
 import ReactForm from '../../../components/form/ReactForm';
 import {parsePathParams,isPathParamChanged} from '../NoteFunctions';
 
-var EVENT_DOCUMENT_CLICK = GlobalEventName.EVENT_DOCUMENT_CLICK;
+var getObjAttrValue = getDataFromImmutableOrPlain;
 
 class NoteCategoryItem extends PureRenderComponent {
 
@@ -28,14 +29,22 @@ class NoteCategoryItem extends PureRenderComponent {
         callbacks.onCancelCreateCategory(item);
     }
 
+    onToggleExpand(){
+        var item = this.props.item || {};
+        var setCategoryItemExpand = this.props.setCategoryItemExpand;
+        var isExpand = this.props.isExpand;
+        setCategoryItemExpand(item,!isExpand);
+    }
+
     render() {
+
         var link1= this.props.toLink;
         var name = this.props.name || '';
         var btns = this.props.btns;
         var item = this.props.item || {};
-        var isEditing = getDataFromImmutableOrPlain(item,'isEditing');
+        var isEditing = getObjAttrValue(item,'isEditing');
         var callbacks = this.props.callbacks;
-        var isDeleted = getDataFromImmutableOrPlain(item,'isDeleted');
+        var isDeleted = getObjAttrValue(item,'isDeleted');
 
         if(isDeleted===true){
             return (<div style={{display:'none'}}></div>);
@@ -51,11 +60,26 @@ class NoteCategoryItem extends PureRenderComponent {
             );
         }
 
+        var isExpand = this.props.isExpand;
+        var arrowIconStyle = {};
+        if(isEmpty(getObjAttrValue(item,'children'))){
+            arrowIconStyle['display'] = 'none';
+        }
 
         return (
-            <div>
-                <Link to={link1}> {name} </Link>
-                <PopupOperation btns={btns}>操作</PopupOperation>
+            <div className="note-menu-item">
+                <Icon
+                    onClick={this.onToggleExpand.bind(this)}
+                    type={`arrow-${isExpand}`}
+                    className="menu-item-arrow"
+                    style={arrowIconStyle} />
+                <Link to={link1}>
+                    <Icon type="folder2" className="menu-icon"/>
+                    <span className="menu-name">{name}</span>
+                </Link>
+                <PopupOperation btns={btns}>
+                    <Icon type={`arrow`}  className="menu-item-arrow-oper"  />
+                </PopupOperation>
             </div>);
     }
 }

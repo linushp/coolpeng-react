@@ -6,7 +6,7 @@ import {parsePathParams,isPathParamChanged} from './NoteFunctions';
 import NoteListWgt from './NoteListWgt';
 import NoteSingleWgt from './NoteSingleWgt';
 import './index.less';
-
+import NoteSideMenu from './NoteSideMenu/NoteSideMenu';
 
 class NoteApp extends PureRenderComponent {
     constructor(props) {
@@ -102,22 +102,29 @@ class NoteApp extends PureRenderComponent {
         var reloadNoteListByCategory = this.reloadNoteListByCategory.bind(this);
         return (
             <div className="note-page">
-                <div className="note-list">
-                    <NoteListWgt {...{
-                        NoteList,
-                        NoteListTotalCount,
-                        NoteListPageSize,
-                        NoteListPageNumber,
-                        NoteListSearchTitleLike,
-                        pathParams,
-                        actions,
-                        reloadNoteListByCategory
-                    }} ></NoteListWgt>
+                <div className="note-page-side">
+                    <div style={{height:54}}></div>
+                    <NoteSideMenu pathParams={pathParams}></NoteSideMenu>
                 </div>
-                <div className="note-content">
-                    <NoteSingleWgt {...{NoteVO, user, actions, isEditing, reloadNoteListByCategory,CategoryList,pathParams}}></NoteSingleWgt>
+                <div className="note-page-main">
+                    <div style={{height:54}}></div>
+                    <div>
+                        <NoteListWgt {...{
+                            NoteList,
+                            NoteListTotalCount,
+                            NoteListPageSize,
+                            NoteListPageNumber,
+                            NoteListSearchTitleLike,
+                            pathParams,
+                            actions,
+                            reloadNoteListByCategory
+                        }} ></NoteListWgt>
+                    </div>
+                    <div className="note-content">
+                        <NoteSingleWgt {...{NoteVO, user, actions, isEditing, reloadNoteListByCategory,CategoryList,pathParams}}></NoteSingleWgt>
+                    </div>
+                    <div className="clear"></div>
                 </div>
-                <div className="clear"></div>
             </div>
         );
     }

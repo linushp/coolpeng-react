@@ -1,12 +1,170 @@
-.note-sidebar{
-  .menu-select-cur a{
-    color: red;
+.note-sidebar {
+  .menu-select-cur {
+    background: #ee942f;
+    //border: 1px solid #ee942f;
+    color: #ffffff;
   }
-  .menu-select-child a{
+  .menu-select-child a {
     color: blue;
   }
 
-  button.CreateCategory[disabled]{
+  button.CreateCategory[disabled] {
     opacity: 0.5;
   }
+
+  .create-text {
+    display: inline-block;
+    font-size: 12px;
+    margin-left: 8px;
+    color: #393939;
+  }
+
+  .top {
+    position: relative;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px #ffffff;
+    padding: 3px 0;
+    white-space: nowrap;
+    line-height: 40px;
+  }
+
+  .top-create, .top-upload {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    margin-left: 30px;
+  }
+
+  .top-icon {
+    position: relative;
+    top: 5px;
+  }
+
+  .top-icon2 {
+    position: relative;
+    top: 1px;
+    left: 5px;
+  }
+
+
+
+
+
+
+
+
+  .menu{
+    margin-left: 22px;
+    line-height: 30px;
+    position: relative;
+
+
+
+    .menu-icon{
+      display: inline-block;
+      position: absolute;
+      top: 7px;
+      left: 4px;
+    }
+
+    .menu-name{
+
+      padding: 5px 0;
+      .menu-arrow{
+        display: inline-block;
+        position: absolute;
+        top: 10px;
+        left: -15px;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        i{
+          display: block;
+          position: absolute;
+          top: 2px;
+          left: 3px;
+        }
+      }
+      span{
+        margin-left: 35px;
+        margin-right: 10px;
+      }
+    }/*menu-name*/
+
+
+
+    .menu-ul{
+      margin-left: 20px;
+
+      .menu-level{
+        position: relative;
+        margin-right: 10px;
+      }
+
+      .menu-item-arrow-oper{
+        position: absolute;
+        right: 0px;
+        top: 8px;
+        display: none;
+        cursor: pointer;
+      }
+
+
+      .note-menu-item:hover{
+        .menu-item-arrow-oper{
+          display: block;
+        }
+      }
+
+    }
+
+    .menu-ul-expand-true{
+       display: block;
+    }
+
+    .menu-ul-expand-false{
+      display: none;
+    }
+
+  }
+
+
+
+  .note-menu-item {
+    .menu-icon {
+      top: 0px;
+      left: 0px;
+    }
+    .menu-name {
+      margin-left: 25px;
+      display: inline-block;
+      line-height: 20px;
+    }
+
+    a {
+      color: #686868;
+    }
+
+    .menu-item-arrow{
+      position: absolute;
+      top: 5px;
+      left: -14px;
+      cursor: pointer;
+    }
+  }
+
+
+  .menu-select-cur {
+
+    .note-menu-item {
+      a {
+        color: #FFFFFF;
+      }
+    }
+  }
+
+
+
+
+
 }

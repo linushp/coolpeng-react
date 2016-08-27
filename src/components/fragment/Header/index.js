@@ -8,7 +8,6 @@ export default class Header extends React.Component {
     }
 
 
-
     renderRightLogin(){
         const {user} = this.props;
         var userInfo = user.userInfo;
@@ -27,10 +26,26 @@ export default class Header extends React.Component {
             </div>);
     }
 
-    render() {
+    renderLink(link,text){
 
+        var pathname = window.location.pathname;
+
+        var selected = "";
+        if(pathname.indexOf(link)===0){
+            selected = ' selected'
+        }
+
+        return(
+            <div className={`cp-header-menu-item ${selected}`}>
+                <Link to={link}>{text} </Link>
+            </div>
+        );
+    }
+
+    render() {
+        var renderLink = this.renderLink.bind(this);
         return (
-            <div className='ant-layout-header'>
+            <div className='cp-layout-header'>
 
                 <div className='page-content'>
                     <h1 className="my-logo float-l" >
@@ -38,18 +53,9 @@ export default class Header extends React.Component {
                             <span className="text">coolpeng</span>
                         </Link>
                     </h1>
-                    <Link to="/home">
-                        home
-                    </Link>
-                    &nbsp;&nbsp;&nbsp;
-                    <Link to="/daohang">
-                        daohang
-                    </Link>
-
-                    &nbsp;&nbsp;&nbsp;
-                    <Link to="/note/index">
-                        Note
-                    </Link>
+                    {renderLink("/home","首页")}
+                    {renderLink("/daohang","导航")}
+                    {renderLink("/note/","随笔")}
                     <div className="float-l">
                     </div>
                     <div className="float-r login-btn">

@@ -1,8 +1,9 @@
+
 @headerHeight:50px;
 @headerMenuHeight:47px;
 @headerBackColor:#fff;
 //http://www.luoo.net/
-.ant-layout-header {
+.cp-layout-header {
   background: @headerBackColor;
   width: 100%;
   height: @headerHeight;
@@ -14,13 +15,6 @@
     line-height: @headerMenuHeight;
   }
 
-  .ant-menu-horizontal {
-    border-bottom: 1px solid @headerBackColor;
-  }
-
-  .ant-menu {
-    background: @headerBackColor;
-  }
 
   .my-logo{
     margin: 0 0;
@@ -40,5 +34,17 @@
     height: @headerMenuHeight;
     line-height: @headerMenuHeight;
   }
+}
 
+
+.cp-header-menu-item{
+  display: block;
+  float: left;
+  padding: 15px 20px;
+}
+.cp-header-menu-item.selected{
+  background-color: #EEE;
+  a{
+    color: red;
+  }
 }

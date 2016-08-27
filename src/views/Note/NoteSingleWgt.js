@@ -41,14 +41,14 @@ class NoteSingle extends PureRenderComponent {
         var editor = this.refs['SimditorReact'];
         var pathParams = globalVar('pathParams');
         var content = editor.getContentValue();
-        var imageList = editor.getContentImageList(content);
+        var parseResult = editor.getContentParseResult(content);
         return {
             myCategoryId:pathParams.c,
             categoryId: pathParams.c,
             postContent: content,
             postTitle: postTitle,
-            summary:'',
-            imageList:imageList
+            summary:parseResult.summary,
+            imageList:parseResult.imageList
         };
     }
 
@@ -106,7 +106,7 @@ class NoteSingle extends PureRenderComponent {
 
         if(NoteVO){
             if(pathParams.n!= NoteVO.get('id')){
-                return <div>loading...</div>
+                return <div></div>
             }
         }
 

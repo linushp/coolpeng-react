@@ -1,14 +1,7 @@
 import React, {PropTypes} from 'react';
 import ActionStoreHelper from '../Common/ActionStoreHelper';
-import NavPath from '../../components/fragment/NavPath'
 import Header from '../../components/fragment/Header'
-import Sidebar from '../../components/fragment/Sidebar'
-import Footer from '../../components/fragment/Footer'
 import LoginDialog from '../Dialogs/LoginDialog';
-
-
-//import {fetchProfile, logout} from '../../actions/user';
-
 import './index.less';
 import '../Common/common.less';
 
@@ -43,16 +36,8 @@ class App extends React.Component {
                 <div className="page-header">
                     <Header user={user} onClickLogin={this.onClickLogin.bind(this)}  onClickLogout={this.onClickLogout.bind(this)} />
                 </div>
-                <div className='page-sidebar' >
-                     <Sidebar user={user} sidebar={this.props.sidebar}></Sidebar>
-                </div>
-                <div className="page-content page-content-main">
-                    <NavPath user={user} actions={actions} />
-                    <div className="clear"></div>
-                    {this.props.content || this.props.children}
-                </div>
-                <div className="page-footer">
-                    <Footer user={user}/>
+                <div>
+                    {this.props.children}
                 </div>
                 <div>
                     <LoginDialog ref="loginDialog" ></LoginDialog>

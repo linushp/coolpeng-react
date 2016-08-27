@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
+import RenderToBody from '../RenderToBody';
 import {listMap,className,EventBus,uniqueId,isEventInTarget} from '../../core/utils/index';
 import './index.less';
 
@@ -15,39 +16,42 @@ export default class PopupOperation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            show: false
+            show: false,
+            positionX:0,
+            positionY:0
         };
         this.uniqueId = uniqueId('PopupOperationUniqueId');
         this.documentClickListener = this.documentClickListener0.bind(this);
     }
 
 
-    componentDidMount() {
-        EventBus.addEventListener(EVENT_DOCUMENT_CLICK, this.documentClickListener)
-    }
-
     componentDidUpdate() {
 
+    }
+
+    componentDidMount() {
+        EventBus.addEventListener(EVENT_DOCUMENT_CLICK, this.documentClickListener)
     }
 
     componentWillUnmount() {
         EventBus.removeEventListener(EVENT_DOCUMENT_CLICK, this.documentClickListener);
     }
 
-
-    onClickBtn() {
+    onClickBtn(e) {
+        var x = e.pageX;
+        var y = e.pageY;
         this.setState({
-            show: true
+            show: true,
+            positionX:x,
+            positionY:y
         });
     }
 
     documentClickListener0(evt, self) {
-        if(this.state.show){
-            if (!isEventInTarget(evt, this.uniqueId)) {
-                this.setState({
-                    show: false
-                });
-            }
+        if (!isEventInTarget(evt, this.uniqueId)) {
+            this.setState({
+                show: false
+            });
         }
     }
 
@@ -59,21 +63,29 @@ export default class PopupOperation extends React.Component {
             'cp-popup-ctn-show': this.state.show
         });
 
+        var cntStyle ={
+            position:'absolute',
+            top:this.state.positionY,
+            left:this.state.positionX
+        };
+
         return (
             <div className="cp-popup-b" id={this.uniqueId}>
                 <div className="cp-popup-btn" onClick={this.onClickBtn.bind(this)}>{this.props.children}</div>
-                <div className={cntClassName}>
-                    <ul>
-                        {listMap(btns, function (btn) {
-                            if (btn.isDisplay === false) {
-                                return null;
-                            }
-                            return (
-                                <li onClick={btn.onClick}>{btn['text']}</li>
-                            );
-                        })}
-                    </ul>
-                </div>
+                <RenderToBody>
+                    <div className={cntClassName} style={cntStyle}>
+                        <ul className="cp-popup-ul-1">
+                            {listMap(btns, function (btn) {
+                                if (btn.isDisplay === false) {
+                                    return null;
+                                }
+                                return (
+                                    <li className="cp-popup-li-1" onClick={btn.onClick}>{btn['text']}</li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+                </RenderToBody>
             </div>);
     }
 

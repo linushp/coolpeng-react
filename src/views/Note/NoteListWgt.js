@@ -6,6 +6,7 @@ import {immutableListMap,className,globalVar} from '../../core/utils/index';
 import {toPathParamString} from './NoteFunctions';
 import ReactForm from '../../components/form/ReactForm';
 import Dialog from '../../components/dialog/Dialog';
+import Icon from "../../components/icons/Icon";
 import './index.less';
 
 function getViewNoteURLPagination(pn) {
@@ -80,25 +81,45 @@ class NoteList extends PureRenderComponent {
 
         return (
             <div>
-                <Link to={this.getCreateRoutePath()}>新建Note</Link>
-
                 <div>
+                    <Link to={this.getCreateRoutePath()}>新建Note</Link>
                     <ReactForm ref="SearchForm" layout={this.SearchFormLayout} values={searchFormValues}></ReactForm>
                     <button onClick={this.onSearchNoteList.bind(this)}>查找</button>
                 </div>
+                <div >
+                    <div className="note-list-list">
+                        {immutableListMap(NoteList, function (v) {
+                            var nn = Object.assign({}, pathParams, {n: v.get('id')});
+                            var mm = toPathParamString(nn, ['c', 'n', 'ps', 'pn']);
+                            var link = '/note/' + mm;
+                            var summary = v.get("summary");
+                            return (
+                                <div className="note-list-item">
+                                    <div className="postTitle">
+                                        <Link to={link}>{v.get('postTitle')}</Link>
+                                    </div>
 
-                <div className="note-list-list">
-                    {immutableListMap(NoteList, function (v) {
-                        var nn = Object.assign({}, pathParams, {n: v.get('id')});
-                        var mm = toPathParamString(nn, ['c', 'n', 'ps', 'pn']);
-                        var link = '/note/' + mm;
-                        return (
-                            <div>
-                                <Link to={link}>  {v.get('postTitle')} </Link>
-                                <Link to={link+'-e1'}> 编辑</Link>
-                                <span onClick={that.onDeleteNote.bind(that,v)}> 删除</span>
-                            </div>);
-                    })}
+                                    <div className="operation">
+                                        <Icon type="more" className="note-list-item-pp"></Icon>
+                                        <Link to={link+'-e1'} className="pp">
+                                            <Icon type="edit"></Icon>
+                                        </Link>
+                                        <span className="pp" onClick={that.onDeleteNote.bind(that,v)}>
+                                            <Icon type="del"></Icon>
+                                        </span>
+                                    </div>
+
+                                    <Link to={link}>
+                                        {(!summary||summary.length===0)?null:<div className="summary">{summary}</div>}
+                                        <div class="date-size">
+                                            <span className="createTime">{v.get('createTime')}</span>
+                                            <span className="categoryId">{v.get("categoryId")}</span>
+                                        </div>
+                                    </Link>
+                                    
+                                </div>);
+                        })}
+                    </div>
                 </div>
                 <div className="note-list-page">
                     <ReactPagination pageSize={NoteListPageSize} pageNo={NoteListPageNumber} totalCount={NoteListTotalCount} onClickPagination={this.onClickPagination.bind(this)}></ReactPagination>

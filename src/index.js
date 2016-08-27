@@ -13,7 +13,6 @@ import App from './views/App';
 import Home from './views/Home';
 
 import NoteApp from './views/Note/NoteApp';
-import NoteSideMenu from './views/Note/NoteSideMenu/NoteSideMenu';
 
 var history = useRouterHistory(createHistory)({ basename: '' });
 
@@ -43,8 +42,8 @@ ReactDOM.render(
                 <IndexRedirect to="daohang"/>
                 <Route component={App}>
                     <Route path="home" component={Home}/>
-                    <Route path="note"  components={{content:NoteApp,sidebar:NoteSideMenu}} />
-                    <Route path="note/:currentPath"  components={{content:NoteApp,sidebar:NoteSideMenu}} />
+                    <Route path="note"  component={NoteApp} />
+                    <Route path="note/:currentPath"  component={NoteApp} />
                     <Route path="daohang" getComponent={getComponent('./views/DaoHang/DaoHang')} > </Route>
                 </Route>
             </Route>

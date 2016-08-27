@@ -141,7 +141,7 @@ export default class SimditorReact extends React.Component {
      * 获取文章中所有的上传的图片,不包含外链图片
      * @param content
      */
-    getContentImageList(content) {
+    getContentParseResult(content) {
         content = content || this.getContentValue();
         var $content = $('<div>' + content + '</div>');
         var $imgs = $content.find('img');
@@ -153,8 +153,17 @@ export default class SimditorReact extends React.Component {
                 imageList.push(url);
             }
         });
-        return imageList;
+
+
+        var contentText = $content.text() || "";
+
+        return {
+            imageList:imageList,
+            contentText:contentText,
+            summary:contentText.substring(0,300)
+        };
     }
+
 
     shouldComponentUpdate(nextProps, nextState) {
         //不允许重绘DOM
