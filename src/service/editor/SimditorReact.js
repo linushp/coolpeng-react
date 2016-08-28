@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import {loadStaticJS,loadStaticCSS,createUUID,StringUtils} from '../../core/utils/index';
+import {loadStaticJS,loadStaticCSS,createUUID,StringUtils,uniqueId} from '../../core/utils/index';
 import StaticConfig from '../../core/utils/StaticConfig';
 import {onXhrUpload} from '../upload/UploadUtils';
 import './index.less';
@@ -42,6 +42,7 @@ export default class SimditorReact extends React.Component {
         this.editor = null;
         this.contentValue = null;
         this.callbackList = [];
+        this.uniqueId = uniqueId("SimditorReactUniqueId");
     }
 
     componentWillMount() {
@@ -86,7 +87,6 @@ export default class SimditorReact extends React.Component {
                     toolbar: toolbar,
                     toolbarFloat: false
                 });
-
                 if (isNewLoad) {
                     setTimeout(function () {
                         that.runInitedCallback();
@@ -107,6 +107,9 @@ export default class SimditorReact extends React.Component {
             callback.bind(that)();
         }
         that.callbackList = [];
+        window.setTimeout(function () {
+            $("#"+that.uniqueId).css({"opacity":"1"});
+        },10);
     }
 
     setContentValue(contentValue) {
@@ -185,8 +188,9 @@ export default class SimditorReact extends React.Component {
     }
 
     render() {
+
         return (
-            <div className="simditor-react-root" ref='simditorRoot'>
+            <div id={this.uniqueId} className="simditor-react-root" ref='simditorRoot'>
                 <div className="wrapper">
                     <section>
                         <textarea className="simditor-react-textarea" placeholder="" autofocus></textarea>

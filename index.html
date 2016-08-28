@@ -14,7 +14,7 @@
         #root.rootShow{
             display: block;
             opacity: 1;
-            transition: opacity 1s linear;
+            transition: opacity 0.3s linear;
         }
 
         #rootLoading {
@@ -52,7 +52,7 @@
 </head>
 <body>
 <div id="root"></div>
-<div id="rootLoading">
+<div id="rootLoading" style="display: none">
     <span id="rootLoadingText">加载中... <span id="rootLoadingTextNum">0 %</span> </span>
     <span id="rootLoadingWrapper">
         <span id="rootLoadingPercent"></span>
@@ -149,10 +149,6 @@
 <script>setLoadingPercent(40, 50,'History');</script>
 <script src="/static/lib/immutable.min.js"></script>
 <script>setLoadingPercent(50, 60,'Immutable');</script>
-<link type="text/css" rel="stylesheet" href="/static/lib/antd/antd-cp.css"/>
-<script>setLoadingPercent(60, 80);</script>
-<script src="/static/lib/antd/antd.min.js"></script>
-<script>setLoadingPercent(80, 100,'antd');</script>
 </body>
 </html>
 <script>setLoadingPercent(100, 100);</script>

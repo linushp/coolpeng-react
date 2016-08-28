@@ -36,6 +36,7 @@ class NoteSideMenu extends PureRenderComponent {
             isEditing:false,
             menuNoteExpand:true
         };
+        this.currentMenuItem = null;
     }
 
     onClickUploadFile(){
@@ -43,6 +44,9 @@ class NoteSideMenu extends PureRenderComponent {
     }
 
     onClickCreateNote(item) {
+        if(!item){
+            item = this.currentMenuItem;
+        }
         var link = toLinkURLEditor(item);
         this.context.router.push(link);
     }
@@ -177,6 +181,7 @@ class NoteSideMenu extends PureRenderComponent {
         var routeCId = pathParams.c;
         console.log("getMenuSelectType",routeCId,M.get('id'))
         if(routeCId===M.get('id')){
+            this.currentMenuItem = M;
             return 'cur';
         }
 
