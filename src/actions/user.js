@@ -41,6 +41,9 @@ export function logout(callback) {
         type: 'LOGOUT',
         payload: {
             promise: api.post('/cloud/user/logout.json')
+        },
+        meta:{
+            actionSourceCallback:callback
         }
     }
 }

@@ -305,7 +305,7 @@ class NoteSideMenu extends PureRenderComponent {
                             <Icon type={`arrow-${this.state.menuNoteExpand}`}  />
                         </div>
                         <Icon type="folder1" className="menu-icon"/>
-                        <span>我的随笔</span>
+                        <span><Link to="/note/"> 我的随笔</Link></span>
                     </div>
                     
                     {this.renderCategoryList(CategoryList,CategoryList,0,that,this.state.menuNoteExpand)}

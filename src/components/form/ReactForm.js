@@ -4,10 +4,11 @@ import $ from 'jquery';
 
 var _undefined = window.undefined;
 
-function formInput(name, text, options) {
-    return (
-        <input className="formInput" name={name} type="text"/>
-    );
+function formInput(name, text, options,obj) {
+    if(obj && obj.placeholder){
+        <input className="formInput" name={name} type="text" placeholder={obj.placeholder}/>;
+    }
+    return <input className="formInput" name={name} type="text"/>;
 }
 
 function formInputSetter(value, $formItem) {
@@ -228,6 +229,9 @@ export default class ReactForm extends React.Component {
     }
 
     setValues(values) {
+        if(!values){
+            return;
+        }
         if (this.isValuesChanged(values)) {
             this.values = values;
             var formRef = this.refs.formRef.getDOMNode();//拿到了原生DOM
@@ -268,7 +272,7 @@ export default class ReactForm extends React.Component {
                         <div className="formItem" data-name={name} data-type={type}>
                             <div className="formItemTitle">{text}</div>
                             <div className="formItemCont">
-                                {itemRender(name, text, options)}
+                                {itemRender(name, text, options,obj)}
                             </div>
                         </div>
                     );
@@ -283,7 +287,7 @@ export default class ReactForm extends React.Component {
 ////
 ////    var layout = [
 ////        {
-////            name:'name',text:'姓名',type:'input',validate:function(){}
+////            name:'name',text:'姓名',type:'input',placeholder:"请输入姓名",validate:function(){}
 ////        },
 ////        {
 ////            name:'sex',text:'性别',type:'checkbox',

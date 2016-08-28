@@ -22,7 +22,6 @@ export default class Header extends React.Component {
         return (
             <div>
                 <span>注册</span>&nbsp;/&nbsp;
-                <span onClick={this.props.onClickLogin}>登录</span>
             </div>);
     }
 

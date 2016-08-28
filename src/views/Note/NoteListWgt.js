@@ -27,7 +27,7 @@ class NoteList extends PureRenderComponent {
     constructor(props) {
         super(props);
         this.SearchFormLayout = [
-            {name: 'Search', type: 'input'}
+            {name: 'Search', type: 'input',placeholder:"搜索"}
         ];
     }
 
@@ -78,13 +78,17 @@ class NoteList extends PureRenderComponent {
         var searchFormValues = {
             Search:NoteListSearchTitleLike
         };
+        // <Link to={this.getCreateRoutePath()}>新建Note</Link>
 
         return (
             <div>
-                <div>
-                    <Link to={this.getCreateRoutePath()}>新建Note</Link>
-                    <ReactForm ref="SearchForm" layout={this.SearchFormLayout} values={searchFormValues}></ReactForm>
-                    <button onClick={this.onSearchNoteList.bind(this)}>查找</button>
+                <div className="note-list-search">
+                    <Icon type="listBack" />
+                    <div className="NoteListSearchForm">
+                        <ReactForm ref="SearchForm" layout={this.SearchFormLayout} values={searchFormValues}></ReactForm>
+                        <Icon type="search" onClick={this.onSearchNoteList.bind(this)}>查找</Icon>
+                    </div>
+                    <Icon type="settingAbstract" />
                 </div>
                 <div >
                     <div className="note-list-list">

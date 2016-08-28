@@ -1,9 +1,9 @@
 import React, {PropTypes} from 'react';
 import ActionStoreHelper from '../Common/ActionStoreHelper';
 import Header from '../../components/fragment/Header'
-import LoginDialog from '../Dialogs/LoginDialog';
 import './index.less';
 import '../Common/common.less';
+import Dialog from '../../components/dialog/Dialog';
 
 class App extends React.Component {
     constructor(props) {
@@ -18,14 +18,15 @@ class App extends React.Component {
     }
 
 
-    onClickLogin(){
-        var loginDialog = this.refs["loginDialog"];
-        loginDialog.open();
-    }
-
     onClickLogout(){
+        var that = this;
         const {user, actions} = this.props;
-        actions.logout();
+        Dialog.showAlertPrompt("确定要退出吗？",function () {
+            actions.logout(function () {
+                debugger;
+                that.context.router.push("/login");
+            });
+        });
     }
 
 
@@ -34,13 +35,12 @@ class App extends React.Component {
         return (
             <div className="page-wrapper">
                 <div className="page-header">
-                    <Header user={user} onClickLogin={this.onClickLogin.bind(this)}  onClickLogout={this.onClickLogout.bind(this)} />
+                    <Header user={user} onClickLogout={this.onClickLogout.bind(this)} />
                 </div>
                 <div>
                     {this.props.children}
                 </div>
                 <div>
-                    <LoginDialog ref="loginDialog" ></LoginDialog>
                 </div>
             </div>
         );
@@ -49,12 +49,13 @@ class App extends React.Component {
 
 App.propTypes = {
     user: PropTypes.object,
-    children: PropTypes.node.isRequired,
+    children: PropTypes.node.isRequired
 };
 
 App.contextTypes = {
     history: PropTypes.object.isRequired,
-    store: PropTypes.object.isRequired
+    store: PropTypes.object.isRequired,
+    router: React.PropTypes.object.isRequired
 };
 
 App.STATE_CONFIG = {

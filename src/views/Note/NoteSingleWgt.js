@@ -67,7 +67,7 @@ class NoteSingle extends PureRenderComponent {
             if(isSuccess){
                 var noteId = payload.data.id;
                 var link = getViewNoteURL(noteId);
-                that.context.router.push(link);
+                // that.context.router.push(link);
                 that.props.reloadNoteListByCategory();
                 Dialog.showMsgSuccess('保存成功');
             }else {
@@ -85,13 +85,17 @@ class NoteSingle extends PureRenderComponent {
             postTitle = NoteVO.get('postTitle');
         }
 
-        var TitleFormLayout = [{name: 'postTitle', text: '标题', type: 'input'}];
+        var TitleFormLayout = [{name: 'postTitle', text: '', type: 'input'}];
         var TitleFormValues = {postTitle: postTitle};
         return (
-            <div>
-                <ReactForm ref="TitleForm" layout={TitleFormLayout} values={TitleFormValues}></ReactForm>
-                <SimditorReact ref="SimditorReact" content={content}></SimditorReact>
-                <button onClick={this.onSaveNote.bind(this,NoteVO)}> 保存</button>
+            <div className="NoteSingleEdit">
+                <div className="NoteSingleEdit_PostTitle">
+                    <ReactForm ref="TitleForm" layout={TitleFormLayout} values={TitleFormValues}></ReactForm>
+                    <button className="NoteSingleEdit_SaveButton" onClick={this.onSaveNote.bind(this,NoteVO)}> 保存</button>
+                </div>
+                <div className="NoteSingleEdit_SimditorReact">
+                    <SimditorReact ref="SimditorReact" content={content}></SimditorReact>
+                </div>
             </div>
         );
     }
@@ -118,11 +122,13 @@ class NoteSingle extends PureRenderComponent {
             var pageId = "NoteSingle_" + NoteVO.get('id');
             var content = NoteVO.get('postContent');
             return (
-                <div className="article-single">
-                    <div>{NoteVO.get('postTitle')}</div>
-                    <div dangerouslySetInnerHTML={{__html:content}}></div>
-                    <AvatarReact user={user} setCurrentTempUser={actions.setCurrentTempUser}
-                                 pageId={pageId}></AvatarReact>
+                <div className="NoteSingleRead">
+                    <div className="NoteSingle_PostTitle">{NoteVO.get('postTitle')}</div>
+                    <div className="NoteSingle_Content" dangerouslySetInnerHTML={{__html:content}}></div>
+                    <div className="NoteSingle_AvatarReact">
+                        <AvatarReact user={user} setCurrentTempUser={actions.setCurrentTempUser}
+                                     pageId={pageId}></AvatarReact>
+                    </div>
                 </div>
             );
         } else {
