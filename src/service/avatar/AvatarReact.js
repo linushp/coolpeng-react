@@ -1,4 +1,4 @@
-//import AvatarView from './avatarView';
+import AvatarView from './avatarView';
 
 
 /**
@@ -42,10 +42,10 @@ export default class AvatarReact extends React.Component {
         }
 
         console.log('Avatar initAvatarView1', new Date().getTime());
-        require.ensure([], function (require) {
+        // require.ensure([], function (require) {
             this.isInited = true;
 
-            var AvatarView = require('./avatarView');
+            // var AvatarView = require('./avatarView');
             console.log('Avatar initAvatarView2', new Date().getTime());
             var pageId = props.pageId || "test";
             var setCurrentTempUser = props.setCurrentTempUser;
@@ -83,7 +83,7 @@ export default class AvatarReact extends React.Component {
             view.outSetUserInfo(userInfo);
 
             this.viewHandler = view;
-        }.bind(this));
+        // }.bind(this));
 
     }
 

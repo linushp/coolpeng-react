@@ -121,10 +121,10 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
 
         plugins: [
             new CaseSensitivePathsPlugin(),
-            new webpack.optimize.CommonsChunkPlugin({
-                name: "shared",
-                minChunks: 2
-            }),
+            // new webpack.optimize.CommonsChunkPlugin({
+            //     name: "shared",
+            //     minChunks: 2
+            // }),
             new HtmlWebpackPlugin({
                 inject: true,
                 //excludeChunks: ['tests'],

@@ -29,6 +29,8 @@ const validate = function (next, replace, callback) {
     callback()
 };
 
+
+//getComponent={getComponent('./views/DaoHang/DaoHang')} >
 const getComponent = function(src){
     return function (nextState, cb){
         require.ensure([], (require) => {
@@ -46,7 +48,7 @@ ReactDOM.render(
                     <Route path="home" component={Home}/>
                     <Route path="note"  component={NoteApp} />
                     <Route path="note/:currentPath"  component={NoteApp} />
-                    <Route path="daohang" getComponent={getComponent('./views/DaoHang/DaoHang')} > </Route>
+                    <Route path="daohang" component={require('./views/DaoHang/DaoHang')} > </Route>
                 </Route>
             </Route>
             <Route path="/login" component={Login} />
