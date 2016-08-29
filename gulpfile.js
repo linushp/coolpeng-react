@@ -76,6 +76,27 @@ gulp.task('minifyCommonJS2', function() {
 
 
 //压缩js
+gulp.task('minifyCommonJS3', function() {
+
+
+    var jsArray = [
+        './static/lib/react-dom.min.js',
+        './static/lib/ReactRouter.min.js',
+        './static/lib/redux.min.js',
+        './static/lib/react-redux.min.js',
+        './static/lib/history.min.js',
+        './static/lib/immutable.min.js'
+    ];
+
+    return gulp.src(jsArray).pipe(concat('router-redux-history-immutable.js'))
+        .pipe(gulp.dest('./static/lib/combo'))
+        .pipe(rename({suffix: '.min'}))
+        .pipe(uglify())
+        .pipe(gulp.dest('./static/lib/combo'))
+});
+
+
+//压缩js
 gulp.task('minifySimditorJS', function() {
 
 
