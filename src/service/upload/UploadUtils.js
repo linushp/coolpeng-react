@@ -33,7 +33,7 @@ function onXhrUpload(file,onSuccess,onError,onProgress) {
                 ak: 'f0131c5559d3415e956706caf01d1051',
                 sk: 'ba90fcb9ee2441faa32f49a909192cc9'
             },
-            endpoint: 'http://ubibi.gz.bcebos.com' // 根据您选用bos服务的区域配置相应的endpoint
+            endpoint: StaticConfig.BOS_UPLOAD_ENDPOINT // 根据您选用bos服务的区域配置相应的endpoint
         };
         var bucket = 'upload'; // 设置您想要操作的bucket
         var client = new baidubce.sdk.BosClient(bosConfig);
@@ -61,7 +61,7 @@ function onXhrUpload(file,onSuccess,onError,onProgress) {
                 var result = {
                     success: true,
                     msg: null,
-                    file_path: 'http://ubibi.coolpeng.cn/upload/' + saveName
+                    file_path: StaticConfig.BOS_UPLOAD_CDN_PATH + saveName
                 };
                 onSuccess(result);
             })

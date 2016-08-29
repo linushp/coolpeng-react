@@ -84,7 +84,7 @@ export function createUUID(userId) {
     });
 
     userId = userId ? userId + '-' : '';
-    return userId + randomStr + uniqueId();
+    return userId + randomStr + uniqueId() + new Date().getTime();
 }
 
 

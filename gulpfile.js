@@ -148,3 +148,16 @@ gulp.task('remini', function() {
         .pipe(gulp.dest('./dist/static/app5/'))
 });
 
+
+
+//压缩js
+gulp.task('copyToServerSvn', function() {
+
+
+    var jsArray = [
+        './dist/index.html'
+    ];
+
+    return gulp.src(jsArray)
+        .pipe(gulp.dest('/Users/luanhaipeng/svn/appidrsjc4t9gjl/ROOT/'))
+});

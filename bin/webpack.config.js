@@ -31,9 +31,9 @@ var isProduction = function () {
 
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
+var __URL_HOST_ORIGIN__ = isProduction()?"'http://image.coolpeng.cn'":"''";
 
-
-
+var publicPath = isProduction()?"http://image.coolpeng.cn/":"/";
 
 function createWebpackConfig(jsFile,htmlFile,mainFileName){
     var webpackConfig = {
@@ -60,7 +60,7 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
          */
         output: {
             path: path.join(__appPath, 'dist'),
-            publicPath: '/',
+            publicPath: publicPath,
             filename: 'static/app/[name].[hash].js',//hash
             chunkFilename: 'static/app/module.[name].[hash].js',
             library: ['CoolpengApp', '[name]'],
@@ -137,16 +137,13 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
             }),
             new webpack.NoErrorsPlugin(),
             new webpack.DefinePlugin({
-                'process.env': {
-                    'NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
-                }
+                __DEV__: !isProduction(),
+                '__URL_HOST_ORIGIN__': __URL_HOST_ORIGIN__,
+                'process.env.NODE_ENV': isProduction() ? '"production"':'"development"'
             }),
             new ExtractTextPlugin("static/css/[hash]-[name].css", {
                 disable: false,
                 allChunks: true
-            }),
-            new webpack.DefinePlugin({
-                __DEV__: JSON.stringify(JSON.parse(isProduction() ? 'false' : 'true'))
             })
         ],
         debug: isProduction() ? false : true,
