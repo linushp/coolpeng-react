@@ -2,8 +2,7 @@ import React from 'react'
 import './index.less'
 import {Link} from 'react-router'
 import Icon from '../../icons/Icon';
-import Dialog from '../../dialog/Dialog';
-import {toUserInfoEditingView} from './UserInfoView';
+import {showUserInfoDialog} from './UserInfoDialog';
 
 export default class Header extends React.Component {
     constructor(props) {
@@ -12,41 +11,9 @@ export default class Header extends React.Component {
 
 
     showUserInfo(){
-
         const {user,updateUserInfo} = this.props;
         var userInfo = user.userInfo;
-
-        var view = toUserInfoEditingView(userInfo);
-        var content = (
-            <div dangerouslySetInnerHTML={{__html:view.html}}></div>
-        );
-        var callback = function(btn,dialog,doCloseDialog){
-
-            if(btn.name==='ok'){
-                var values = view.getInputValue();
-                updateUserInfo({
-                    id:userInfo.id,
-                    UserEntity:values
-                },function(){
-                    Dialog.showMsgSuccess("修改成功");
-                });
-            }else {
-                doCloseDialog();
-            }
-        };
-
-        var popStyle = {
-            width:600,
-            height:400
-        };
-
-        var buttons = [
-            {text: '修改', name:'ok', cls: 'primary', action: 'close'},
-            {text: '关闭', name:'cancel', cls: '', action: 'close'}
-        ];
-
-        //content,callback,title, buttons, popStyle, popClass,closeControl
-        Dialog.showModal(content,callback,"个人资料设置",buttons,popStyle,null,true);
+        showUserInfoDialog(userInfo,updateUserInfo);
     }
 
     renderRightLogin(){

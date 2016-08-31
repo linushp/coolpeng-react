@@ -115,7 +115,8 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
             "_":"window._",
             "underscore":"window._",
             "antd":"window.antd",
-            "immutable":"window.Immutable"
+            "immutable":"window.Immutable",
+            "md5":"window.UbibiLib_Md5"
         },
 
 

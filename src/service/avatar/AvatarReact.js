@@ -120,7 +120,7 @@ export default class AvatarReact extends React.Component {
                     }
                     if(isUserChanged){
                         that.userInfo = that.getUserInfo(nextProps);
-                        that.viewHandler.outSetUserInfo(userInfo);
+                        that.viewHandler.outSetUserInfo(that.userInfo);
                     }
                 },100);
             }else {

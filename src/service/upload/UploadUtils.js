@@ -50,7 +50,7 @@ function onXhrUpload(file,onSuccess,onError,onProgress) {
 
         //var file = evt.target.files[0]; // 获取要上传的文件
         var key = file.name; // 保存到bos时的key，您可更改，默认以文件名作为key
-        var blob = file.obj;
+        var blob = file.obj || file;
 
         var ext = key.split(/\./g).pop();
         var mimeType = baidubce.sdk.MimeType.guess(ext);
