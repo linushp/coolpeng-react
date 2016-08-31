@@ -3,6 +3,7 @@ import './index.less'
 import {Link} from 'react-router'
 import Icon from '../../icons/Icon';
 import {showUserInfoDialog} from './UserInfoDialog';
+import PopupOperation from '../../PopupOperation/PopupOperation';
 
 export default class Header extends React.Component {
     constructor(props) {
@@ -10,23 +11,44 @@ export default class Header extends React.Component {
     }
 
 
-    showUserInfo(){
+    showUserInfo() {
         const {user,updateUserInfo} = this.props;
         var userInfo = user.userInfo;
-        showUserInfoDialog(userInfo,updateUserInfo);
+        showUserInfoDialog(userInfo, updateUserInfo);
     }
 
-    renderRightLogin(){
+    userAvatarPop(that) {
+        var data = [
+            {
+                text: '个人资料设置',
+                onClick: function () {
+                    that.showUserInfo();
+                }
+            },
+            {
+                text: '退出',
+                onClick: function () {
+                    const {onClickLogout} = that.props;
+                    onClickLogout();
+                }
+            }
+        ];
+        return data;
+    }
+
+    renderRightLogin() {
         const {user} = this.props;
         var userInfo = user.userInfo;
-        if(userInfo && user.isLogged){
+        if (userInfo && user.isLogged) {
             return (
                 <div>
                     <div className="userSetting">
                         <Icon icon="cogs"></Icon>
                     </div>
                     <div className="userAvatar" title={userInfo.nickname}>
-                        <img src={userInfo.avatar} alt={userInfo.nickname} onClick={this.showUserInfo.bind(this)} />
+                        <PopupOperation btns={this.userAvatarPop(this)} positionY="15" positionX="-130">
+                            <img src={userInfo.avatar} alt={userInfo.nickname}/>
+                        </PopupOperation>
                     </div>
                 </div>
             );
@@ -37,16 +59,16 @@ export default class Header extends React.Component {
             </div>);
     }
 
-    renderLink(link,text){
+    renderLink(link, text) {
 
         var pathname = window.location.pathname;
 
         var selected = "";
-        if(pathname.indexOf(link)===0){
+        if (pathname.indexOf(link) === 0) {
             selected = ' selected'
         }
 
-        return(
+        return (
             <div className={`cp-header-menu-item ${selected}`}>
                 <Link to={link}>{text} </Link>
             </div>
@@ -59,15 +81,15 @@ export default class Header extends React.Component {
             <div className='cp-layout-header'>
 
                 <div className='page-content'>
-                    <h1 className="my-logo float-l" >
+                    <h1 className="my-logo float-l">
                         <Link to="/home">
                             <Icon icon="make-group"></Icon>
                             <span className="text">ubibi</span>
                         </Link>
                     </h1>
-                    {renderLink("/home","首页")}
-                    {renderLink("/daohang","导航")}
-                    {renderLink("/note/","随笔")}
+                    {renderLink("/home", "首页")}
+                    {renderLink("/daohang", "导航")}
+                    {renderLink("/note/", "随笔")}
                     <div className="float-r">
                         {this.renderRightLogin()}
                     </div>

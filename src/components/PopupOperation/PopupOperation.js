@@ -39,16 +39,18 @@ export default class PopupOperation extends React.Component {
 
     onClickBtn(e) {
 
-        //var $target = $(e.target);
-        //var w = $target.width();
-        //var h = $target.height();
+        var $target = $(e.target);
+        var w = $target.width();
+        var h = $target.height();
+
+        var offset = $target.offset()
 
         var x = e.pageX;
         var y = e.pageY;
         this.setState({
             show: true,
-            positionX:x,
-            positionY:y
+            positionX:offset.left+w,
+            positionY:offset.top+h
         });
     }
 
@@ -70,8 +72,8 @@ export default class PopupOperation extends React.Component {
 
         var cntStyle ={
             position:'absolute',
-            top:this.state.positionY,
-            left:this.state.positionX
+            top:this.state.positionY+parseInt(this.props.positionY||0,10),
+            left:this.state.positionX+parseInt(this.props.positionX||0,10),
         };
 
         return (
