@@ -38,6 +38,11 @@ export default class PopupOperation extends React.Component {
     }
 
     onClickBtn(e) {
+
+        //var $target = $(e.target);
+        //var w = $target.width();
+        //var h = $target.height();
+
         var x = e.pageX;
         var y = e.pageY;
         this.setState({
