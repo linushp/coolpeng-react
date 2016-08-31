@@ -35,7 +35,7 @@ class App extends React.Component {
         return (
             <div className="page-wrapper">
                 <div className="page-header">
-                    <Header user={user} onClickLogout={this.onClickLogout.bind(this)} />
+                    <Header user={user} onClickLogout={this.onClickLogout.bind(this)} updateUserInfo={actions.updateUserInfo}/>
                 </div>
                 <div>
                     {this.props.children}
@@ -64,7 +64,8 @@ App.STATE_CONFIG = {
 
 App.ACTION_CONFIG = {
     fetchProfile: 'user.fetchProfile',
-    logout:'user.logout'
+    logout:'user.logout',
+    updateUserInfo:"user.updateUserInfo"
 };
 
 export default ActionStoreHelper()(App);

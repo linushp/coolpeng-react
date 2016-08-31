@@ -37,9 +37,7 @@ class Dialog extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            show: props.show,
-            positionX: null,
-            positionY: null
+            show: props.show
         };
         this.styleZIndex = styleZIndex;
         this.timeoutHandler = null;
@@ -76,7 +74,6 @@ class Dialog extends React.Component {
 
 
     onClickClose(btn) {
-        this.setState({show: false});
         var data = this.props.data;
         var doCloseDialog = this.doCloseDialog.bind(this);
         if (data.callback) {
@@ -97,12 +94,19 @@ class Dialog extends React.Component {
     getPopStyle(popStyle) {
         popStyle = popStyle || {};
 
-        var newStyle={'zIndex': (this.styleZIndex + 1)};
-        if(this.state.positionY!==null){
-            newStyle['top'] = this.state.positionY;
+        var height = popStyle.height;
+        var width = popStyle.width ;
+        var newStyle={
+            'zIndex': (this.styleZIndex + 1)
+        };
+
+        if(height){
+            newStyle[height] = height;
+            newStyle['marginTop'] = (0-(height/2));
         }
-        if(this.state.positionX!==null){
-            newStyle['left'] = this.state.positionX;
+        if(width){
+            newStyle[width] = width;
+            newStyle['marginLeft'] = (0-(width/2));
         }
 
         return Object.assign(newStyle, popStyle);
@@ -162,10 +166,10 @@ class Dialog extends React.Component {
         var popClassDisplay = this.state.show?'':'cp-dialog-hidden';
         //draggable={true} onDragEnd={this.ondragend.bind(this)}
         return (
-            <div className="cp-dialog">
+            <div className={`cp-dialog ${popClassDisplay}`}>
                 <div data-mid={id} className={`cp-dialog-${type}`}>
                     <div className="cp-dialog-mask" style={{'zIndex':this.styleZIndex}}></div>
-                    <div className={`cp-dialog-pop ${popClassDisplay} ${popClass}`} style={this.getPopStyle(popStyle)} >
+                    <div className={`cp-dialog-pop ${popClass}`} style={this.getPopStyle(popStyle)} >
                         <div className="cp-dialog-header"> {title} </div>
                         <div className="cp-dialog-ico cp-dialog-close" onClick={this.onClickClose.bind(this,btnCancel)}
                              style={{'zIndex':(this.styleZIndex+2)}}></div>
@@ -264,15 +268,12 @@ var defaultButton_2 = [btnCancel,btnOK];
 var NULL = null;
 module.exports = {
 
-    showModal: createShowDialog(DIALOG_TYPE_MODAL,'标题', defaultButton_2,true),
-
+    showModal: createShowDialog(DIALOG_TYPE_MODAL,'标题', defaultButton_2,false),
     showAlertInfo: createShowDialog(DIALOG_TYPE_ALERT_INFO,'提示', defaultButton_1,false),
     showAlertError: createShowDialog(DIALOG_TYPE_ALERT_ERROR,'错误', defaultButton_1,false),
     showAlertSuccess: createShowDialog(DIALOG_TYPE_ALERT_SUCCESS,'成功', defaultButton_1,false),
     showAlertPrompt: createShowDialog(DIALOG_TYPE_ALERT_PROMPT,'请确认?', defaultButton_2,false),
-
-    showFullScreen: createShowDialog(DIALOG_TYPE_FULL_SCREEN,'', defaultButton_1,true),
-
+    showFullScreen: createShowDialog(DIALOG_TYPE_FULL_SCREEN,'', defaultButton_1,false),
     showMsgInfo: createShowDialog(DIALOG_TYPE_MSG_INFO,NULL,NULL,false),
     showMsgSuccess: createShowDialog(DIALOG_TYPE_MSG_SUCCESS,NULL,NULL,false),
     showMsgError: createShowDialog(DIALOG_TYPE_MSG_ERROR,NULL,NULL,false),

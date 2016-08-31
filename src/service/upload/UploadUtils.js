@@ -22,9 +22,18 @@ function getUserId(){
 }
 
 
+function getUploadFolder() {
+    var userId = getUserId();
+    return "user-" + userId;
+}
+
+
 function onXhrUpload(file,onSuccess,onError,onProgress) {
 
+
     loadStaticJS(StaticConfig.BCE_UPLOADER_JS, function () {
+
+        var uploadFolder = getUploadFolder();
 
         var baidubce = window.baidubce;
 
@@ -35,7 +44,8 @@ function onXhrUpload(file,onSuccess,onError,onProgress) {
             },
             endpoint: StaticConfig.BOS_UPLOAD_ENDPOINT // 根据您选用bos服务的区域配置相应的endpoint
         };
-        var bucket = 'upload'; // 设置您想要操作的bucket
+
+        var bucket = `upload/${uploadFolder}`; // 设置您想要操作的bucket
         var client = new baidubce.sdk.BosClient(bosConfig);
 
         //var file = evt.target.files[0]; // 获取要上传的文件
@@ -52,7 +62,7 @@ function onXhrUpload(file,onSuccess,onError,onProgress) {
         };
 
         //var saveName = new Date().getTime() + '' + Math.floor(Math.random() * 1000000) + key;
-        var saveName = '' + createUUID(getUserId()) + getSuffix(key);
+        var saveName = createUUID(null) + getSuffix(key);
 
         client.putObjectFromBlob(bucket, saveName, blob, options)
             .then(function (res) {
@@ -61,7 +71,7 @@ function onXhrUpload(file,onSuccess,onError,onProgress) {
                 var result = {
                     success: true,
                     msg: null,
-                    file_path: StaticConfig.BOS_UPLOAD_CDN_PATH + saveName
+                    file_path: StaticConfig.BOS_UPLOAD_CDN_PATH + `${uploadFolder}/` + saveName
                 };
                 onSuccess(result);
             })

@@ -1,50 +1,82 @@
-
-@headerHeight:50px;
-@headerMenuHeight:47px;
-@headerBackColor:#fff;
+@headerHeight: 52px;
+@headerMenuHeight: 47px;
+@headerBackColor: #047fd6;
+@headerFontColor: #FFF;
 //http://www.luoo.net/
+
 .cp-layout-header {
   background: @headerBackColor;
   width: 100%;
   height: @headerHeight;
-  border-top: 2px solid #dd5862;
   border-bottom: 1px solid #e9e8e8;
+  color: @headerFontColor;
 
-  .header-menu>li{
+  .header-menu > li {
     height: @headerMenuHeight;
     line-height: @headerMenuHeight;
   }
 
-
-  .my-logo{
-    margin: 0 0;
-    background: url("imgs/logo.png") no-repeat;
-    background-size: 121px 40px;
+  .my-logo {
+    margin: 4px 0 0 0;
     width: 190px;
     height: 40px;
     display: block;
-    margin-top: 4px;
-    span{
+    color: #FFFFFF;
+    span {
       display: block;
-      text-indent: -9999px;
+      float: left;
+      color: #FFFFFF;
+      font-size: 14px;
+      line-height: 40px;
+      margin-left: 20px;
+      font-family: "Pingfang SC", "Lantinghei SC", "Microsoft YaHei", "Hiragino Sans GB", "WenQuanYi Micro Hei", sans-serif;
+    }
+    .icon-make-group {
+      color: #FFFFFF;
+      display: block;
+      float: left;
+      margin: 10px 0 0 30px;
     }
   }
 
-  .login-btn{
+  .login-btn {
     height: @headerMenuHeight;
     line-height: @headerMenuHeight;
   }
+
+  .userAvatar {
+    float: left;
+    img {
+      width: 35px;
+      height: 35px;
+      border-radius: 1000px;
+      margin: 7px 20px 0 0;
+      cursor: pointer;
+    }
+  }
+
+  .userSetting {
+    float: left;
+    width: 35px;
+    height: 35px;
+    margin-top: 13px;
+    cursor: pointer;
+    .icon-cogs{
+      font-size: 20px;
+    }
+  }
+
 }
 
-
-.cp-header-menu-item{
+.cp-header-menu-item {
   display: block;
   float: left;
-  padding: 15px 20px;
-}
-.cp-header-menu-item.selected{
-  background-color: #EEE;
-  a{
-    color: red;
+  padding: 17px 20px;
+  a {
+    color: @headerFontColor;
   }
+}
+
+.cp-header-menu-item.selected {
+  background-color: #005fa2;
 }

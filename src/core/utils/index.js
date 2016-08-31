@@ -83,8 +83,8 @@ export function createUUID(userId) {
         return v.toString(16);
     });
 
-    userId = userId ? userId + '-' : '';
-    return userId + randomStr + uniqueId() + new Date().getTime();
+    userId = userId ? (userId + '-'): '';
+    return userId + randomStr + uniqueId() +''+ new Date().getTime();
 }
 
 

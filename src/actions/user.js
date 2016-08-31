@@ -49,6 +49,20 @@ export function logout(callback) {
 }
 
 
+export function updateUserInfo(data,callback){
+    return {
+        type: 'updateUserInfo',
+        payload: {
+            promise: api.post('/cloud/user/updateUserInfo.json',data)
+        },
+        meta:{
+            actionSourceCallback:callback
+        }
+    }
+}
+
+
+
 export function setCurrentTempUser(tempUser){
     return {
         type: 'LOGIN_TEMP_USER',

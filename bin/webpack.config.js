@@ -156,8 +156,8 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
             proxy: {
                 '/cloud/*': {
 
-                     //target: 'http://www.coolpeng.cn',
-                    target: 'http://127.0.0.1:10086',
+                     target: 'http://www.coolpeng.cn',
+                    //target: 'http://127.0.0.1:10086',
 
                     secure: false,
                     changeOrigin: true

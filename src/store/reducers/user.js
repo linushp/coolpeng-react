@@ -117,6 +117,8 @@ export default function auth(state = initialState, action = {}) {
             return receiveUserInfo(state, action.payload);
         case 'LOGIN_TEMP_USER':
             return receiveTempUserInfo(state, action.payload);
+        case 'updateUserInfo_SUCCESS':
+            return receiveUserInfo(state, action.payload);
         default:
             return state;
     }
