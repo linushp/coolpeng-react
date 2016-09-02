@@ -8,21 +8,21 @@ exports.GlobalEventName = GlobalEventName;
 exports.EventBus = EventBus;
 
 exports.StringUtils = StringUtils;
-
-var _undefined = window.undefined;
+var win = window;
+var _undefined = win.undefined;
+var Math = win.Math;
 exports._undefined = _undefined;
 
 
 var uniqueIdNumber = 0;
-export function uniqueId(prefix){
+export function uniqueId(prefix) {
     uniqueIdNumber++;
-    if(prefix){
+    if (prefix) {
         return prefix + '' + uniqueIdNumber;
-    }else {
+    } else {
         return uniqueIdNumber;
     }
 }
-
 
 
 export function isPromise(value) {
@@ -83,8 +83,8 @@ export function createUUID(userId) {
         return v.toString(16);
     });
 
-    userId = userId ? (userId + '-'): '';
-    return userId + randomStr + uniqueId() +''+ new Date().getTime();
+    userId = userId ? (userId + '-') : '';
+    return userId + randomStr + uniqueId() + '' + new Date().getTime();
 }
 
 
@@ -108,20 +108,20 @@ export function getDataFromImmutableOrPlain(obj, key) {
 }
 
 
-export function setData(obj,key,value){
+export function setData(obj, key, value) {
     if (!obj) {
         return null;
     }
     if (isFunction(obj.set)) {
-        obj = obj.set(key,value);
+        obj = obj.set(key, value);
     }
-    else{
+    else {
         obj[key] = value;
     }
     return obj;
 }
 
-export function isImmutable(obj){
+export function isImmutable(obj) {
     if (isFunction(obj.set) &&
         isFunction(obj.get) &&
         isFunction(obj.toJS)) {
@@ -166,33 +166,32 @@ export function getObjValueInPath(obj, str) {
     return null;
 }
 
-export function isType(x,type){
-    type = type.trim();
-    return Object.prototype.toString.call(x) === '[object '+type+']';
+export function isType(x, type) {
+    return Object.prototype.toString.call(x) === '[object ' + type + ']';
 }
 
 export function isFunction(x) {
-    return isType(x,'Function');
+    return isType(x, 'Function');
 }
 
 export function isArray(x) {
-    return isType(x,'Array');
+    return isType(x, 'Array');
 }
 
-export function isNumber(x){
-    return isType(x,'Number');
+export function isNumber(x) {
+    return isType(x, 'Number');
 }
 
-export function isEmpty(x){
-    if(!x){
+export function isEmpty(x) {
+    if (!x) {
         return true;
     }
 
-    if(isFunction(x.isEmpty)){
+    if (isFunction(x.isEmpty)) {
         return x.isEmpty();
     }
 
-    if(!isFunction(x.toJS) && x.length===0){
+    if (!isFunction(x.toJS) && x.length === 0) {
         return true;
     }
 
@@ -298,7 +297,7 @@ export function immutableListMap(itemList, callback) {
     return resultList;
 }
 
-export function listMap(itemList, callback){
+export function listMap(itemList, callback) {
     if (!itemList) {
         return [];
     }
@@ -318,27 +317,16 @@ export function listMap(itemList, callback){
 }
 
 
-export function findImmutableListObj(listObj,finder){
-    var indexList = [];
-    listObj.forEach(function (item, i) {
-        if (finder(item, i)) {
-            indexList.push(i);
-        }
-    });
-    return indexList;
-}
-
-
-export function isImmutableObjHasKV(immutableObj,finderObject){
-    if(isFunction(finderObject)){
+export function isImmutableObjHasKV(immutableObj, finderObject) {
+    if (isFunction(finderObject)) {
         return finderObject(immutableObj);
     }
     else {
-        for(var k in finderObject){
-            if(finderObject.hasOwnProperty(k)){
+        for (var k in finderObject) {
+            if (finderObject.hasOwnProperty(k)) {
                 var v = finderObject[k];
                 var iValue = immutableObj.get(k);
-                if(v!==iValue){
+                if (v !== iValue) {
                     return false;
                 }
             }
@@ -355,47 +343,47 @@ export function isImmutableObjHasKV(immutableObj,finderObject){
  * @param newData 对象或函数.将复合条件的对象替换为新的对象.
  * @returns {*}
  */
-export function updateImmutableObject(origin,finderObject,newData){
+export function updateImmutableObject(origin, finderObject, newData) {
     var Immutable = window.Immutable;
     var Map = Immutable.Map;
     var List = Immutable.List;
-    if(Map.isMap(origin)){
-        if(isImmutableObjHasKV(origin,finderObject)){
-            if(isFunction(newData)){
+    if (Map.isMap(origin)) {
+        if (isImmutableObjHasKV(origin, finderObject)) {
+            if (isFunction(newData)) {
                 origin = origin.merge(newData(origin));
-            }else {
+            } else {
                 origin = origin.merge(newData);
             }
         }
 
         var entrySeq = origin.entrySeq();
-        entrySeq.forEach(function(v,i){
+        entrySeq.forEach(function (v, i) {
             var key = v[0];
             var value = v[1];
-            var newValue = updateImmutableObject(value,finderObject,newData);
-            if(value!==newValue){
-                origin = origin.set(key,newValue);
+            var newValue = updateImmutableObject(value, finderObject, newData);
+            if (value !== newValue) {
+                origin = origin.set(key, newValue);
             }
         });
     }
 
-    if(List.isList(origin)){
+    if (List.isList(origin)) {
         var size = origin.size;
-        for(var i =0;i<size;i++){
-            origin = origin.update(i,function(v){
-                return updateImmutableObject(v,finderObject,newData);
+        for (var i = 0; i < size; i++) {
+            origin = origin.update(i, function (v) {
+                return updateImmutableObject(v, finderObject, newData);
             });
         }
     }
     return origin;
 }
 
-export function removeImmutableListObj(state,listName,finder){
+export function removeImmutableListObj(state, listName, finder) {
     var listObj = state.get(listName);
-    listObj = listObj.filterNot(function(v,i){
-        return finder(v,i);
+    listObj = listObj.filterNot(function (v, i) {
+        return finder(v, i);
     });
-    state = state.set(listName,listObj);
+    state = state.set(listName, listObj);
     return state;
 }
 
@@ -413,18 +401,17 @@ export function className(obj) {
     return arr.join(' ');
 }
 
-export function globalVar(key,value){
+export function globalVar(key, value) {
     var COOLPENG_TEMP_VAR = 'COOLPENG_TEMP_VAR';
     window[COOLPENG_TEMP_VAR] = window[COOLPENG_TEMP_VAR] || {};
-    if(value!=undefined){
+    if (value != undefined) {
         window[COOLPENG_TEMP_VAR][key] = value;
     }
     return window[COOLPENG_TEMP_VAR][key];
 }
 
 
-
-export function isEventInTarget(evt,targetId){
+export function isEventInTarget(evt, targetId) {
     var $target = $(evt.target);
     var p = $target.closest("#" + targetId);
     if (p && p.length > 0) {
@@ -434,17 +421,46 @@ export function isEventInTarget(evt,targetId){
     return false;
 }
 
-
-export function getOrCreateElementById(id){
-    var $elem = $('#'+id);
-    if($elem && $elem.length > 0 ){
-        return $elem[0];
+/**
+ * 逆转字符串
+ * @param str
+ * @returns {string}
+ */
+export function reverseString(str) {
+    str = str || "";
+    var len = str.length;
+    var newStr = [];
+    for (var i = len - 1; i >= 0; i--) {
+        newStr.push(str[i]);
     }
+    return newStr.join("");
+}
 
-    var div = '<div id="'+id+'"></div>';
-    $('body').append(div);
-    $elem = $('#'+id);
-    if($elem && $elem.length > 0 ){
-        return $elem[0];
+
+/**
+ * 获取一个随机的数字
+ * @param min
+ * @param max
+ * @returns {number}
+ */
+export function getRandomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
+}
+
+
+/**
+ * 获取一个随机的指定长度的数字字符串
+ * @param min
+ * @param max
+ * @param len
+ * @returns {string}
+ */
+export function getRandomNumString(min, max, len) {
+    var num = "" + getRandomNumber(min, max);
+    num = reverseString(num);
+    var str = [];
+    for (var i = 0; i < len; i++) {
+        str[i] = num[len - i - 1] || "0";
     }
+    return str.join("");
 }

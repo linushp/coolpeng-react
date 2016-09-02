@@ -1,10 +1,10 @@
 import PureRenderComponent from '../../core/PureRenderComponent';
 import ActionStoreHelper from '../Common/ActionStoreHelper';
-import {immutableListMap,className,globalVar} from '../../core/utils/index';
+import {immutableListMap,className,globalVar,uniqueId} from '../../core/utils/index';
 import {toPathParamString,getCategoryIdPath} from './NoteFunctions';
 import AvatarReact from '../../service/avatar/AvatarReact';
 import SimditorReact from '../../service/editor/SimditorReact';
-import ReactForm from '../../components/form/ReactForm';
+import ReactForm,{getReactFormValues} from '../../components/form/ReactForm';
 import Dialog from '../../components/dialog/Dialog';
 import $ from 'jquery';
 import './index.less';
@@ -28,6 +28,7 @@ class NoteSingle extends PureRenderComponent {
 
     constructor(props) {
         super(props);
+        this.reactFormUniqueId = uniqueId("reactFormUniqueId");
     }
 
     componentWillMount() {
@@ -35,8 +36,8 @@ class NoteSingle extends PureRenderComponent {
 
 
     getEditorContent() {
-        var TitleForm = this.refs['TitleForm'];
-        var TitleFormValue = TitleForm.getValues();
+
+        var TitleFormValue = getReactFormValues(this.reactFormUniqueId);
         var postTitle = TitleFormValue.postTitle;
         var editor = this.refs['SimditorReact'];
         var pathParams = globalVar('pathParams');
@@ -90,7 +91,7 @@ class NoteSingle extends PureRenderComponent {
         return (
             <div className="NoteSingleEdit">
                 <div className="NoteSingleEdit_PostTitle">
-                    <ReactForm ref="TitleForm" layout={TitleFormLayout} values={TitleFormValues}></ReactForm>
+                    <ReactForm id={this.reactFormUniqueId} layout={TitleFormLayout} values={TitleFormValues}></ReactForm>
                     <button className="NoteSingleEdit_SaveButton" onClick={this.onSaveNote.bind(this,NoteVO)}> 保存</button>
                 </div>
                 <div className="NoteSingleEdit_SimditorReact">

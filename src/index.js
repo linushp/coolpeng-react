@@ -11,10 +11,11 @@ import App from './views/App';
 import Home from './views/Home';
 import NoteApp from './views/Note/NoteApp';
 import Login from './views/Login/Login';
+import DaoHang from './views/DaoHang/DaoHang';
 
 var history = useRouterHistory(createHistory)({ basename: '' });
 
-if(window.COOPENG_USE_HASH_HISTORY){
+if(__IS_HASH_HISTORY__){
     history = useRouterHistory(createHashHistory)({ basename: '' });
 }
 
@@ -31,13 +32,13 @@ const validate = function (next, replace, callback) {
 
 
 //getComponent={getComponent('./views/DaoHang/DaoHang')} >
-const getComponent = function(src){
-    return function (nextState, cb){
-        require.ensure([], (require) => {
-            cb(null, require(src))
-        })
-    }
-};
+// const getComponent = function(src){
+//     return function (nextState, cb){
+//         require.ensure([], (require) => {
+//             cb(null, require(src))
+//         })
+//     }
+// };
 
 ReactDOM.render(
     <Provider store={store}>
@@ -47,8 +48,8 @@ ReactDOM.render(
                 <Route component={App}>
                     <Route path="home" component={Home}/>
                     <Route path="note"  component={NoteApp} />
-                    <Route path="note/:currentPath"  component={NoteApp} />
-                    <Route path="daohang" component={require('./views/DaoHang/DaoHang')} > </Route>
+                    <Route path="note/:currentPath" component={NoteApp} />
+                    <Route path="daohang" component={DaoHang} > </Route>
                 </Route>
             </Route>
             <Route path="/login" component={Login} />
@@ -61,4 +62,5 @@ $(function(){
     $(document).on('click',function(evt){
         EventBus.emit('EVENT_DOCUMENT_CLICK',evt,this);
     });
+    $("#root").addClass('rootShow');
 });

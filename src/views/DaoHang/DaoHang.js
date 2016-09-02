@@ -3,7 +3,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import PureRenderComponent from '../../core/PureRenderComponent';
 import ActionStoreHelper from '../Common/ActionStoreHelper';
-import DaohangCreate from './DaohangCreate';
+import DaohangCreateButton from './DaohangCreateButton';
 import DaoHangCategory from './DaoHangCategory';
 import './index.less';
 
@@ -11,6 +11,9 @@ class DaoHang extends PureRenderComponent {
 
     constructor(props) {
         super(props);
+        this.state = {
+            isEditing:false
+        };
     }
 
     componentWillMount() {
@@ -36,9 +39,9 @@ class DaoHang extends PureRenderComponent {
         var that = this;
         const {user, daohang, actions} = this.props;
         var result = [];
-        //refreshCategoryList={that.refreshCategoryList.bind(that)}
+        var isEditing = this.state.isEditing;
         categoryList.forEach(function (c, i) {
-            result.push(<DaoHangCategory category={c} user={user} actions={actions} parent={that}></DaoHangCategory>);
+            result.push(<DaoHangCategory category={c} isEditing={isEditing} user={user} actions={actions} parent={that}></DaoHangCategory>);
         });
         return result;
     }
@@ -54,7 +57,12 @@ class DaoHang extends PureRenderComponent {
         return (
             <div className="cp-daohang">
                 <div className="cp-daohang-create">
-                    <DaohangCreate daohang={daohang} user={user} actions={actions} parent={this}></DaohangCreate>
+                    {
+                        this.state.isEditing?
+                            <button className="cp-daohang-create-button" onClick={()=>{this.setState({isEditing:false})}}>完成</button> :
+                            <button className="cp-daohang-create-button" onClick={()=>{this.setState({isEditing:true})}}>编辑</button>
+                    }
+                    <DaohangCreateButton daohang={daohang} user={user} actions={actions} parent={this}></DaohangCreateButton>
                 </div>
                 <div className="cp-daohang-ccs">
                     {this.renderCategoryList(categoryList)}

@@ -2,9 +2,9 @@ import {Link} from 'react-router'
 import ReactPagination from '../../components/Pagination/ReactPagination';
 import PureRenderComponent from '../../core/PureRenderComponent';
 import ActionStoreHelper from '../Common/ActionStoreHelper';
-import {immutableListMap,className,globalVar} from '../../core/utils/index';
+import {immutableListMap,className,globalVar,uniqueId} from '../../core/utils/index';
 import {toPathParamString} from './NoteFunctions';
-import ReactForm from '../../components/form/ReactForm';
+import ReactForm,{getReactFormValue} from '../../components/form/ReactForm';
 import Dialog from '../../components/dialog/Dialog';
 import Icon from "../../components/icons/Icon";
 import './index.less';
@@ -29,6 +29,7 @@ class NoteList extends PureRenderComponent {
         this.SearchFormLayout = [
             {name: 'Search', type: 'input',placeholder:"搜索"}
         ];
+        this.reactFormUniqueId = uniqueId("reactFormUniqueId");
     }
 
 
@@ -55,7 +56,7 @@ class NoteList extends PureRenderComponent {
 
 
     onSearchNoteList(){
-        var searchText = this.getReactFormValue('SearchForm','Search');
+        var searchText = getReactFormValue(this.reactFormUniqueId,'Search');
         const {reloadNoteListByCategory} = this.props;
         reloadNoteListByCategory(searchText);
     }
@@ -85,7 +86,7 @@ class NoteList extends PureRenderComponent {
                 <div className="note-list-search">
                     <Icon type="listBack" />
                     <div className="NoteListSearchForm">
-                        <ReactForm ref="SearchForm" layout={this.SearchFormLayout} values={searchFormValues}></ReactForm>
+                        <ReactForm id={this.reactFormUniqueId} layout={this.SearchFormLayout} values={searchFormValues}></ReactForm>
                         <Icon type="search" onClick={this.onSearchNoteList.bind(this)}>查找</Icon>
                     </div>
                     <Icon type="settingAbstract" />

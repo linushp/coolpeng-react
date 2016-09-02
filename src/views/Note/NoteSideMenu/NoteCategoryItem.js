@@ -4,7 +4,7 @@ import PopupOperation from '../../../components/PopupOperation/PopupOperation';
 import Icon from "../../../components/icons/Icon";
 import ActionStoreHelper from '../../Common/ActionStoreHelper';
 import {immutableListMap,className,getDataFromImmutableOrPlain,uniqueId,isEmpty,EventBus,GlobalEventName,isEventInTarget} from '../../../core/utils/index';
-import ReactForm from '../../../components/form/ReactForm';
+import ReactForm,{getReactFormValue} from '../../../components/form/ReactForm';
 import {parsePathParams,isPathParamChanged} from '../NoteFunctions';
 
 var getObjAttrValue = getDataFromImmutableOrPlain;
@@ -15,12 +15,13 @@ class NoteCategoryItem extends PureRenderComponent {
     constructor(props) {
         super(props);
         this.editingUniqueId = uniqueId('NoteCategoryItemEditing');
+        this.reactFormUniqueId = uniqueId("reactFormUniqueId");
     }
 
 
     onSaveCategory(item){
         var callbacks = this.props.callbacks;
-        var name = this.getReactFormValue('nameForm','name');
+        var name = getReactFormValue(this.reactFormUniqueId,'name');
         callbacks.onSaveCategory(item,name);
     }
 
@@ -53,7 +54,7 @@ class NoteCategoryItem extends PureRenderComponent {
         if(isEditing){
             return (
                 <div id={this.editingUniqueId}>
-                    <ReactForm ref="nameForm" layout={[{type:'input',name:'name'}]} values={{'name':name}}></ReactForm>
+                    <ReactForm id={this.reactFormUniqueId} layout={[{type:'input',name:'name'}]} values={{'name':name}}></ReactForm>
                     <button onClick={this.onSaveCategory.bind(this,item)}>保存</button>
                     <button onClick={this.onCancelCreateCategory.bind(this,item)}>取消</button>
                 </div>

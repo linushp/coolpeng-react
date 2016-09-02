@@ -17,16 +17,4 @@ export default class PureRenderComponent extends React.Component {
         return isOk;
     }
 
-
-    getReactFormValue(refName,formItemName){
-        var ref = this.refs[refName];
-        return ref.getValue(formItemName);
-    }
-
-    getReactFormValues(refName) {
-        var ref = this.refs[refName];
-        return ref.getValues();
-    }
-
-
 }

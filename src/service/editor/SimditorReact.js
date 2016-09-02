@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import {loadStaticJS,loadStaticCSS,createUUID,StringUtils,uniqueId} from '../../core/utils/index';
-import StaticConfig from '../../core/utils/StaticConfig';
+// import StaticConfig from '../../core/utils/StaticConfig';
 import {onXhrUpload} from '../upload/UploadUtils';
 import './index.less';
 /**
@@ -68,9 +68,9 @@ export default class SimditorReact extends React.Component {
         }
 
         var that = this;
-
-        loadStaticCSS(StaticConfig.SIMDITOR_CSS, function () {
-            loadStaticJS(StaticConfig.SIMDITOR_JS, function (isNewLoad) {
+        var isNewLoad = false;
+        // loadStaticCSS(StaticConfig.SIMDITOR_CSS, function () {
+        //     loadStaticJS(StaticConfig.SIMDITOR_JS, function (isNewLoad) {
                 var Simditor = window.Simditor;
                 toolbar = ['title', 'bold', 'italic', 'underline', 'strikethrough', 'fontScale', 'color', '|', 'ol', 'ul', 'blockquote', 'code', 'table', '|', 'link', 'image', 'hr', '|', 'indent', 'outdent', 'alignment'];
                 var simditorRoot = this.refs.simditorRoot.getDOMNode();//拿到了原生DOM
@@ -95,8 +95,8 @@ export default class SimditorReact extends React.Component {
                     that.runInitedCallback();
                 }
 
-            }.bind(that));
-        });
+            // }.bind(that));
+        // });
     }
 
     runInitedCallback() {

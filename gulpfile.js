@@ -109,7 +109,7 @@ gulp.task('minifySimditorJS', function() {
         './static/lib/simditor-2.3.6/scripts/simditor.js'
     ];
 
-    return gulp.src(jsArray).pipe(concat('simditor-all.js'))
+    return gulp.src(jsArray).pipe(concat('simditor-v20160902.js'))
         .pipe(gulp.dest('./static/lib/combo'))
         .pipe(rename({suffix: '.min'}))
         .pipe(uglify())

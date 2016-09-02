@@ -439,6 +439,26 @@ return hotkeys;
   }
 }(this, function ($, SimpleModule) {
 
+  function sortByFileName(fileList) {
+
+    var fileArray = [];
+    for(var i=0;i<fileList.length;i++){
+      fileArray.push(fileList[i]);
+    }
+    fileArray = fileArray.sort(function (x,y) {
+      try {
+        var xName = x.name;
+        var yName = y.name;
+        return xName.localeCompare(yName);
+      }catch (e){
+        return 0;
+      }
+    });
+    debugger;
+    return fileArray;
+  }
+
+
 var Uploader, uploader,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -501,6 +521,7 @@ Uploader = (function(superClass) {
       return;
     }
     if ($.isArray(file) || file instanceof FileList) {
+      file = sortByFileName(file);
       for (i = 0, len = file.length; i < len; i++) {
         f = file[i];
         this.upload(f, opts);

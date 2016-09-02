@@ -3,10 +3,17 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import ActionStoreHelper from '../Common/ActionStoreHelper';
 import PureRenderComponent from '../../core/PureRenderComponent';
-import ReactForm from '../../components/form/ReactForm';
+import ReactForm,{getReactFormValues} from '../../components/form/ReactForm';
 import Dialog from '../../components/dialog/Dialog';
+import {getRandomNumString,uniqueId} from '../../core/utils/index';
 
 import './index.less'
+
+
+var num = getRandomNumString(1,13,4);
+var style = {
+    'backgroundImage':`url("http://image.coolpeng.cn/avatar/00backwall/B-${num}.jpg")`
+};
 
 class Login extends PureRenderComponent {
 
@@ -19,16 +26,18 @@ class Login extends PureRenderComponent {
         this.state = {
         };
         this.LoginFormLayout = [
-            {name: 'username', type: 'input',placeholder:"请输入用户名",text:"用户名"},
-            {name: 'password', type: 'input',placeholder:"请输入密码",text:"密码"}
+            {name: 'username', type: 'input',placeholder:"请输入用户名"},
+            {name: 'password', type: 'password',placeholder:"请输入密码",onEnterKey:this.doLogin.bind(this)},
+            {name: 'button', type: 'button',placeholder:"登录",className:"loginButton",onClick:this.doLogin.bind(this)}
         ];
+        this.reactFormUniqueId = uniqueId("reactFormUniqueId");
     }
 
     componentWillMount() {
     }
 
     doLogin(){
-        var values = this.getReactFormValues("LoginForm");
+        var values = getReactFormValues(this.reactFormUniqueId);
         var username = values["username"];
         var password = values["password"];
         var actions = this.props.actions;
@@ -42,14 +51,13 @@ class Login extends PureRenderComponent {
             }
         });
     }
-
     render() {
-        var actions = this.props.actions;
-        var user = this.props.user || {};
         return (
-            <div className="login-page">
-                <ReactForm ref="LoginForm" layout={this.LoginFormLayout}></ReactForm>
-                <button onClick={this.doLogin.bind(this)} className="loginButton">登录</button>
+            <div className="login-page" style={style}>
+                <div className="login-box">
+                    <div  className="login-title">登录系统</div>
+                    <ReactForm id={this.reactFormUniqueId} layout={this.LoginFormLayout}></ReactForm>
+                </div>
             </div>
         );
     }

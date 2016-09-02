@@ -14,7 +14,7 @@ export function showUserInfoDialog(userInfo,updateUserInfo){
         <div dangerouslySetInnerHTML={{__html:view.html}}></div>
     );
 
-
+    
     window[onFileChangeName] = function(e){
         var files = e.files;//FileList
         var file = files[0];
@@ -37,6 +37,7 @@ export function showUserInfoDialog(userInfo,updateUserInfo){
                 Dialog.showMsgSuccess("修改成功");
             });
         }else {
+            delete window[onFileChangeName];
             doCloseDialog();
         }
     };

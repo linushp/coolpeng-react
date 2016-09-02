@@ -1,14 +1,37 @@
 import {getDataFromImmutableOrPlain,isArray,immutableListMap,shallowEqual} from '../../core/utils/index';
+import PureRenderComponent from '../../core/PureRenderComponent';
 import React, {PropTypes} from 'react';
 import $ from 'jquery';
 
 var _undefined = window.undefined;
 
 function formInput(name, text, options,obj) {
-    if(obj && obj.placeholder){
-        <input className="formInput" name={name} type="text" placeholder={obj.placeholder}/>;
+    var placeholder = obj.placeholder || "";
+    var className = obj.className||"";
+    var onClick = function (e) {
+        if(obj.onClick){
+            obj.onClick(e);
+        }
+    };
+
+    var onChange = function (e) {
+        if(obj.onChange){
+            obj.onChange(e);
+        }
+    };
+
+    var onKeyUp = function (e) {
+        if(e.keyCode===13 && obj.onEnterKey){
+            obj.onEnterKey(e);
+        }
+    };
+
+    if(obj.type==="submit"||obj.type==="button"){
+        return <input className={`formInput ${className}`} name={name} type={obj.type} value={placeholder} onClick={onClick} />;
+    }else {
+        return <input className={`formInput ${className}`} name={name} type={obj.type} placeholder={placeholder} onClick={onClick} onChange={onChange} onKeyUp={onKeyUp} />;
     }
-    return <input className="formInput" name={name} type="text"/>;
+
 }
 
 function formInputSetter(value, $formItem) {
@@ -114,6 +137,9 @@ function defaultRender() {
 
 var typeRenderMap = {
     'input': formInput,
+    'password': formInput,
+    'submit': formInput,
+    'button': formInput,
     'checkbox': formCheckbox,
     'radio': formRadio,
     'select': formSelect
@@ -133,6 +159,9 @@ function getTypeRender(type) {
 
 var typeSetterMap = {
     'input': formInputSetter,
+    'password': formInputSetter,
+    'submit': formInputSetter,
+    'button': formInputSetter,
     'checkbox': formCheckboxSetter,
     'radio': formRadioSetter,
     'select': formSelectSetter
@@ -162,6 +191,9 @@ function setFromItemValue($formItem, values) {
 
 var typeGetterMap = {
     'input': formInputGetter,
+    'password': formInputGetter,
+    'submit': formInputGetter,
+    'button': formInputGetter,
     'checkbox': formCheckboxGetter,
     'radio': formRadioGetter,
     'select': formSelectGetter
@@ -186,39 +218,50 @@ function getFromItemValue($formItem) {
     return setter($formItem);
 }
 
+export function getReactFormValues(id) {
+    var $formItemList = $("#"+id).find('.formItem');
+    var values = {};
+    $formItemList.each(function () {
+        var $formItem = $(this);
+        var name = $formItem.attr('data-name');
+        var v = getFromItemValue($formItem);
+        values[name] = v;
+    });
+    return values;
+}
+
+export function getReactFormValue(id,name){
+    return getReactFormValues(id)[name];
+}
 
 
 
+export class FormItem extends PureRenderComponent{
+    constructor(props) {
+        super(props);
+    }
 
-
+    render(){
+        var {text,name,type,options,config} = this.props;
+        var itemRender = getTypeRender(type);
+        config = config || this.props;
+        return (
+            <div className="formItem" data-name={name} data-type={type}>
+                <div className="formItemTitle">{text}</div>
+                <div className="formItemCont">
+                    {itemRender(name, text, options,config)}
+                </div>
+            </div>
+        );
+    }
+}
 
 /***************ReactForm**************/
-export default class ReactForm extends React.Component {
+export default class ReactForm extends PureRenderComponent{
     constructor(props) {
         super(props);
         this.state = {};
         this.values = null;
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return false;
-    }
-
-    getValues() {
-        var formRef = this.refs.formRef.getDOMNode();//拿到了原生DOM
-        var $formItemList = $(formRef).find('.formItem');
-        var values = {};
-        $formItemList.each(function () {
-            var $formItem = $(this);
-            var name = $formItem.attr('data-name');
-            var v = getFromItemValue($formItem);
-            values[name] = v;
-        });
-        return values;
-    }
-
-    getValue(name){
-        return this.getValues()[name];
     }
 
     isValuesChanged(values) {
@@ -254,29 +297,29 @@ export default class ReactForm extends React.Component {
         this.setValues(values);
     }
 
+
+    renderContent(layout,children){
+        if(!layout){
+            return children;
+        }
+        else {
+            return immutableListMap(layout, function (obj) {
+                var text = getDataFromImmutableOrPlain(obj, 'text');
+                var name = getDataFromImmutableOrPlain(obj, 'name');
+                var type = getDataFromImmutableOrPlain(obj, 'type');
+                var options = getDataFromImmutableOrPlain(obj, 'options');
+                return <FormItem text={text} name={name} type={type} options={options} config={obj}></FormItem>;
+            });
+        }
+    }
+
     render() {
-
         var layout = this.props.layout;
-
-        var id = this.props.id || "";
-
+        var id = this.props.id;
+        var children = this.props.children;
         return (
-            <div ref="formRef" id={id}>
-                {immutableListMap(layout, function (obj) {
-                    var text = getDataFromImmutableOrPlain(obj, 'text');
-                    var name = getDataFromImmutableOrPlain(obj, 'name');
-                    var type = getDataFromImmutableOrPlain(obj, 'type');
-                    var options = getDataFromImmutableOrPlain(obj, 'options');
-                    var itemRender = getTypeRender(type);
-                    return (
-                        <div className="formItem" data-name={name} data-type={type}>
-                            <div className="formItemTitle">{text}</div>
-                            <div className="formItemCont">
-                                {itemRender(name, text, options,obj)}
-                            </div>
-                        </div>
-                    );
-                })}
+            <div ref="formRef" id={id} >
+                {this.renderContent(layout,children)}
             </div>
         );
     }
@@ -307,7 +350,7 @@ export default class ReactForm extends React.Component {
 ////
 ////    return (
 ////
-////        <ReactForm layout={layout} values={values} ></ReactForm>
+////        <ReactForm id="" layout={layout} values={values} ></ReactForm>
 ////
 ////    );
 ////

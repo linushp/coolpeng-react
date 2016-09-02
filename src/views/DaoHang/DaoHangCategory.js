@@ -60,9 +60,9 @@ export default class DaoHangCategory extends PureRenderComponent {
     }
 
     render() {
-        const {user, actions,category} = this.props;
+        const {user, actions,category,isEditing} = this.props;
         var isAdminUser = isAdmin(user);
-        var adminControl = displayControl.bind(this,isAdminUser);
+        var adminControl = displayControl.bind(this,isAdminUser && isEditing);
 
         var that = this;
         return (

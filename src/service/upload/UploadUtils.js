@@ -1,4 +1,4 @@
-import {loadStaticJS,loadStaticCSS,createUUID,StringUtils} from '../../core/utils/index';
+import {loadStaticJS,createUUID,StringUtils} from '../../core/utils/index';
 import StaticConfig from '../../core/utils/StaticConfig';
 
 function getSuffix (url) {

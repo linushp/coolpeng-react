@@ -35,6 +35,37 @@ var __URL_HOST_ORIGIN__ = isProduction()?"'http://image.coolpeng.cn'":"''";
 
 var publicPath = isProduction()?"http://image.coolpeng.cn/":"/";
 
+
+var getLessLoader = function () {
+    if(isProduction()){
+        return {
+            test: /\.less?$/,
+            loader: ExtractTextPlugin.extract("style-loader", "css-loader!less-loader"),
+            include: __appPath
+        };
+    }else {
+        return {
+            test: /\.less?$/,
+            loaders: [ 'style-loader','css-loader','less-loader?{"sourceMap":true}'],
+            include: __appPath
+        };
+    }
+};
+
+var getCssLoader = function () {
+    if(isProduction()){
+        return {
+            test: /\.css$/,
+            loader: ExtractTextPlugin.extract("style-loader", "css-loader")
+        };
+    }else {
+        return {
+            test: /\.css$/,
+            loaders: [ 'style-loader','css-loader']
+        };
+    }
+};
+
 function createWebpackConfig(jsFile,htmlFile,mainFileName){
     var webpackConfig = {
         target: 'web',
@@ -76,17 +107,7 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
                 {test: /\.js?$/, exclude: /node_modules/, loader: 'babel?cacheDirectory'},
                 {test: /\.styl$/, loader: 'style-loader!css-loader!stylus-loader'},
                 {test: /\.scss$/, loaders: ["style", "css", "sass"]},
-                {
-                    test: /\.less?$/,
-                    //loader: ExtractTextPlugin.extract("style-loader", "css-loader!less-loader"),
-                    loaders: [ 'style-loader','css-loader','less-loader?{"sourceMap":true}'],
-                    include: __appPath
-                },
-                {
-                    test: /\.css$/,
-                    loaders: [ 'style-loader','css-loader'],
-                    //loader: ExtractTextPlugin.extract("style-loader", "css-loader")
-                },
+                getLessLoader(), getCssLoader(),
                 {test: /\.(jpg|png|gif)$/, loader: 'url?limit=100000'},
                 {test: /\.(woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000'},
             ],
@@ -139,6 +160,7 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
             new webpack.NoErrorsPlugin(),
             new webpack.DefinePlugin({
                 __DEV__: !isProduction(),
+                __IS_HASH_HISTORY__: false,
                 '__URL_HOST_ORIGIN__': __URL_HOST_ORIGIN__,
                 'process.env.NODE_ENV': isProduction() ? '"production"':'"development"'
             }),
@@ -157,8 +179,8 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
             proxy: {
                 '/cloud/*': {
 
-                     target: 'http://www.coolpeng.cn',
-                    //target: 'http://127.0.0.1:10086',
+                     // target: 'http://www.coolpeng.cn',
+                    target: 'http://127.0.0.1:10086',
 
                     secure: false,
                     changeOrigin: true

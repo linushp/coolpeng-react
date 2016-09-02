@@ -179,7 +179,7 @@ class NoteSideMenu extends PureRenderComponent {
 
     getMenuSelectType(M,pathParams) {
         var routeCId = pathParams.c;
-        console.log("getMenuSelectType",routeCId,M.get('id'))
+        // console.log("getMenuSelectType",routeCId,M.get('id'))
         if(routeCId===M.get('id')){
             this.currentMenuItem = M;
             return 'cur';

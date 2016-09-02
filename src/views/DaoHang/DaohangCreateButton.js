@@ -3,7 +3,7 @@ import {bindActionCreators} from 'redux';
 import $ from 'jquery';
 import {connect} from 'react-redux';
 import {isAdmin} from '../../core/utils';
-
+import Dialog from '../../components/dialog/Dialog';
 
 function formInput(name,text){
     return (
@@ -65,6 +65,11 @@ export default class CreateDaohang extends React.Component {
         });
     }
 
+
+    onClickCreateButton(){
+        Dialog.showModal();
+    }
+
     render() {
         const {user, actions,daohang} = this.props;
 
@@ -79,29 +84,27 @@ export default class CreateDaohang extends React.Component {
             return <option value={id}>{text}</option>
         });
 
+        /**
+         *                 <div className="cp-dh-create1">
+         <div ref="form">
+         {formSelect('categoryId','分类',selectOptions)}
+         {formInput('text','文字')}
+         {formInput('link','链接')}
+         {formInput('desc','描述')}
+         </div>
+         <button onClick={this.onSubmitAddLink.bind(this)}>添加链接</button>
+         </div>
+
+         <div className="cp-dh-create2">
+         <div ref="form2">
+         {formInput('text','文字')}
+         {formInput('desc','描述')}
+         </div>
+         <button onClick={this.onSubmitAddCategory.bind(this)}>添加分类</button>
+         </div>
+         */
         return (
-            <div>
-
-                <div className="cp-dh-create1">
-                    <div ref="form">
-                        {formSelect('categoryId','分类',selectOptions)}
-                        {formInput('text','文字')}
-                        {formInput('desc','描述')}
-                        {formInput('link','链接')}
-                    </div>
-                    <button onClick={this.onSubmitAddLink.bind(this)}>添加链接</button>
-                </div>
-
-                <div className="cp-dh-create2">
-                    <div ref="form2">
-                        {formInput('text','文字')}
-                        {formInput('desc','描述')}
-                    </div>
-                    <button onClick={this.onSubmitAddCategory.bind(this)}>添加分类</button>
-                </div>
-
-            </div>
-
+            <button className="cp-daohang-create-button" onClick={this.onClickCreateButton.bind(this)}>新建</button>
         );
     }
 }
