@@ -1,9 +1,9 @@
 import React from 'react'
 import './index.less'
 import {Link} from 'react-router'
-import Icon from '../../icons/Icon';
+import Icon from '../../../../components/icons/Icon';
 import {showUserInfoDialog} from './UserInfoDialog';
-import PopupOperation from '../../PopupOperation/PopupOperation';
+import PopupOperation from '../../../../components/PopupOperation/PopupOperation';
 
 export default class Header extends React.Component {
     constructor(props) {

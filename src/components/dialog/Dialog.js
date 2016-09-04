@@ -170,7 +170,7 @@ class Dialog extends React.Component {
                 <div data-mid={id} className={`cp-dialog-${type}`}>
                     <div className="cp-dialog-mask" style={{'zIndex':this.styleZIndex}}></div>
                     <div className={`cp-dialog-pop ${popClass}`} style={this.getPopStyle(popStyle)} >
-                        <div className="cp-dialog-header"> {title} </div>
+                        <div className="cp-dialog-header" > {title} </div>
                         <div className="cp-dialog-ico cp-dialog-close" onClick={this.onClickClose.bind(this,btnCancel)}
                              style={{'zIndex':(this.styleZIndex+2)}}></div>
                         <div className="cp-dialog-content">

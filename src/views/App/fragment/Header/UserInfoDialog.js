@@ -1,8 +1,8 @@
-import Dialog from '../../dialog/Dialog';
+import Dialog from '../../../../components/dialog/Dialog';
 import $ from 'jquery';
 import {toUserInfoEditingView} from './UserInfoView';
-import {uniqueId} from '../../../core/utils/index';
-import {onXhrUpload} from '../../../service/upload/UploadUtils';
+import {uniqueId} from '../../../../core/utils/index';
+import {onXhrUpload} from '../../../../service/upload/UploadUtils';
 //
 //
 

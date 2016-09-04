@@ -26,9 +26,13 @@ function formInput(name, text, options,obj) {
         }
     };
 
-    if(obj.type==="submit"||obj.type==="button"){
+    if(obj.type==="textarea"){
+        return <textarea className={`formInput ${className}`} name={name} type={obj.type} placeholder={placeholder} onClick={onClick} onChange={onChange} onKeyUp={onKeyUp} ></textarea>
+    }
+    else if(obj.type==="submit"||obj.type==="button"){
         return <input className={`formInput ${className}`} name={name} type={obj.type} value={placeholder} onClick={onClick} />;
-    }else {
+    }
+    else {
         return <input className={`formInput ${className}`} name={name} type={obj.type} placeholder={placeholder} onClick={onClick} onChange={onChange} onKeyUp={onKeyUp} />;
     }
 
@@ -39,15 +43,19 @@ function formInputSetter(value, $formItem) {
     if (value === null || value === _undefined) {
         value = "";
     }
-    var $input = $formItem.find('input');
+    var $input = $formItem.find('.formInput');
     $input.val(value);
 }
 
 
 function formInputGetter($formItem) {
-    var $input = $formItem.find('input');
+    var $input = $formItem.find('.formInput');
     return $input.val();
 }
+
+
+
+
 
 
 function formSelect(name, text, options) {
@@ -66,12 +74,17 @@ function formSelect(name, text, options) {
  * @param value  like: "11"
  */
 function formSelectSetter(value, $formItem) {
-
+    if (value === null || value === _undefined) {
+        value = "";
+    }
+    var $input = $formItem.find('.formInput');
+    $input.val(value);
 }
 
 
 function formSelectGetter($formItem) {
-
+    var $input = $formItem.find('.formInput');
+    return $input.val();
 }
 
 
@@ -135,15 +148,47 @@ function defaultRender() {
     return <div>参数配置错误</div>
 }
 
+
+
+
+
+
+/*****************************************************************************************************************/
+
+
 var typeRenderMap = {
     'input': formInput,
     'password': formInput,
     'submit': formInput,
     'button': formInput,
+    "textarea":formInput,
     'checkbox': formCheckbox,
     'radio': formRadio,
     'select': formSelect
 };
+
+var typeSetterMap = {
+    'input': formInputSetter,
+    'password': formInputSetter,
+    'submit': formInputSetter,
+    'button': formInputSetter,
+    "textarea":formInputSetter,
+    'checkbox': formCheckboxSetter,
+    'radio': formRadioSetter,
+    'select': formSelectSetter
+};
+
+var typeGetterMap = {
+    'input': formInputGetter,
+    'password': formInputGetter,
+    'submit': formInputGetter,
+    'button': formInputGetter,
+    "textarea":formInputGetter,
+    'checkbox': formCheckboxGetter,
+    'radio': formRadioGetter,
+    'select': formSelectGetter
+};
+
 
 function getTypeRender(type) {
     var render = typeRenderMap[type];
@@ -154,20 +199,6 @@ function getTypeRender(type) {
 }
 
 
-/*******Set Values******/
-
-
-var typeSetterMap = {
-    'input': formInputSetter,
-    'password': formInputSetter,
-    'submit': formInputSetter,
-    'button': formInputSetter,
-    'checkbox': formCheckboxSetter,
-    'radio': formRadioSetter,
-    'select': formSelectSetter
-};
-
-
 function getFormItemSetter(type) {
     var setter = typeSetterMap[type];
     if (setter) {
@@ -175,30 +206,6 @@ function getFormItemSetter(type) {
     }
     return $.noop;
 }
-
-
-function setFromItemValue($formItem, values) {
-    var name = $formItem.attr('data-name');
-    var type = $formItem.attr('data-type');
-    var value = values[name];
-    var setter = getFormItemSetter(type);
-    setter(value, $formItem);
-}
-
-
-/***************getFromItemValue($formItem);**************/
-
-
-var typeGetterMap = {
-    'input': formInputGetter,
-    'password': formInputGetter,
-    'submit': formInputGetter,
-    'button': formInputGetter,
-    'checkbox': formCheckboxGetter,
-    'radio': formRadioGetter,
-    'select': formSelectGetter
-};
-
 
 function getFormItemValueGetter(type) {
     var getter = typeGetterMap[type];
@@ -210,6 +217,13 @@ function getFormItemValueGetter(type) {
     }
 }
 
+function setFromItemValue($formItem, values) {
+    var name = $formItem.attr('data-name');
+    var type = $formItem.attr('data-type');
+    var value = values[name];
+    var setter = getFormItemSetter(type);
+    setter(value, $formItem);
+}
 
 function getFromItemValue($formItem) {
     var name = $formItem.attr('data-name');
@@ -217,6 +231,8 @@ function getFromItemValue($formItem) {
     var setter = getFormItemValueGetter(type);
     return setter($formItem);
 }
+
+
 
 export function getReactFormValues(id) {
     var $formItemList = $("#"+id).find('.formItem');
@@ -233,7 +249,6 @@ export function getReactFormValues(id) {
 export function getReactFormValue(id,name){
     return getReactFormValues(id)[name];
 }
-
 
 
 export class FormItem extends PureRenderComponent{

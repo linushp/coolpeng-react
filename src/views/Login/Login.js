@@ -10,7 +10,7 @@ import {getRandomNumString,uniqueId} from '../../core/utils/index';
 import './index.less'
 
 
-var num = getRandomNumString(1,13,4);
+var num = getRandomNumString(1,16,4);
 var style = {
     'backgroundImage':`url("http://image.coolpeng.cn/avatar/00backwall/B-${num}.jpg")`
 };
@@ -24,6 +24,7 @@ class Login extends PureRenderComponent {
     constructor(props) {
         super(props);
         this.state = {
+
         };
         this.LoginFormLayout = [
             {name: 'username', type: 'input',placeholder:"请输入用户名"},
@@ -52,6 +53,7 @@ class Login extends PureRenderComponent {
         });
     }
     render() {
+        let loggingIn = this.props.user.loggingIn;
         return (
             <div className="login-page" style={style}>
                 <div className="login-box">
@@ -69,7 +71,7 @@ Login.STATE_CONFIG = {
 };
 
 Login.ACTION_CONFIG = {
-    setCurrentTempUser: 'user.setCurrentTempUser',
+    "setCurrentTempUser": 'user.setCurrentTempUser',
     "login":"user.login"
 };
 

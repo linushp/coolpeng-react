@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import ActionStoreHelper from '../Common/ActionStoreHelper';
-import Header from '../../components/fragment/Header'
+import Header from './fragment/Header'
 import './index.less';
 import '../Common/common.less';
 import Dialog from '../../components/dialog/Dialog';

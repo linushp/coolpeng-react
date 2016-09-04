@@ -31,8 +31,10 @@ var isProduction = function () {
 
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
+//js文件上传时候静态文件的路径
 var __URL_HOST_ORIGIN__ = isProduction()?"'http://image.coolpeng.cn'":"''";
 
+//打包输出的静态文件的路径
 var publicPath = isProduction()?"http://image.coolpeng.cn/":"/";
 
 
@@ -94,7 +96,7 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
             publicPath: publicPath,
             filename: 'static/app/[name].[hash].js',//hash
             chunkFilename: 'static/app/module.[name].[hash].js',
-            library: ['CoolpengApp', '[name]'],
+            library: ['Ubibi', '[name]'],
             pathInfo: true
         },
 
@@ -164,7 +166,7 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
                 '__URL_HOST_ORIGIN__': __URL_HOST_ORIGIN__,
                 'process.env.NODE_ENV': isProduction() ? '"production"':'"development"'
             }),
-            new ExtractTextPlugin("static/css/[hash]-[name].css", {
+            new ExtractTextPlugin("static/app/[name].[hash].css", {
                 disable: false,
                 allChunks: true
             })

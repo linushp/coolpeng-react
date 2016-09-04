@@ -1,4 +1,4 @@
-import {uniqueId} from '../../../core/utils/index';
+import {uniqueId} from '../../../../core/utils/index';
 import $ from 'jquery';
 import './UserInfoView.less';
 
