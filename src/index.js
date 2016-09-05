@@ -5,6 +5,7 @@ import {Router, Route, IndexRedirect,useRouterHistory} from 'react-router';
 import {createHistory,createHashHistory} from 'history'
 import configureStore from './store/configureStore';
 import {EventBus,getLocalStorage} from './core/utils/index'
+import Dialog from './components/dialog/Dialog';
 import $ from 'jquery';
 
 import App from './views/App';
@@ -59,8 +60,24 @@ ReactDOM.render(
 );
 
 $(function(){
+
+    $("#root").addClass('rootShow');
+
     $(document).on('click',function(evt){
         EventBus.emit('EVENT_DOCUMENT_CLICK',evt,this);
     });
-    $("#root").addClass('rootShow');
+
+
+    var showAlertError = false;
+    EventBus.addEventListener('UserNoLoginException',function (data) {
+        if(showAlertError){
+            return;
+        }
+        showAlertError = true;
+        Dialog.showAlertError(data.responseText,function () {
+            showAlertError = false;
+            history.pushState(null, '/login');
+        });
+    });
+
 });

@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import {toQueryParam} from '../utils';
+import {StringUtils,EventBus} from '../utils';
 
 
 function ajaxPost(userInfoGetter, url, queryCondition, success, onError) {
@@ -21,6 +21,15 @@ function ajaxPost(userInfoGetter, url, queryCondition, success, onError) {
 }
 
 
+function handNamedException(data) {
+    var exceptionName = data.responseDesc;
+    if(exceptionName && StringUtils.endsWith(exceptionName,"Exception")){
+        EventBus.emit(exceptionName,data);
+    }
+}
+
+
+
 class AjaxPromise {
 
     constructor(config) {
@@ -36,12 +45,14 @@ class AjaxPromise {
         return new Promise(function (resolve, reject) {
             ajaxPost(that.userInfoGetter, url, queryCondition, function (data) {
                 if(data.responseCode!==0){
+                    handNamedException(data);
                     reject(data);
                 }
                 else {
                     resolve(data);
                 }
             }, function (e) {
+                console.error(e);
                 reject(e);
             });
         });
