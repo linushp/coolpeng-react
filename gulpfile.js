@@ -125,7 +125,13 @@ gulp.task('remini', function() {
     function replaceDefaultStr(s){
         var ss = s.replace(/\["default"\]/gm,'[DEFAULT_CONST_STRING]');
         ss = ss.replace(/"__esModule"/gm,'ES_MODULE_CONST_STRING');
-        var mm = '(function(){  var DEFAULT_CONST_STRING = "default"; var ES_MODULE_CONST_STRING = "__esModule";  '+ss+' })()';
+        ss = ss.replace(/React\.createElement/gm,'REACT_React_createElement');
+
+        var mm = '(function(){  ' +
+            'var REACT_React_createElement = React.createElement;  ' +
+            'var DEFAULT_CONST_STRING = "default";  ' +
+            'var ES_MODULE_CONST_STRING = "__esModule";  ' +
+            '  '+ss+'  })()';
         return mm;
     }
 
