@@ -25,7 +25,7 @@
 
 }
 
-.note-list-list {
+.note-list-list ,.note-list-empty{
   width: 300px;
   position: fixed;
   left: 221px;
@@ -33,6 +33,41 @@
   bottom: 50px;
   overflow: auto;
 }
+
+
+
+.note-list-empty{
+  padding-top: 100px;
+
+  .emptyText{
+    color: #868686;
+    margin-bottom: 10px;
+    text-align: center;
+    display: block;
+    text-align: center;
+  }
+
+
+  .createButton{
+    font-size: 12px;
+    vertical-align: middle;
+    text-align: center;
+    margin: 0 auto;
+    padding: 0 5px;
+    line-height: 32px;
+    color: #ffffff;
+    background: #398dee;
+    border-radius: 2px;
+    border: 1px solid #398dee;
+    cursor: pointer;
+    outline: none;
+    width: 100px;
+    display: block;
+  }
+
+
+}
+
 
 .note-list-search {
   height: 60px;

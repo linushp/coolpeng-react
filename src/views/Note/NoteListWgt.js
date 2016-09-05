@@ -27,7 +27,7 @@ class NoteList extends PureRenderComponent {
     constructor(props) {
         super(props);
         this.SearchFormLayout = [
-            {name: 'Search', type: 'input',placeholder:"搜索"}
+            {name: 'Search', type: 'input',placeholder:"搜索",onEnterKey:this.onSearchNoteList.bind(this)}
         ];
         this.reactFormUniqueId = uniqueId("reactFormUniqueId");
     }
@@ -71,27 +71,18 @@ class NoteList extends PureRenderComponent {
     }
 
 
-    render() {
-        const {NoteList,NoteListTotalCount,NoteListPageSize,NoteListPageNumber,pathParams,NoteListSearchTitleLike} = this.props;
 
-        var that  = this;
+    renderNoteList(NoteList,NoteListTotalCount,NoteListPageSize,NoteListPageNumber,pathParams,NoteListSearchTitleLike){
 
-        var searchFormValues = {
-            Search:NoteListSearchTitleLike
-        };
-        // <Link to={this.getCreateRoutePath()}>新建Note</Link>
+        if(!NoteList || NoteList.size==0){
+            return null;
+        }
+
+        var that = this;
 
         return (
             <div>
-                <div className="note-list-search">
-                    <Icon type="listBack" />
-                    <div className="NoteListSearchForm">
-                        <ReactForm id={this.reactFormUniqueId} layout={this.SearchFormLayout} values={searchFormValues}></ReactForm>
-                        <Icon type="search" onClick={this.onSearchNoteList.bind(this)}>查找</Icon>
-                    </div>
-                    <Icon type="settingAbstract" />
-                </div>
-                <div >
+                <div>
                     <div className="note-list-list">
                         {immutableListMap(NoteList, function (v) {
                             var nn = Object.assign({}, pathParams, {n: v.get('id')});
@@ -121,7 +112,6 @@ class NoteList extends PureRenderComponent {
                                             <span className="categoryId">{v.get("categoryId")}</span>
                                         </div>
                                     </Link>
-                                    
                                 </div>);
                         })}
                     </div>
@@ -129,6 +119,51 @@ class NoteList extends PureRenderComponent {
                 <div className="note-list-page">
                     <ReactPagination pageSize={NoteListPageSize} pageNo={NoteListPageNumber} totalCount={NoteListTotalCount} onClickPagination={this.onClickPagination.bind(this)}></ReactPagination>
                 </div>
+            </div>
+        );
+    }
+
+
+
+
+
+    renderEmptyList(NoteList,NoteListTotalCount,NoteListPageSize,NoteListPageNumber,pathParams,NoteListSearchTitleLike){
+        if(!NoteList || NoteList.size==0){
+            return (
+                <div className="note-list-empty">
+                    <span className="emptyText">没有找到随笔</span>
+                    <Link className="createButton" to={this.getCreateRoutePath()}>新建随笔</Link>
+                </div>
+            );
+        }
+        return null;
+    }
+
+
+
+
+    render() {
+        const {NoteList,NoteListTotalCount,NoteListPageSize,NoteListPageNumber,pathParams,NoteListSearchTitleLike} = this.props;
+
+        var that  = this;
+
+        var searchFormValues = {
+            Search:NoteListSearchTitleLike
+        };
+        // <Link to={this.getCreateRoutePath()}>新建Note</Link>
+
+        return (
+            <div>
+                <div className="note-list-search">
+                    <Icon type="listBack" />
+                    <div className="NoteListSearchForm">
+                        <ReactForm id={this.reactFormUniqueId} layout={this.SearchFormLayout} values={searchFormValues}></ReactForm>
+                        <Icon type="search" onClick={this.onSearchNoteList.bind(this)}>查找</Icon>
+                    </div>
+                    <Icon type="settingAbstract" />
+                </div>
+                {this.renderNoteList(NoteList,NoteListTotalCount,NoteListPageSize,NoteListPageNumber,pathParams,NoteListSearchTitleLike)}
+                {this.renderEmptyList(NoteList,NoteListTotalCount,NoteListPageSize,NoteListPageNumber,pathParams,NoteListSearchTitleLike)}
             </div>
 
         );

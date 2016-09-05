@@ -124,11 +124,11 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
         },
 
         externals: {
-            jquery: "window.jQuery",
-            jQuery: "window.jQuery",
-            $: "window.jQuery",
-            react:"window.React",
-            ReactDOM:"window.ReactDOM",
+            "jquery": "window.jQuery",
+            "jQuery": "window.jQuery",
+            "$": "window.jQuery",
+            "react":"window.React",
+            "ReactDOM":"window.ReactDOM",
             "react-dom":"window.ReactDOM",
             "react-router":"window.ReactRouter",
             "react-redux":"window.ReactRedux",
@@ -181,8 +181,8 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
             proxy: {
                 '/cloud/*': {
 
-                     // target: 'http://www.coolpeng.cn',
-                    target: 'http://127.0.0.1:10086',
+                      target: 'http://www.coolpeng.cn',
+                    //target: 'http://127.0.0.1:10086',
 
                     secure: false,
                     changeOrigin: true

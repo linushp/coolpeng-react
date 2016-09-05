@@ -5,6 +5,7 @@ import PureRenderComponent from '../../core/PureRenderComponent';
 import ActionStoreHelper from '../Common/ActionStoreHelper';
 import DaohangCreateButton from './DaohangCreateButton';
 import DaoHangCategory from './DaoHangCategory';
+import {isAdmin,displayControl} from '../../core/utils';
 import './index.less';
 
 class DaoHang extends PureRenderComponent {
@@ -54,14 +55,16 @@ class DaoHang extends PureRenderComponent {
 
         const {user, daohang, actions} = this.props;
         var categoryList = daohang.get("categoryList") || [];
+        var isAdminUser = isAdmin(user);
+        var adminControl = displayControl.bind(this,isAdminUser);
         return (
             <div className="cp-daohang">
                 <div className="cp-daohang-create">
-                    {
+                    {adminControl(
                         this.state.isEditing?
                             <button className="cp-daohang-create-button" onClick={()=>{this.setState({isEditing:false})}}>完成</button> :
                             <button className="cp-daohang-create-button" onClick={()=>{this.setState({isEditing:true})}}>编辑</button>
-                    }
+                    )}
                     <DaohangCreateButton daohang={daohang} user={user} actions={actions} parent={this}></DaohangCreateButton>
                 </div>
                 <div className="cp-daohang-ccs">

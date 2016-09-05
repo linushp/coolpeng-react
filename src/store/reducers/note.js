@@ -198,6 +198,10 @@ var switchRestType = {
         var CategoryList = state.get('CategoryList');
         CategoryList = updateImmutableObject(CategoryList,finder,newValue);
         return state.set('CategoryList',CategoryList);
+    },
+
+    'staticClearNoteStore':function(state, res, restState, meta){
+        return initialState;
     }
 
 };

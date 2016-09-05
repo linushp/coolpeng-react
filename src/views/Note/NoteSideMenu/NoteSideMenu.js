@@ -220,10 +220,12 @@ class NoteSideMenu extends PureRenderComponent {
     }
 
     setCategoryItemExpand(item,isExpand){
-        var id = item.get('id');
-        var m = {};
-        m["CategoryItemExpand_" + id] = isExpand;
-        this.setState(m);
+        if(item){
+            var id = item.get('id');
+            var m = {};
+            m["CategoryItemExpand_" + id] = isExpand;
+            this.setState(m);
+        }
     }
 
 

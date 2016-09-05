@@ -48,8 +48,12 @@ window.COOLPENG_USER_STATE = initialState;
 
 function receiveUserInfo(state, response) {
     if (response.responseCode === 0) {
+        var userInfo = response.data;
+        if(!userInfo.avatar){
+            userInfo.avatar = "http://image.coolpeng.cn/static/images/default-avatar.jpg";
+        }
         var newState = Object.assign({}, state, {
-            userInfo: response.data,
+            userInfo: userInfo,
             loggingIn: false,
             loggingOut: false,
             loginErrors: null,

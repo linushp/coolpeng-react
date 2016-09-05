@@ -46,6 +46,7 @@ class Login extends PureRenderComponent {
         actions.login(username, password, function (action,res) {
             if (res && res.responseCode === 0) {
                 Dialog.showMsgSuccess("登录成功");
+                actions.staticClearNoteStore();
                 that.context.router.push("/note/");
             }else {
                 Dialog.showMsgSuccess(res && res.responseText);
@@ -72,7 +73,8 @@ Login.STATE_CONFIG = {
 
 Login.ACTION_CONFIG = {
     "setCurrentTempUser": 'user.setCurrentTempUser',
-    "login":"user.login"
+    "login":"user.login",
+    "staticClearNoteStore":'note.staticClearNoteStore'
 };
 
 
