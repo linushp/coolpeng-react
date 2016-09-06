@@ -21,7 +21,7 @@ class CarouselItem extends PureRenderComponent {
 }
 
 
-class ReactCarousel extends PureRenderComponent {
+export default class ReactCarousel extends PureRenderComponent {
 
     constructor(props) {
         super(props);
