@@ -57,8 +57,10 @@ class NoteSingle extends PureRenderComponent {
         const {actions} = this.props;
         var editorContent = this.getEditorContent();
         var vo = {accessControl:'private'};
+        var isCreating = true;
         if (NoteVO) {
             vo = NoteVO.toJS();
+            isCreating = false;
         }
 
         var that = this;
@@ -71,6 +73,9 @@ class NoteSingle extends PureRenderComponent {
                 // that.context.router.push(link);
                 that.props.reloadNoteListByCategory();
                 Dialog.showMsgSuccess('保存成功');
+                if(isCreating){
+                     that.context.router.push(link+"-e1");
+                }
             }else {
                 Dialog.showMsgError('保存失败');
             }

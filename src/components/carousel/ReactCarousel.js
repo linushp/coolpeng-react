@@ -57,7 +57,7 @@ export default class ReactCarousel extends PureRenderComponent {
     render() {
         var isShow = this.props.show;
         var name = this.props.name;
-        var children = this.props.children;
+        var children = this.props.children || [];
 
 
 
