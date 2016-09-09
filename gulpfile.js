@@ -30,6 +30,7 @@ var revCollector = require('gulp-rev-collector');
 //删除文件夹中的内容
 gulp.task('clean', function() {
     del(["./dist/"]);
+    del(["./release/"]);
 });
 
 //压缩js
@@ -119,19 +120,21 @@ gulp.task('minifySimditorJS', function() {
 
 
 //压缩js
-gulp.task('remini', function() {
+gulp.task('release1', function() {
 
 
     function replaceDefaultStr(s){
-        var ss = s.replace(/\["default"\]/gm,'[DEFAULT_CONST_STRING]');
-        ss = ss.replace(/"__esModule"/gm,'ES_MODULE_CONST_STRING');
-        ss = ss.replace(/React\.createElement/gm,'REACT_React_createElement');
+        var ss = s.replace(/\["default"\]/gm,'[UBIBI_GG_DEFAULT_CONST_STRING]');
+        ss = ss.replace(/"__esModule"/gm,'UBIBI_GG_ES_MODULE_CONST_STRING');
+        ss = ss.replace(/React\.createElement/gm,'UBIBI_GG_REACT_CREATE_ELEMENT');
 
-        var mm = '(function(){  ' +
-            'var REACT_React_createElement = React.createElement;  ' +
-            'var DEFAULT_CONST_STRING = "default";  ' +
-            'var ES_MODULE_CONST_STRING = "__esModule";  ' +
-            '  '+ss+'  })()';
+        var mm = '' +
+            '(function(window,document){   ' +
+            '   var UBIBI_GG_REACT_CREATE_ELEMENT = React.createElement;   ' +
+            '   var UBIBI_GG_DEFAULT_CONST_STRING = "default";   ' +
+            '   var UBIBI_GG_ES_MODULE_CONST_STRING = "__esModule";   ' +
+            '   '+ss+'   ' +
+            '})(window,window.document) ';
         return mm;
     }
 
@@ -148,15 +151,13 @@ gulp.task('remini', function() {
         './dist/static/app/*.js'
     ];
 
-    return gulp.src(jsArray).pipe(concat('mm.js'))
+    return gulp.src(jsArray).pipe(concat('release.js'))
         .pipe(modify(replaceDefaultStr))
-        .pipe(gulp.dest('./dist/static/app5/'))
+        .pipe(rev())
         .pipe(rename({suffix: '.min'}))
         .pipe(uglify())
-        .pipe(gulp.dest('./dist/static/app5/'))
+        .pipe(gulp.dest('./dist/static/app/'))
 });
-
-
 
 //压缩js
 gulp.task('copyToServerSvn', function() {
