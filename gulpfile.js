@@ -86,11 +86,11 @@ gulp.task('minifyCommonJS3', function() {
         './static/lib/react-redux.min.js',
         './static/lib/history.min.js',
         './static/lib/immutable.min.js',
-        './static/lib/md5.js',
-        './static/lib/src/SmartyTemplate.js'
+        './static/lib/underscore-min.js',
+        './static/lib/md5.js'
     ];
 
-    return gulp.src(jsArray).pipe(concat('router-redux-history-immutable-md5-tt.js'))
+    return gulp.src(jsArray).pipe(concat('router-redux-history-immutable-md5-underscore.js'))
         .pipe(gulp.dest('./static/lib/combo'))
         .pipe(rename({suffix: '.min'}))
         .pipe(uglify())

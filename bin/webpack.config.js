@@ -112,6 +112,7 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
                 getLessLoader(), getCssLoader(),
                 {test: /\.(jpg|png|gif)$/, loader: 'url?limit=100000'},
                 {test: /\.(woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000'},
+                {test: /\.rt/, loader: "react-templates-loader" }
             ],
             noParse: []
         },
