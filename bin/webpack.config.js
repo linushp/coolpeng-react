@@ -9,13 +9,12 @@ var webpack = require('webpack'),
 var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 
 
-
-var appPath = function(s){
-    var x=  path.join(__dirname,"../");
-    return path.join(x,s);
+var appPath = function (s) {
+    var x = path.join(__dirname, "../");
+    return path.join(x, s);
 };
 
-var __appPath = path.join(__dirname,"../");
+var __appPath = path.join(__dirname, "../");
 
 var isProduction = function () {
     console.log("process.env.NODE_ENV:" + process.env.NODE_ENV);
@@ -24,51 +23,49 @@ var isProduction = function () {
 
     console.log("isRelease:", isRelease);
     return isRelease;
-
-    //return true;
 };
 
 
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 //js文件上传时候静态文件的路径
-var __URL_HOST_ORIGIN__ = isProduction()?"'http://image.coolpeng.cn'":"''";
+var __URL_HOST_ORIGIN__ = isProduction() ? "'http://image.coolpeng.cn'" : "''";
 
 //打包输出的静态文件的路径
-var publicPath = isProduction()?"http://image.coolpeng.cn/":"/";
+var publicPath = isProduction() ? "http://image.coolpeng.cn/" : "/";
 
 
 var getLessLoader = function () {
-    if(isProduction()){
+    if (isProduction()) {
         return {
             test: /\.less?$/,
             loader: ExtractTextPlugin.extract("style-loader", "css-loader!less-loader"),
             include: __appPath
         };
-    }else {
+    } else {
         return {
             test: /\.less?$/,
-            loaders: [ 'style-loader','css-loader','less-loader?{"sourceMap":true}'],
+            loaders: ['style-loader', 'css-loader', 'less-loader?{"sourceMap":true}'],
             include: __appPath
         };
     }
 };
 
 var getCssLoader = function () {
-    if(isProduction()){
+    if (isProduction()) {
         return {
             test: /\.css$/,
             loader: ExtractTextPlugin.extract("style-loader", "css-loader")
         };
-    }else {
+    } else {
         return {
             test: /\.css$/,
-            loaders: [ 'style-loader','css-loader']
+            loaders: ['style-loader', 'css-loader']
         };
     }
 };
 
-function createWebpackConfig(jsFile,htmlFile,mainFileName){
+function createWebpackConfig(jsFile, htmlFile, mainFileName) {
     var webpackConfig = {
         target: 'web',
         cache: true,
@@ -112,7 +109,7 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
                 getLessLoader(), getCssLoader(),
                 {test: /\.(jpg|png|gif)$/, loader: 'url?limit=100000'},
                 {test: /\.(woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000'},
-                {test: /\.rt/, loader: "react-templates-loader" }
+                {test: /\.rt/, loader: "react-templates-loader"}
             ],
             noParse: []
         },
@@ -128,19 +125,19 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
             "jquery": "window.jQuery",
             "jQuery": "window.jQuery",
             "$": "window.jQuery",
-            "react":"window.React",
-            "ReactDOM":"window.ReactDOM",
-            "react-dom":"window.ReactDOM",
-            "react-router":"window.ReactRouter",
-            "react-redux":"window.ReactRedux",
-            "redux":"window.Redux",
-            "history":"window.History",
-            "lodash":"window._",
-            "_":"window._",
-            "underscore":"window._",
-            "antd":"window.antd",
-            "immutable":"window.Immutable",
-            "md5":"window.UbibiLib_Md5"
+            "react": "window.React",
+            "ReactDOM": "window.ReactDOM",
+            "react-dom": "window.ReactDOM",
+            "react-router": "window.ReactRouter",
+            "react-redux": "window.ReactRedux",
+            "redux": "window.Redux",
+            "history": "window.History",
+            "lodash": "window._",
+            "_": "window._",
+            "underscore": "window._",
+            "antd": "window.antd",
+            "md5": "window.UbibiLib_Md5",
+            "immutable": "window.Immutable"
         },
 
 
@@ -165,7 +162,7 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
                 __DEV__: !isProduction(),
                 __IS_HASH_HISTORY__: false,
                 '__URL_HOST_ORIGIN__': __URL_HOST_ORIGIN__,
-                'process.env.NODE_ENV': isProduction() ? '"production"':'"development"'
+                'process.env.NODE_ENV': isProduction() ? '"production"' : '"development"'
             }),
             new ExtractTextPlugin("static/app/[name].[hash].css", {
                 disable: false,
@@ -173,7 +170,7 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
             })
         ],
         debug: isProduction() ? false : true,
-        devtool: isProduction() ? null: 'eval-cheap-module-source-map',
+        devtool: isProduction() ? null : 'eval-cheap-module-source-map',
         devServer: {
             port: 4000,
             host: "0.0.0.0",
@@ -181,10 +178,8 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
             historyApiFallback: true,
             proxy: {
                 '/cloud/*': {
-
-                       target: 'http://www.coolpeng.cn',
-                    //target: 'http://127.0.0.1:10086',
-
+                    // target: 'http://www.coolpeng.cn',
+                    target: 'http://127.0.0.1:10086',
                     secure: false,
                     changeOrigin: true
                 },
@@ -197,8 +192,8 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
     };
 
 
-    if(mainFileName){
-        webpackConfig.entry =  {};
+    if (mainFileName) {
+        webpackConfig.entry = {};
         webpackConfig.entry[mainFileName] = appPath(jsFile);
     }
 
@@ -206,7 +201,7 @@ function createWebpackConfig(jsFile,htmlFile,mainFileName){
 }
 
 
-var webpackConfig = createWebpackConfig("src/index.js",'index.html',"main");
+var webpackConfig = createWebpackConfig("src/index.js", 'index.html', "main");
 webpackConfig.createWebpackConfig = createWebpackConfig;
 module.exports = webpackConfig;
 

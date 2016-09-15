@@ -7,8 +7,9 @@ import user from './reducers/user';
 import menu from './reducers/menu';
 import note from './reducers/note';
 import daohang from './reducers/daohang';
+import chat from './reducers/chat';
 
-const reducer = combineReducers({user, menu, note,daohang});
+const reducer = combineReducers({user, menu, note,daohang,chat});
 
 const createStoreWithMiddleware = applyMiddleware(
   thunkMiddleware,
