@@ -17,7 +17,7 @@ class DaoHang extends PureRenderComponent {
         };
     }
 
-    componentWillMount() {
+    componentDidMount() {
         if (!this.isDataOk()) {
             this.refreshCategoryList();
         }

@@ -12,8 +12,7 @@
     "package_win": "set NODE_ENV=production && webpack  --config ./bin/webpack.config.js --progress --profile --colors",
     "release_win": "gulp clean && set NODE_ENV=production && webpack  --config ./bin/webpack.config.js --progress --profile --colors && gulp release1",
     "watch": "webpack-dev-server  --config ./bin/webpack.config.js  --hot --inline --progress --colors",
-    "dev-reply": "webpack-dev-server  --config ./bin/dev-reply.js  --hot --inline --progress --colors",
-    "pack-reply": "NODE_ENV=production webpack  --config ./bin/dev-reply.js --progress --profile --colors"
+    "watch_dev": "webpack-dev-server  --config ./bin/webpack.config.dev.js  --hot --inline --progress --colors"
   },
   "author": "luanhaipeng",
   "license": "WTFPL",

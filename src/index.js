@@ -13,6 +13,7 @@ import Home from './views/Home';
 import NoteApp from './views/Note/NoteApp';
 import Login from './views/Login/Login';
 import DaoHang from './views/DaoHang/DaoHang';
+import ChatRoomIndex from './views/ChatRoom/ChatRoomIndex/ChatRoomIndex';
 
 var history = useRouterHistory(createHistory)({ basename: '' });
 
@@ -51,6 +52,7 @@ ReactDOM.render(
                     <Route path="note"  component={NoteApp} />
                     <Route path="note/:currentPath" component={NoteApp} />
                     <Route path="daohang" component={DaoHang} > </Route>
+                    <Route path="chat" component={ChatRoomIndex} > </Route>
                 </Route>
             </Route>
             <Route path="/login" component={Login} />
@@ -66,8 +68,7 @@ $(function(){
     $(document).on('click',function(evt){
         EventBus.emit('EVENT_DOCUMENT_CLICK',evt,this);
     });
-
-
+    
     var showAlertError = false;
     EventBus.addEventListener('UserNoLoginException',function (data) {
         if(showAlertError){

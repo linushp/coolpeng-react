@@ -33,9 +33,7 @@ class Login extends PureRenderComponent {
         ];
         this.reactFormUniqueId = uniqueId("reactFormUniqueId");
     }
-
-    componentWillMount() {
-    }
+    
 
     doLogin(){
         var values = getReactFormValues(this.reactFormUniqueId);

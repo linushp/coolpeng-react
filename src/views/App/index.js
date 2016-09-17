@@ -4,6 +4,7 @@ import Header from './fragment/Header'
 import './index.less';
 import '../Common/common.less';
 import Dialog from '../../components/dialog/Dialog';
+import WebSocketHelper from './websocket/WebSocketHelper';
 
 class App extends React.Component {
     constructor(props) {
@@ -35,13 +36,12 @@ class App extends React.Component {
         const {user, actions} = this.props;
         return (
             <div className="page-wrapper">
+                <WebSocketHelper></WebSocketHelper>
                 <div className="page-header">
                     <Header user={user} onClickLogout={this.onClickLogout.bind(this)} updateUserInfo={actions.updateUserInfo}/>
                 </div>
                 <div>
                     {this.props.children}
-                </div>
-                <div>
                 </div>
             </div>
         );

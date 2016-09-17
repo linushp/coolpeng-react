@@ -88,6 +88,7 @@ export default class Header extends React.Component {
                         </Link>
                     </h1>
                     {renderLink("/home", "首页")}
+                    {renderLink("/chat", "聊天")}
                     {renderLink("/daohang", "导航")}
                     {renderLink("/note/", "随笔")}
                     <div className="float-r">

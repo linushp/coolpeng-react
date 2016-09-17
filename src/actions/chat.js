@@ -1,5 +1,10 @@
 import CloudRestAction from '../core/CloudRestAction';
 
+var staticFunc = [
+    "staticSetCurrentSessionId",
+    "staticOnWebSocketMessage"
+];
+
 
 var funcNameList = [
     'getAllOnlineUserVO',
@@ -11,6 +16,6 @@ var funcNameList = [
 
 var prefix = "chat";
 
-var restAction = new CloudRestAction(prefix,funcNameList);
+var restAction = new CloudRestAction(prefix,funcNameList,staticFunc);
 
 export default restAction;

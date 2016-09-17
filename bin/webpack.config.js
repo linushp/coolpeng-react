@@ -20,20 +20,22 @@ var isProduction = function () {
     console.log("process.env.NODE_ENV:" + process.env.NODE_ENV);
     var env = process.env.NODE_ENV || "";
     var isRelease = env.trim() === "production";
-
     console.log("isRelease:", isRelease);
     return isRelease;
 };
 
 
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
-
 //js文件上传时候静态文件的路径
 var __URL_HOST_ORIGIN__ = isProduction() ? "'http://image.coolpeng.cn'" : "''";
+
+//服务端路径
+var __SERVER_LOCATION_HOST__ = isProduction() ? "'www.coolpeng.cn'" : "'127.0.0.1:10086'";
 
 //打包输出的静态文件的路径
 var publicPath = isProduction() ? "http://image.coolpeng.cn/" : "/";
 
+
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 var getLessLoader = function () {
     if (isProduction()) {
@@ -161,6 +163,7 @@ function createWebpackConfig(jsFile, htmlFile, mainFileName) {
             new webpack.DefinePlugin({
                 __DEV__: !isProduction(),
                 __IS_HASH_HISTORY__: false,
+                '__SERVER_LOCATION_HOST__': __SERVER_LOCATION_HOST__,
                 '__URL_HOST_ORIGIN__': __URL_HOST_ORIGIN__,
                 'process.env.NODE_ENV': isProduction() ? '"production"' : '"development"'
             }),
