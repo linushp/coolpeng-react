@@ -2,6 +2,7 @@ import EventBus from './EventBus';
 import GlobalEventName from './GlobalEventName';
 import StringUtils from './StringUtils';
 import $ from 'jquery';
+import './underscore.mixin.js';
 
 exports.GlobalEventName = GlobalEventName;
 

@@ -1,5 +1,7 @@
 
-(function(_){
+(function(){
+
+    var _ = window._;
 
     var oldMapFunction = _.map;
 
@@ -10,4 +12,4 @@
         return oldMapFunction(list, iteratee, context);
     }
 
-})(window._);
+})();
