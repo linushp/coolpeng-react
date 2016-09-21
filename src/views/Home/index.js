@@ -18,13 +18,15 @@ class Home extends React.Component {
     render() {
         var actions = this.props.actions;
         var user = this.props.user || {};
+        var daohang = this.props.daohang || {};
         return template.apply(this,this.state);
     }
 }
 
 
 Home.STATE_CONFIG = {
-    user: 'user'
+    user: 'user',
+    daohang: 'daohang'
 };
 
 Home.ACTION_CONFIG = {

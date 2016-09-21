@@ -88,6 +88,7 @@ gulp.task('minifyCommonJS3', function() {
         './static/lib/history.min.js',
         './static/lib/immutable.min.js',
         './static/lib/underscore-min.js',
+        './static/lib/src/underscore.mixin.js',
         './static/lib/md5.js'
     ];
 

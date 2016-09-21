@@ -1,5 +1,5 @@
 <div>
-    <div style="margin-top: 100px">
-        hello
+    <div style="margin-top: 100px" rt-repeat="m in this.props.daohang.get('categoryList')" >
+        {m.get('text')}
     </div>
 </div>
