@@ -65,7 +65,11 @@ export default CreateCloudRestReducer({
             return state;
         },
         'sendMessage': function (state, res, restState, meta) {
+            if (restState.isPending()) {
+
+            }
             if (restState.isSuccess()) {
+
             }
             return state;
         },

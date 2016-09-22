@@ -38,14 +38,16 @@ class ChatRoomIndex extends PureRenderComponent {
         });
     }
 
-    onSendMessage(currentSession, msg, callback) {
+    onSendMessage(currentSession, msg,msgSummary, callback) {
         var {actions} = this.props;
         var sessionVO = currentSession.toJS();
-        actions.sendMessage({
+        var sendObject = {
             msg: msg,
+            msgSummary:msgSummary,
             sessionVO: sessionVO,
             refreshRecent: true
-        }, function () {
+        };
+        actions.sendMessage(sendObject, function () {
             callback()
         });
     }

@@ -2,27 +2,21 @@ import EventBus from './EventBus';
 import GlobalEventName from './GlobalEventName';
 import StringUtils from './StringUtils';
 import $ from 'jquery';
-import './underscore.mixin.js';
+import _ from 'underscore';
+import {initUnderscoreMixin} from './underscore.mixin.js';
 
-exports.GlobalEventName = GlobalEventName;
-
-exports.EventBus = EventBus;
-
-exports.StringUtils = StringUtils;
 var win = window;
 var _undefined = win.undefined;
 var Math = win.Math;
+
+exports.GlobalEventName = GlobalEventName;
+exports.EventBus = EventBus;
+exports.StringUtils = StringUtils;
 exports._undefined = _undefined;
 
 
-var uniqueIdNumber = 0;
 export function uniqueId(prefix) {
-    uniqueIdNumber++;
-    if (prefix) {
-        return prefix + '' + uniqueIdNumber;
-    } else {
-        return uniqueIdNumber;
-    }
+    return _.uniqueId(prefix);
 }
 
 
@@ -465,3 +459,17 @@ export function getRandomNumString(min, max, len) {
     }
     return str.join("");
 }
+
+
+export function toInnerHTML(html){
+    return (
+        <div dangerouslySetInnerHTML={{__html:html}}></div>
+    );
+}
+
+
+
+initUnderscoreMixin({
+    valueIn: getObjValueInPath,
+    toInnerHTML:toInnerHTML
+});

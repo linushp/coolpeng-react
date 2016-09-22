@@ -15,7 +15,7 @@ class SessionItem extends PureRenderComponent {
         var {session,currentSession,onSwitchSession} = this.props;//isImmutable
         var isCurrent = currentSession===session;
         var s = session.toJS();
-        var sessionIcon = s.sessionIcon || "http://ubibi.coolpeng.cn/upload/user-1/3ef3887da1bbd49d9992751474080797076.jpg";
+        var sessionIcon = s.sessionIcon;
         return (
             <div>
                 <div className={`item item-current-${isCurrent}`} onClick={()=>onSwitchSession(session,s)} data-id={s.sessionId}

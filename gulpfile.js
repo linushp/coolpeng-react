@@ -34,49 +34,6 @@ gulp.task('clean', function() {
 });
 
 //压缩js
-gulp.task('minifyCommonJS', function() {
-
-
-    var jsArray = [
-        './static/lib/jquery.min.js',
-        './static/lib/react.min.js',
-        './static/lib/react-dom.min.js',
-        './static/lib/ReactRouter.min.js',
-        './static/lib/redux.min.js',
-        './static/lib/react-redux.min.js',
-        './static/lib/history.min.js'
-    ];
-
-    return gulp.src(jsArray).pipe(concat('jquery-react-router-redux-history.js'))
-        .pipe(gulp.dest('./static/lib/combo'))
-        .pipe(rename({suffix: '.min'}))
-        .pipe(uglify())
-        .pipe(gulp.dest('./static/lib/combo'))
-});
-
-
-
-//压缩js
-gulp.task('minifyCommonJS2', function() {
-
-
-    var jsArray = [
-        './static/lib/react-dom.min.js',
-        './static/lib/ReactRouter.min.js',
-        './static/lib/redux.min.js',
-        './static/lib/react-redux.min.js',
-        './static/lib/history.min.js'
-    ];
-
-    return gulp.src(jsArray).pipe(concat('router-redux-history.js'))
-        .pipe(gulp.dest('./static/lib/combo'))
-        .pipe(rename({suffix: '.min'}))
-        .pipe(uglify())
-        .pipe(gulp.dest('./static/lib/combo'))
-});
-
-
-//压缩js
 gulp.task('minifyCommonJS3', function() {
 
 
@@ -102,20 +59,33 @@ gulp.task('minifyCommonJS3', function() {
 //压缩js
 gulp.task('minifySimditorJS', function() {
 
-
     var jsArray = [
         './static/lib/simditor-2.3.6/scripts/module.js',
         './static/lib/simditor-2.3.6/scripts/hotkeys.js',
         './static/lib/simditor-2.3.6/scripts/uploader-bce.js',
-        './static/lib/simditor-2.3.6/scripts/simditor.js'
+        './static/lib/simditor-2.3.6/scripts/simditor.js',
+        './static/lib/simditor-2.3.6/scripts/simditor-emoji.js'
     ];
 
-    return gulp.src(jsArray).pipe(concat('simditor-v20160902.js'))
-        .pipe(gulp.dest('./static/lib/combo'))
+    return gulp.src(jsArray).pipe(concat('simditor-v20160922.js'))
+        //.pipe(gulp.dest('./static/lib/combo'))
         .pipe(rename({suffix: '.min'}))
         .pipe(uglify())
         .pipe(gulp.dest('./static/lib/combo'))
 });
+
+//压缩js
+gulp.task('minifySimditorCss', function() {
+
+    var cssArray = [
+        './static/lib/simditor-2.3.6/styles/simditor.css',
+        './static/lib/simditor-2.3.6/styles/simditor-emoji.css'
+    ];
+
+    return gulp.src(cssArray).pipe(concat('simditor-v20160922.css'))
+        .pipe(gulp.dest('./static/lib/combo'));
+});
+
 
 
 
