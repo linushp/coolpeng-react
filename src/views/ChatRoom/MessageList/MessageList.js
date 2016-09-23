@@ -54,7 +54,6 @@ class MessageItem extends PureRenderComponent {
 }
 
 
-
 class MessageSessionHeader extends PureRenderComponent {
     constructor(props) {
         super(props);
@@ -62,12 +61,12 @@ class MessageSessionHeader extends PureRenderComponent {
 
     render() {
         var {currentSession} = this.props;
-        var getValue = getObjValueInPath.bind({},currentSession);
+        var getValue = getObjValueInPath.bind({}, currentSession);
         var sessionIcon = getValue("sessionIcon");
         var sessionTitle = getValue("sessionTitle");
         return (
             <div className="chat-msg-header">
-                <img className="sessionIcon" src={sessionIcon} alt={sessionTitle} />
+                <img className="sessionIcon" src={sessionIcon} alt={sessionTitle}/>
                 <div className="sessionTitle">
                     {sessionTitle}
                 </div>
@@ -77,9 +76,16 @@ class MessageSessionHeader extends PureRenderComponent {
 }
 
 
-
-
-
+function scrollToBottom(uniqueId, count) {
+    var $scroll = $("#" + uniqueId).find('.chat-msg-scroll');
+    var scrollDom = $scroll[0];
+    scrollDom.scrollTop = 1000000;
+    if (count > 0) {
+        window.setTimeout(function () {
+            scrollToBottom(uniqueId, count - 1);
+        }, 10);
+    }
+}
 
 
 export default class MessageList extends PureRenderComponent {
@@ -88,17 +94,10 @@ export default class MessageList extends PureRenderComponent {
         this.uniqueId = uniqueId('MessageListUniqueId');
     }
 
-    scrollToBottom(){
-        var $scroll = $("#"+this.uniqueId).find('.chat-msg-scroll');
-        var scrollDom = $scroll[0];
-        scrollDom.scrollTop = 100000;
-    }
 
-    componentDidUpdate(){
+    componentDidUpdate() {
         var that = this;
-        window.setTimeout(function(){
-            that.scrollToBottom();
-        },0);
+        scrollToBottom(this.uniqueId, 10);
     }
 
     render() {
@@ -113,6 +112,8 @@ export default class MessageList extends PureRenderComponent {
                         {immutableListMap(messageList, function (message) {
                             var uid1 = valueIn(preMessage, 'sendUser.uid');
                             var uid2 = valueIn(message, 'sendUser.uid');
+                            var createTimeMillis1 = valueIn(preMessage, 'createTimeMillis');
+                            var createTimeMillis2 = valueIn(message, 'createTimeMillis');
                             var isHideUserInfo = false;
                             if (uid1 === uid2) {
                                 isHideUserInfo = true;
@@ -126,8 +127,15 @@ export default class MessageList extends PureRenderComponent {
                                 preMessageEqualCount = 0;
                             }
 
+                            if (createTimeMillis1 && createTimeMillis2 && createTimeMillis2 - createTimeMillis1 > 1000 * 60 * 10) {
+                                //时间间隔超过10分钟.
+                                isHideUserInfo = false;
+                                preMessageEqualCount = 0;
+                            }
+
                             var msgId = message.msgId;
-                            var dom = <MessageItem key={msgId} isHideUserInfo={isHideUserInfo} message={message} userInfo={userInfo}></MessageItem>;
+                            var dom = <MessageItem key={msgId} isHideUserInfo={isHideUserInfo} message={message}
+                                                   userInfo={userInfo}></MessageItem>;
                             preMessage = message;
                             return dom;
                         })}
