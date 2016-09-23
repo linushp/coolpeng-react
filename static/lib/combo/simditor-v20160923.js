@@ -6345,7 +6345,7 @@ return Simditor;
             ref = opts.images;
             for (i = 0, len = ref.length; i < len; i++) {
                 name = ref[i];
-                html += "<li data-name='" + name + "'><img src='" + dir + name + ".png' width='20' height='20' alt='" + name + "' /></li>";
+                html += "<li data-name='" + name + "'><img src='" + dir + name + ".png' width='30' height='30' alt='" + name + "' /></li>";
             }
             $list = $(tpl);
             $list.html(html).appendTo(this.menuWrapper);

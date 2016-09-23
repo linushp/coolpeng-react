@@ -24,8 +24,6 @@
 
 .editor-style img[data-emoji],
 .simditor .simditor-body img[data-emoji] {
-    width: 26px;
-    height: 26px;
     display: inline-block;
     margin: 0;
     max-width: inherit;

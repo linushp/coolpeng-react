@@ -1,39 +1,45 @@
-.chat-room{
+.chat-room {
 
-  .chat-message-input{
+  .chat-message-input {
     position: fixed;
     height: 160px;
     bottom: 0;
     right: 0;
     left: 281px;
-    border-top:solid 1px #dedede ;
+    border-top: solid 1px #dedede;
 
-
-
-
-    .simditor{
+    .simditor {
       border: none;
 
-      .simditor-toolbar{
+      .simditor-toolbar {
         border-bottom: none;
 
-        .toolbar-item{
-          .simditor-icon{
+        .toolbar-item {
+          .simditor-icon {
             font-size: 20px;
             color: #958F8F;
             opacity: 1;
 
-            &:hover{
+            &:hover {
               color: #FF9500;
             }
           }
-
         }
 
+        .toolbar-menu-emoji {
+          top: auto;
+          bottom: 40px;
+          width: 321px;
+        }
+
+        .toolbar-menu:before{
+          top: auto;
+          bottom: -3px;
+        }
       }
 
       .simditor-body {
-        padding:0px;
+        padding: 0px;
         margin: 10px;
         height: 100px;
         min-height: 100px;
@@ -42,16 +48,14 @@
         font-size: 14px;
         overflow: auto;
         margin-right: 136px;
-        *{
+        * {
           margin: 0;
           padding: 0;
         }
       }
     }
 
-
-
-    .sendButton{
+    .sendButton {
       position: absolute;
       right: 24px;
       top: 68px;
@@ -64,8 +68,6 @@
       outline: none;
       z-index: 10;
     }
-
-
 
   }
 
