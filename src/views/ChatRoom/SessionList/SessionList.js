@@ -44,6 +44,7 @@ export default class SessionList extends PureRenderComponent {
         var currentSession = props.currentSession;
         return (
             <div className="chat-session-list">
+                <div className="clear2"></div>
                 {immutableListMap(sessionList, function (session) {
                     var sessionId = session.sessionId;
                     return <SessionItem key={sessionId} session={session}

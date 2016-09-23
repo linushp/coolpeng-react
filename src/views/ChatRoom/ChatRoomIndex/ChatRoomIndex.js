@@ -1,6 +1,7 @@
 import React from 'react'
 import {bindActionCreators} from 'redux';
 import immutable from 'immutable';
+import {createUUID} from '../../../core/utils/index';
 import PureRenderComponent from '../../../core/PureRenderComponent';
 import {connect} from 'react-redux';
 import ActionStoreHelper from '../../Common/ActionStoreHelper';
@@ -38,12 +39,14 @@ class ChatRoomIndex extends PureRenderComponent {
         });
     }
 
-    onSendMessage(currentSession, msg,msgSummary, callback) {
-        var {actions} = this.props;
+    onSendMessage(currentSession, msg, msgSummary, callback) {
+        var {actions,user} = this.props;
+        var userInfo = user.userInfo;
         var sessionVO = currentSession.toJS();
         var sendObject = {
             msg: msg,
-            msgSummary:msgSummary,
+            msgSummary: msgSummary,
+            msgId: createUUID(userInfo.id),
             sessionVO: sessionVO,
             refreshRecent: true
         };
@@ -55,7 +58,7 @@ class ChatRoomIndex extends PureRenderComponent {
     render() {
         var that = this;
         var {user, sessionList, sessionId2MessageList, currentSessionId} = that.props || {};
-        var userInfo = user.userInfo;
+        var userInfo = user.userInfo || {};
         var messageList = sessionId2MessageList.get(currentSessionId);
         var currentSession = sessionList.find(function (obj) {
             var sessionId = obj.get("sessionId");
@@ -78,7 +81,7 @@ class ChatRoomIndex extends PureRenderComponent {
                     </div>
                 </div>
                 <div className="chat-content">
-                    <MessageList messageList={messageList} currentSession={currentSession}></MessageList>
+                    <MessageList messageList={messageList} currentSession={currentSession} userInfo={userInfo}></MessageList>
                     <MessageInput onSendMessage={that.onSendMessage.bind(that,currentSession)}></MessageInput>
                 </div>
             </div>

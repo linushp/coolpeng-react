@@ -1,6 +1,8 @@
 import React from 'react'
 import PureRenderComponent from '../../../core/PureRenderComponent';
 import ActionStoreHelper from '../../Common/ActionStoreHelper';
+import {createUUID} from '../../../core/utils/index';
+
 
 class WebSocketHelper extends PureRenderComponent {
     constructor(props) {
@@ -15,16 +17,17 @@ class WebSocketHelper extends PureRenderComponent {
         var that = this;
         var {userInfo,actions} = that.props;
         var uid = userInfo.id;
-        if(!uid){
+        if (!uid) {
             return;
         }
 
-        if(that.socket){
+        if (that.socket) {
             return;
         }
 
+        var connectionId = createUUID(uid);
 
-        var host = "ws://" + __SERVER_LOCATION_HOST__ + "/cloud/chat.websocket?uid=" + uid;
+        var host = "ws://" + __SERVER_LOCATION_HOST__ + "/cloud/chat.websocket?uid=" + uid + "&connectionId=" + connectionId;
         var socket = null;
         if ('WebSocket' in window) {
             socket = new WebSocket(host);

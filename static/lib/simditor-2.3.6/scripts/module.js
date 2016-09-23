@@ -134,6 +134,16 @@ Module = (function() {
   Module.prototype.triggerHandler = function() {
     var args, ref;
     args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+
+    var triggerHandler = this.opts.triggerHandler;
+    if (triggerHandler) {
+      var isOK = triggerHandler.apply(ref, args);
+      if (isOK === false) {
+        return false;
+      }
+    }
+
+
     return (ref = $(this)).triggerHandler.apply(ref, args);
   };
 

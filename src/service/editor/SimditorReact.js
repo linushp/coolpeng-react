@@ -1,5 +1,6 @@
 import $ from 'jquery';
-import {loadStaticJS,loadStaticCSS,createUUID,StringUtils,uniqueId} from '../../core/utils/index';
+import _ from 'underscore';
+import {loadStaticJS,loadStaticCSS,createUUID,StringUtils,uniqueId,isFunction} from '../../core/utils/index';
 import StaticConfig from '../../core/utils/StaticConfig';
 import {onXhrUpload} from '../upload/UploadUtils';
 import './index.less';
@@ -23,6 +24,8 @@ function isImageUploadSupport(url) {
 }
 
 
+// loadStaticCSS(StaticConfig.SIMDITOR_CSS, function () {
+//     loadStaticJS(StaticConfig.SIMDITOR_JS, function (isNewLoad) {
 /**
  * 可以直接使用
  * <SimditorReact ref="SimditorReact" content={content}></SimditorReact>
@@ -61,43 +64,46 @@ export default class SimditorReact extends React.Component {
         }
 
         var that = this;
-        var toolbar = that.props.toolbar;
+        var options = this.props.options || {};
+        var triggerHandler = options.triggerHandler;
         var isNewLoad = false;
-        // loadStaticCSS(StaticConfig.SIMDITOR_CSS, function () {
-        //     loadStaticJS(StaticConfig.SIMDITOR_JS, function (isNewLoad) {
-                var Simditor = window.Simditor;
 
-                if(!toolbar){
-                    toolbar = ["emoji",'title', 'bold', 'italic', 'underline', 'strikethrough', 'fontScale', 'color', '|', 'ol', 'ul', 'blockquote', 'code', 'table', '|', 'link', 'image', 'hr', '|', 'indent', 'outdent', 'alignment'];
+        var Simditor = window.Simditor;
+        var toolbar = ["emoji", 'title', 'bold', 'italic', 'underline', 'strikethrough', 'fontScale', 'color', '|', 'ol', 'ul', 'blockquote', 'code', 'table', '|', 'link', 'image', 'hr', '|', 'indent', 'outdent', 'alignment'];
+        var simditorRoot = this.refs.simditorRoot.getDOMNode();//拿到了原生DOM
+        var $textarea = $(simditorRoot).find('textarea');
+        var editorOptions = {
+            textarea: $textarea,
+            upload: {
+                onXhrUpload: function (file, _this, onSuccess, onError, onProgress) {
+                    onXhrUpload(file, onSuccess, onError, onProgress);
                 }
-
-                var simditorRoot = this.refs.simditorRoot.getDOMNode();//拿到了原生DOM
-                var $textarea = $(simditorRoot).find('textarea');
-                that.editor = new Simditor({
-                    textarea: $textarea,
-                    upload: {
-                        onXhrUpload: function (file, _this, onSuccess, onError, onProgress) {
-                            onXhrUpload(file, onSuccess, onError, onProgress);
-                        }
-                    },
-                    emoji: {
-                        imagePath: URL_HOST_ORIGIN + '/static/images/emoji/'
-                    },
-                    pasteImage: true,
-                    defaultImage: URL_HOST_ORIGIN + '/static/images/editor-default-img.png',
-                    toolbar: toolbar,
-                    toolbarFloat: false
-                });
-                if (isNewLoad) {
-                    setTimeout(function () {
-                        that.runInitedCallback();
-                    }, 1000);
-                } else {
-                    that.runInitedCallback();
+            },
+            emoji: {
+                imagePath: 'http://image.coolpeng.cn/static/images/emoji/'
+            },
+            pasteImage: true,
+            defaultImage: 'http://image.coolpeng.cn/static/images/editor-default-img.png',
+            toolbar: toolbar,
+            toolbarFloat: false,
+            triggerHandler: function (a, b, c, d, e) {
+                if (isFunction(triggerHandler)) {
+                    return triggerHandler(a, b, c, d, e);
                 }
+                return true;
+            }
+        };
 
-            // }.bind(that));
-        // });
+        var mergerOptions = _.extend({},editorOptions, options);
+        that.editor = new Simditor(mergerOptions);
+        if (isNewLoad) {
+            setTimeout(function () {
+                that.runInitedCallback();
+            }, 1000);
+        } else {
+            that.runInitedCallback();
+        }
+
     }
 
     runInitedCallback() {
@@ -109,8 +115,8 @@ export default class SimditorReact extends React.Component {
         }
         that.callbackList = [];
         window.setTimeout(function () {
-            $("#"+that.uniqueId).css({"opacity":"1"});
-        },10);
+            $("#" + that.uniqueId).css({"opacity": "1"});
+        }, 10);
     }
 
     setContentValue(contentValue) {
@@ -131,7 +137,7 @@ export default class SimditorReact extends React.Component {
         });
     }
 
-    clearContentValue(){
+    clearContentValue() {
         var that = this;
         that.initSimditorView(function () {
             that.editor.setValue("");
@@ -169,9 +175,9 @@ export default class SimditorReact extends React.Component {
         var contentText = $content.text() || "";
 
         return {
-            imageList:imageList,
-            contentText:contentText,
-            summary:contentText.substring(0,300)
+            imageList: imageList,
+            contentText: contentText,
+            summary: contentText.substring(0, 300)
         };
     }
 

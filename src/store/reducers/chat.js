@@ -1,6 +1,6 @@
 import CreateCloudRestReducer from '../../core/CreateCloudRestReducer';
 import immutable from 'immutable';
-import {updateImmutableObject} from '../../core/utils/index';
+import {updateImmutableObject,StringUtils,createUUID,getCurrentUser} from '../../core/utils/index';
 
 var initialState = immutable.fromJS({
     onlineUserList: [],
@@ -11,14 +11,15 @@ var initialState = immutable.fromJS({
 
 
 function handlePublicMsgEventSessionLastMsg(state, obj) {
-    var chatMsgVO = obj.chatMsgVO;
+    //var chatMsgVO = obj.chatMsgVO;
     var sessionId = obj.sessionId;
-    var msg = chatMsgVO.msg;
+    var msgSummary = obj.msgSummary;
+    //var msg = chatMsgVO.msg;
     var finder = function(c){
         return c.get('sessionId')===sessionId;
     };
     var newValue = function(c){
-        return c.set('lastMsgText',msg);
+        return c.set('lastMsgText',msgSummary);
     };
     var sessionList = state.get('sessionList');
     sessionList = updateImmutableObject(sessionList,finder,newValue);
@@ -66,10 +67,29 @@ export default CreateCloudRestReducer({
         },
         'sendMessage': function (state, res, restState, meta) {
             if (restState.isPending()) {
-
-            }
-            if (restState.isSuccess()) {
-
+                var sessionId = meta.reqData.sessionVO.sessionId;
+                var msg = meta.reqData.msg;
+                var msgId = meta.reqData.msgId;
+                var msgSummary = meta.reqData.msgSummary;
+                var userInfo = getCurrentUser();
+                var json = {
+                    sessionId: sessionId,
+                    msgSummary:msgSummary,
+                    chatMsgVO: {
+                        msgId: msgId,
+                        sendUser: {
+                            uid: userInfo.id,
+                            username: userInfo.username,
+                            nickname: userInfo.nickname,
+                            avatar: userInfo.avatar
+                        },
+                        msg: msg,
+                        createTimeMillis: new Date().getTime(),
+                        status:"pending"
+                    }
+                };
+                state = handlePublicMsgEvent(state, json);
+                state = handlePublicMsgEventSessionLastMsg(state, json);
             }
             return state;
         },

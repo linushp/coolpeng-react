@@ -58,8 +58,7 @@
       position: relative;
       clear: both;
       color: #262626;
-      font-size: 14px;
-      margin-bottom: 20px;
+      margin-top: 20px;
 
       .sendUserAvatar {
         position: absolute;
@@ -73,20 +72,20 @@
       .mgsBody {
         margin-left: 60px;
 
-
         .msgDesc{
-
           .nickname,.createTime{
             display: inline-block;
           }
-
+          .nickname{
+            color: #35cd96;
+            font-size: 12px;
+            font-family: "Open Sans", sans-serif;
+          }
           .createTime{
             font-size: 12px;
             margin-left: 20px;
             color: #AAA;
-
           }
-
         }
 
         .msgContent{
@@ -94,12 +93,59 @@
           position: relative;
           box-shadow: 0 1px .5px rgba(0,0,0,.13);
           max-width: 65%;
-          background-color: #dcf8c6;
+          overflow: hidden;
+          word-wrap: break-word;
+          word-break:break-all;
+          background-color: #ffffff;
           float: left;
           padding: 6px 7px 8px 9px;
+          font-size: 13px;
+          line-height: 20px;
+
+          *{
+            margin: 0;
+            padding: 0;
+            font-size: 13px;
+            line-height: 20px;
+          }
+
+          img{
+            max-width: 300px;
+          }
+
         }
 
       }
+
+
+
+      &.isCurrentUser{
+        .mgsBody {
+          .msgDesc{
+            .nickname{
+              color: #ff7800;
+            }
+          }
+          .msgContent{
+            background-color: #dcf8c6;
+          }
+        }
+      }
+
+
+      &.isHideUserInfo{
+        margin-top: 0px;
+        .sendUserAvatar{
+          display: none;
+        }
+        .mgsBody {
+          .msgDesc{
+            display: none;
+          }
+        }
+      }
+
+
     }
 
   }

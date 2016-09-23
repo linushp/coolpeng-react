@@ -1,6 +1,7 @@
 import EventBus from './EventBus';
 import GlobalEventName from './GlobalEventName';
 import StringUtils from './StringUtils';
+import JSXRenderUtils from './JSXRenderUtils';
 import $ from 'jquery';
 import _ from 'underscore';
 import {initUnderscoreMixin} from './underscore.mixin.js';
@@ -13,6 +14,7 @@ exports.GlobalEventName = GlobalEventName;
 exports.EventBus = EventBus;
 exports.StringUtils = StringUtils;
 exports._undefined = _undefined;
+exports.JSXRenderUtils = JSXRenderUtils;
 
 
 export function uniqueId(prefix) {
@@ -141,6 +143,9 @@ export function isImmutable(obj) {
  *  var d = getObjectValue(a,'b.c.d');
  */
 export function getObjValueInPath(obj, str) {
+    if(!obj){
+        return null;
+    }
     try {
         var propArr = str.split(".");
         var tmpObj = obj;
@@ -223,9 +228,7 @@ export function shallowEqual(objA, objB) {
 
 
 export function isAdmin(u) {
-    if (!u) {
-        return false;
-    }
+    u = u || getCurrentUser();
     if (u.permission === 'admin') {
         return true;
     }
@@ -235,6 +238,12 @@ export function isAdmin(u) {
     return false;
 }
 
+
+export function getCurrentUser(){
+    var userState = window.COOLPENG_USER_STATE || {};
+    var userInfo = userState.userInfo || {};
+    return userInfo;
+}
 
 export function displayControl(isDisplay, component) {
     if (isDisplay) {

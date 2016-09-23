@@ -34,7 +34,6 @@
         return 0;
       }
     });
-    debugger;
     return fileArray;
   }
 
