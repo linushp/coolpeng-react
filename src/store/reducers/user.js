@@ -1,4 +1,5 @@
 import {getLocalStorage,setLocalStorage} from '../../core/utils/index';
+import StaticConfig from '../../core/utils/StaticConfig';
 
 import {
     LOGIN_PENDING,
@@ -50,7 +51,7 @@ function receiveUserInfo(state, response) {
     if (response.responseCode === 0) {
         var userInfo = response.data;
         if(!userInfo.avatar){
-            userInfo.avatar = "http://image.coolpeng.cn/static/images/default-avatar.jpg";
+            userInfo.avatar = StaticConfig.DEFAULT_AVATAR;
         }
         var newState = Object.assign({}, state, {
             userInfo: userInfo,

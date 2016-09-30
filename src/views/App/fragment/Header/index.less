@@ -1,6 +1,7 @@
 @headerHeight: 52px;
 @headerMenuHeight: 47px;
-@headerBackColor: #047fd6;
+@headerBackColor: #776564;
+@headerBackColor2: #887970;
 @headerFontColor: #FFF;
 //http://www.luoo.net/
 
@@ -8,7 +9,6 @@
   background: @headerBackColor;
   width: 100%;
   height: @headerHeight;
-  border-bottom: 1px solid #e9e8e8;
   color: @headerFontColor;
 
   .header-menu > li {
@@ -78,5 +78,5 @@
 }
 
 .cp-header-menu-item.selected {
-  background-color: #005fa2;
+  background-color:@headerBackColor2
 }

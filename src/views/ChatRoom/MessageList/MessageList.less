@@ -4,11 +4,11 @@
 
   .chat-msg-list {
     position: fixed;
-    top: 54px;
+    top: 50px;
     bottom: 160px;
     right: 0;
     left: 281px;
-    background-color:rgba(222,222,222,0.2);
+    //background-color:rgba(222,222,222,0.2);
 
     .chat-msg-header {
       position: absolute;
@@ -16,8 +16,8 @@
       left: 0;
       height: 60px;
       width: 100%;
-      background-color: #eee;
       z-index: 1;
+      box-shadow: 0 1px 0 rgba(222,222,222,100);
 
       .sessionIcon {
         margin: 10px;
@@ -77,7 +77,7 @@
             display: inline-block;
           }
           .nickname{
-            color: #35cd96;
+            color: #666;
             font-size: 12px;
             font-family: "Open Sans", sans-serif;
           }
@@ -96,21 +96,33 @@
           overflow: hidden;
           word-wrap: break-word;
           word-break:break-all;
-          background-color: #ffffff;
+          background-color: #F0F0F0;
+          color: #000;
           float: left;
-          padding: 6px 7px 8px 9px;
-          font-size: 13px;
+          padding: 6px 10px;
           line-height: 20px;
 
           *{
+            font-weight: normal;
+            font-family: 'SimSun';
             margin: 0;
             padding: 0;
-            font-size: 13px;
+            font-size: 14px;
             line-height: 20px;
           }
 
           img{
             max-width: 300px;
+            &.chat-uploaded-image{
+              display: block;
+              clear: both;
+              margin-top: 10px;
+            }
+          }
+
+          a{
+            color: #002bed;
+            text-decoration: underline;
           }
 
         }
@@ -123,11 +135,12 @@
         .mgsBody {
           .msgDesc{
             .nickname{
-              color: #ff7800;
+              color: #666;
             }
           }
           .msgContent{
-            background-color: #dcf8c6;
+            color: #ffffff;
+            background-color: rgba(163,136,135,0.7);
           }
         }
       }

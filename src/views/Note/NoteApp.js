@@ -5,7 +5,6 @@ import {immutableListMap,className,globalVar,isEmpty,_undefined} from '../../cor
 import {parsePathParams,isPathParamChanged} from './NoteFunctions';
 import NoteListWgt from './NoteListWgt';
 import NoteSingleWgt from './NoteSingleWgt';
-import ReactCarousel from '../../components/carousel/ReactCarousel';
 import './index.less';
 import NoteSideMenu from './NoteSideMenu/NoteSideMenu';
 
@@ -13,8 +12,6 @@ class NoteApp extends PureRenderComponent {
     constructor(props) {
         super(props);
         this.state = {
-            isShowReactCarousel:false,
-            reactCarouselData:null
         };
     }
 
@@ -98,13 +95,6 @@ class NoteApp extends PureRenderComponent {
     }
 
 
-    showReactCarouselImages(images){
-
-    }
-
-    renderReactCarouselItems(){
-
-    }
 
     render() {
         const {NoteVO,NoteList,NoteListTotalCount,NoteListPageSize,NoteListPageNumber,NoteListSearchTitleLike,CategoryList,user,actions} = this.props;
@@ -139,11 +129,6 @@ class NoteApp extends PureRenderComponent {
                     </div>
                     <div className="clear"></div>
                 </div>
-
-
-                <ReactCarousel name="NoteAppReactCarousel" show={this.state.isShowReactCarousel}>
-                    {this.renderReactCarouselItems()}
-                </ReactCarousel>
 
             </div>
         );

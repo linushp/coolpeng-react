@@ -92,10 +92,6 @@ class ChatRoomIndex extends PureRenderComponent {
 
                     <LeftPanelPlaceHolder ref="LeftPanelPlaceHolder"></LeftPanelPlaceHolder>
 
-                    <div className="my-info">
-                        <img className="avatar" src={userInfo.avatar} alt=""/>
-                        <div onClick={that.onSwitchLeftPanel.bind(that,'newSession')}>新建</div>
-                    </div>
                     <div className="session-list">
                         <SessionList sessionList={sessionList}
                                      currentSession={currentSession}
@@ -104,7 +100,7 @@ class ChatRoomIndex extends PureRenderComponent {
                 </div>
                 <div className="chat-content">
                     <MessageList messageList={messageList} currentSession={currentSession} userInfo={userInfo}></MessageList>
-                    <MessageInput onSendMessage={that.onSendMessage.bind(that,currentSession)}></MessageInput>
+                    <MessageInput onSendMessage={that.onSendMessage.bind(that,currentSession)} userInfo={userInfo}></MessageInput>
                 </div>
             </div>
         );

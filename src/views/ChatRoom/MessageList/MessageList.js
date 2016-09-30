@@ -1,6 +1,8 @@
 import React from 'react'
 import PureRenderComponent from '../../../core/PureRenderComponent';
 import {immutableListMap,getObjValueInPath,uniqueId,StringUtils,JSXRenderUtils,className,toInnerHTML} from '../../../core/utils/index';
+import StaticConfig from '../../../core/utils/StaticConfig';
+import {showImageCarousel} from './MessageCarousel'
 import $ from 'jquery';
 import "./MessageList.less";
 var hideStyle = JSXRenderUtils.hideStyle;
@@ -23,6 +25,10 @@ class MessageItem extends PureRenderComponent {
 
         var sendUser = getValue("sendUser");
         var sendUser_avatar = valueIn(sendUser, 'avatar');
+        if(!sendUser_avatar){
+            sendUser_avatar = StaticConfig.DEFAULT_AVATAR
+        }
+
         var sendUser_nickname = valueIn(sendUser, 'nickname');
         var sendUser_uid = valueIn(sendUser, 'uid');
         var loginUserUid = valueIn(userInfo, "id");
@@ -100,12 +106,25 @@ export default class MessageList extends PureRenderComponent {
         scrollToBottom(this.uniqueId, 10);
     }
 
+
+
+    onClickMessageList(e){
+        var that = this;
+        var $target = $(e.target);
+        if($target.hasClass('chat-uploaded-image')){
+            showImageCarousel(that.uniqueId,$target);
+        }
+    }
+
+
+
     render() {
-        var {messageList,userInfo,currentSession} = this.props;
+        var that = this;
+        var {messageList,userInfo,currentSession} = that.props;
         var preMessage = null;
         var preMessageEqualCount = 0;
         return (
-            <div className="chat-msg-list" id={this.uniqueId}>
+            <div className="chat-msg-list" id={that.uniqueId} onClick={that.onClickMessageList.bind(that)}>
                 <MessageSessionHeader currentSession={currentSession}></MessageSessionHeader>
                 <div className="chat-msg-container">
                     <div className="chat-msg-scroll">
