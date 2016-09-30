@@ -18,7 +18,7 @@ function getPlaceHolder() {
 
 function createImageListHTML(imageList, targetImage) {
     var html = [];
-    var targetOid = targetImage.oid || "___________";
+    var targetOid = targetImage.oid || "___________$$$$$$$$$_______";
     for (var i = 0; i < imageList.length; i++) {
         var img = imageList[i];
         var oid = img.oid;
