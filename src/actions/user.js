@@ -62,6 +62,18 @@ export function updateUserInfo(data,callback){
 }
 
 
+export function register(data,callback){
+    return {
+        type: 'register',
+        payload: {
+            promise: api.post('/cloud/user/register.json',data)
+        },
+        meta:{
+            actionSourceCallback:callback
+        }
+    }
+}
+
 
 export function setCurrentTempUser(tempUser){
     return {

@@ -8,6 +8,7 @@ import ActionStoreHelper from '../../Common/ActionStoreHelper';
 import SessionList from '../SessionList/SessionList';
 import MessageList from '../MessageList/MessageList';
 import MessageInput from '../MessageInput/MessageInput';
+import LeftPanelPlaceHolder from '../LeftPanel/LeftPanelPlaceHolder';
 import './ChatRoomIndex.less'
 
 class ChatRoomIndex extends PureRenderComponent {
@@ -26,6 +27,12 @@ class ChatRoomIndex extends PureRenderComponent {
         });
     }
 
+
+    /**
+     * 切换会话
+     * @param session
+     * @param sessionVO
+     */
     onSwitchSession(session, sessionVO) {
         var sessionId = sessionVO.sessionId;
         var {sessionId2MessageList, actions} = this.props || {};
@@ -39,6 +46,13 @@ class ChatRoomIndex extends PureRenderComponent {
         });
     }
 
+    /**
+     * 发送消息
+     * @param currentSession
+     * @param msg
+     * @param msgSummary
+     * @param callback
+     */
     onSendMessage(currentSession, msg, msgSummary, callback) {
         var {actions,user} = this.props;
         var userInfo = user.userInfo;
@@ -55,6 +69,14 @@ class ChatRoomIndex extends PureRenderComponent {
         });
     }
 
+    /**
+     * 右侧面板创建新会话
+     */
+    onSwitchLeftPanel(panelName){
+        this.refs['LeftPanelPlaceHolder'].onSwitchPanel(panelName);
+    }
+
+
     render() {
         var that = this;
         var {user, sessionList, sessionId2MessageList, currentSessionId} = that.props || {};
@@ -67,12 +89,12 @@ class ChatRoomIndex extends PureRenderComponent {
         return (
             <div className="chat-room">
                 <div className="chat-side">
+
+                    <LeftPanelPlaceHolder ref="LeftPanelPlaceHolder"></LeftPanelPlaceHolder>
+
                     <div className="my-info">
                         <img className="avatar" src={userInfo.avatar} alt=""/>
-                        <div className="content">
-                            <div className="my-name">{userInfo.nickname}</div>
-                            <div className="my-name2">{userInfo.mail}</div>
-                        </div>
+                        <div onClick={that.onSwitchLeftPanel.bind(that,'newSession')}>新建</div>
                     </div>
                     <div className="session-list">
                         <SessionList sessionList={sessionList}

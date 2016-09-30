@@ -11,7 +11,8 @@ import $ from 'jquery';
 import App from './views/App';
 import Home from './views/Home';
 import NoteApp from './views/Note/NoteApp';
-import Login from './views/Login/Login';
+import UserLogin from './views/User/UserLogin';
+import UserRegister from './views/User/UserRegister';
 import DaoHang from './views/DaoHang/DaoHang';
 import ChatRoomIndex from './views/ChatRoom/ChatRoomIndex/ChatRoomIndex';
 
@@ -55,7 +56,7 @@ ReactDOM.render(
                     <Route path="chat" component={ChatRoomIndex} > </Route>
                 </Route>
             </Route>
-            <Route path="/login" component={Login} />
+            <Route path="/login" component={UserLogin} />
         </Router>
     </Provider>,
     document.getElementById('root')
