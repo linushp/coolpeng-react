@@ -1,4 +1,4 @@
-import {getDataFromImmutableOrPlain,isArray,immutableListMap,shallowEqual} from '../../core/utils/index';
+import {getDataFromImmutableOrPlain,isArray,immutableListMap,shallowEqual,uniqueId} from '../../core/utils/index';
 import PureRenderComponent from '../../core/PureRenderComponent';
 import React, {PropTypes} from 'react';
 import $ from 'jquery';
@@ -250,6 +250,9 @@ export function getReactFormValue(id,name){
     return getReactFormValues(id)[name];
 }
 
+export function createReactFormUniqueId(){
+    return uniqueId("ReactFormUniqueId")
+}
 
 export class FormItem extends PureRenderComponent{
     constructor(props) {

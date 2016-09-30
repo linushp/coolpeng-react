@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import ActionStoreHelper from '../Common/ActionStoreHelper';
 import PureRenderComponent from '../../core/PureRenderComponent';
-import ReactForm,{getReactFormValues} from '../../components/form/ReactForm';
+import ReactForm,{getReactFormValues,createReactFormUniqueId} from '../../components/form/ReactForm';
 import Dialog from '../../components/dialog/Dialog';
 import {getRandomNumString,uniqueId} from '../../core/utils/index';
 
@@ -16,7 +16,7 @@ export default class UserRegister extends PureRenderComponent {
         var that = this;
         that.state = {};
 
-        that.reactFormUniqueId = uniqueId("reactFormUniqueId");
+        that.reactFormUniqueId = createReactFormUniqueId();
         that.LoginFormLayout = [
             {name:'mail',type:'input',placeholder:"请输入邮箱"},
             {name: 'nickname', type: 'input', placeholder: "请输入昵称"},

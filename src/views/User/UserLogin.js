@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import ActionStoreHelper from '../Common/ActionStoreHelper';
 import PureRenderComponent from '../../core/PureRenderComponent';
-import ReactForm,{getReactFormValues} from '../../components/form/ReactForm';
+import ReactForm,{getReactFormValues,createReactFormUniqueId} from '../../components/form/ReactForm';
 import UserRegister from './UserRegister';
 import Dialog from '../../components/dialog/Dialog';
 import {getRandomNumString,uniqueId,JSXRenderUtils} from '../../core/utils/index';
@@ -29,7 +29,7 @@ class UserLogin extends PureRenderComponent {
             currentView: 'login'
         };
 
-        that.reactFormUniqueId = uniqueId("reactFormUniqueId");
+        that.reactFormUniqueId = createReactFormUniqueId();
         that.LoginFormLayout = [
             {name: 'username', type: 'input', placeholder: "请输入用户名或邮箱"},
             {name: 'password', type: 'password', placeholder: "请输入密码", onEnterKey: this.doLogin.bind(this)},
