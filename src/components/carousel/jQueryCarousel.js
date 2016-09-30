@@ -64,6 +64,8 @@ function initEvent() {
         var $imgItem = $this.closest(`.${IMG_ITEM_CLASS}`);
         $imgItem.removeClass(IMG_ITEM_CUR_CLASS);
         var $nextImg = $imgItem.next();
+        var osrc = $nextImg.attr('osrc');
+        $nextImg.attr('src',osrc);
         $nextImg.addClass(IMG_ITEM_CUR_CLASS);
     });
 
@@ -72,6 +74,8 @@ function initEvent() {
         var $imgItem = $this.closest(`.${IMG_ITEM_CLASS}`);
         $imgItem.removeClass(IMG_ITEM_CUR_CLASS);
         var $nextImg = $imgItem.prev();
+        var osrc = $nextImg.attr('osrc');
+        $nextImg.attr('src',osrc);
         $nextImg.addClass(IMG_ITEM_CUR_CLASS);
     });
 
