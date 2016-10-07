@@ -15,6 +15,14 @@ function getPlaceHolder() {
     return $placeholder;
 }
 
+function encodeHTML(m) {
+    if(!m){
+        return "";
+    }
+    m = m.replace(/</gm,"&lt;");
+    m = m.replace(/>/gm,"&gt;");
+    return m;
+}
 
 function createImageListHTML(imageList, targetImage) {
     var html = [];
@@ -30,7 +38,7 @@ function createImageListHTML(imageList, targetImage) {
             '   <div class="closeCarousel"></div>' +
             '   <div class="preImage"></div>' +
             '   <div class="nextImage"></div>' +
-            '   <div class="imageName"> ' + img.name + ' </div>' +
+            '   <div class="imageName"> ' + encodeHTML(img.name) + ' </div>' +
             '   <div class="imageObjWrapper">' +
             '       <img class="imageObj closeCarousel" src="' + src + '" osrc="' + img.oSrc + '" alt="' + img.name + '" >' +
             '   </div>' +

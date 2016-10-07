@@ -1,6 +1,6 @@
 import CreateCloudRestReducer from '../../core/CreateCloudRestReducer';
 import immutable from 'immutable';
-import {updateImmutableObject,StringUtils,createUUID,getCurrentUser} from '../../core/utils/index';
+import {updateImmutableObject, StringUtils, createUUID, getCurrentUser} from '../../core/utils/index';
 
 var initialState = immutable.fromJS({
     onlineUserList: [],
@@ -9,35 +9,90 @@ var initialState = immutable.fromJS({
     currentSessionId: null
 });
 
+function immutableFromJSON(jsonObj) {
+    return immutable.fromJS(jsonObj);
+}
 
-function handlePublicMsgEventSessionLastMsg(state, obj) {
+function ifNullReturnNewList(listObj) {
+    if (listObj) {
+        return listObj;
+    }
+    return immutableFromJSON([]);
+}
+
+
+function beforeSendMsg_HandlePublicMsgEventSessionLastMsg(state, obj) {
     //var chatMsgVO = obj.chatMsgVO;
     var sessionId = obj.sessionId;
     var msgSummary = obj.msgSummary;
     //var msg = chatMsgVO.msg;
-    var finder = function(c){
-        return c.get('sessionId')===sessionId;
+    var finder = function (c) {
+        return c.get('sessionId') === sessionId;
     };
-    var newValue = function(c){
-        return c.set('lastMsgText',msgSummary);
+    var newValue = function (c) {
+        return c.set('lastMsgText', msgSummary);
     };
     var sessionList = state.get('sessionList');
-    sessionList = updateImmutableObject(sessionList,finder,newValue);
-    return state.set('sessionList',sessionList);
+    sessionList = updateImmutableObject(sessionList, finder, newValue);
+    return state.set('sessionList', sessionList);
 }
 
-function handlePublicMsgEvent(state, obj) {
+function beforeSendMsg_HandlePublicMsgEvent(state, obj) {
 
-    var chatMsgVO = immutable.fromJS(obj.chatMsgVO);
+    var chatMsgVO = immutableFromJSON(obj.chatMsgVO);
     var sessionId = obj.sessionId;
     var sessionId2MessageList = state.get("sessionId2MessageList");
     var messageList = sessionId2MessageList.get(sessionId);
-
+    messageList = ifNullReturnNewList(messageList);
     messageList = messageList.push(chatMsgVO);
     sessionId2MessageList = sessionId2MessageList.set(sessionId, messageList);
     state = state.set("sessionId2MessageList", sessionId2MessageList);
     return state;
 }
+
+
+function isMessageListContainsMsgId(messageList, msgId) {
+    var isHas = false;
+
+    messageList.forEach(function (c) {
+        if (c.get('msgId') === msgId) {
+            isHas = true;
+        }
+    });
+
+    return isHas;
+}
+
+function afterSendMsg_HandlePublicMsgEvent(state, obj) {
+
+    var chatMsgVO = immutableFromJSON(obj.chatMsgVO);
+    var msgId = obj.chatMsgVO.msgId;
+    var sessionId = obj.sessionId;
+    var sessionId2MessageList = state.get("sessionId2MessageList");
+    var messageList = sessionId2MessageList.get(sessionId);
+    messageList = ifNullReturnNewList(messageList);
+    if (isMessageListContainsMsgId(messageList, msgId)) {
+        var finder = function (c) {
+            return c.get('msgId') === msgId;
+        };
+        var newValue = function (c) {
+            return chatMsgVO;
+        };
+        messageList = updateImmutableObject(messageList, finder, newValue);
+    } else {
+        messageList = messageList.push(chatMsgVO);
+    }
+
+
+    sessionId2MessageList = sessionId2MessageList.set(sessionId, messageList);
+    state = state.set("sessionId2MessageList", sessionId2MessageList);
+    return state;
+}
+
+function afterSendMsg_HandlePublicMsgEventSessionLastMsg(state, json) {
+    return beforeSendMsg_HandlePublicMsgEventSessionLastMsg(state, json);
+}
+
 
 export default CreateCloudRestReducer({
     initialState: initialState,
@@ -74,7 +129,7 @@ export default CreateCloudRestReducer({
                 var userInfo = getCurrentUser();
                 var json = {
                     sessionId: sessionId,
-                    msgSummary:msgSummary,
+                    msgSummary: msgSummary,
                     chatMsgVO: {
                         msgId: msgId,
                         sendUser: {
@@ -85,11 +140,11 @@ export default CreateCloudRestReducer({
                         },
                         msg: msg,
                         createTimeMillis: new Date().getTime(),
-                        status:"pending"
+                        status: "pending"
                     }
                 };
-                state = handlePublicMsgEvent(state, json);
-                state = handlePublicMsgEventSessionLastMsg(state, json);
+                state = beforeSendMsg_HandlePublicMsgEvent(state, json);
+                state = beforeSendMsg_HandlePublicMsgEventSessionLastMsg(state, json);
             }
             return state;
         },
@@ -115,8 +170,8 @@ export default CreateCloudRestReducer({
                 var json = JSON.parse(data);
                 var messageName = json.name;
                 if (messageName === "PublicMsgEvent") {
-                    state = handlePublicMsgEvent(state, json);
-                    state = handlePublicMsgEventSessionLastMsg(state, json);
+                    state = afterSendMsg_HandlePublicMsgEvent(state, json);
+                    state = afterSendMsg_HandlePublicMsgEventSessionLastMsg(state, json);
                 }
             } catch (e) {
                 console.error("[ERROR]", e);

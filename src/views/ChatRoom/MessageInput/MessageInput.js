@@ -63,8 +63,8 @@ export default class MessageInput extends PureRenderComponent {
         var content2 = that.makeContentImageThumb(content);
         var {onSendMessage} = that.props;//isImmutable
         onSendMessage(content2, summary, function () {
-            editor.clearContentValue();
         });
+        editor.clearContentValue();
     }
 
 
@@ -92,10 +92,10 @@ export default class MessageInput extends PureRenderComponent {
             toolbar: ['emoji', 'image'],
             triggerHandler: triggerHandler
         };
+        // <button className="sendButton" onClick={that.onSendMessage.bind(that)}>发送</button>
         return (
             <div className="chat-message-input">
                 <SimditorReact options={editorOptions} ref="SimditorReact" content={''}></SimditorReact>
-                <button className="sendButton" onClick={that.onSendMessage.bind(that)}>发送</button>
             </div>
         );
     }

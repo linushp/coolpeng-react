@@ -7,6 +7,7 @@ import $ from 'jquery';
 import "./MessageList.less";
 var hideStyle = JSXRenderUtils.hideStyle;
 var valueIn = getObjValueInPath;
+var loadingImg = "http://image.coolpeng.cn/static/icons/loading2.gif";
 class MessageItem extends PureRenderComponent {
     constructor(props) {
         super(props);
@@ -36,7 +37,7 @@ class MessageItem extends PureRenderComponent {
 
         var msgItemClassName = className({
             'chat-msg-item': true,
-            'pending': status === 'pending',
+            'isPending': status === 'pending',
             "isCurrentUser": isCurrentUser,
             "isHideUserInfo": isHideUserInfo
         });
@@ -49,9 +50,10 @@ class MessageItem extends PureRenderComponent {
                         <div className="nickname">{sendUser_nickname}</div>
                         <div className="createTime">{createTimStr}</div>
                     </div>
-                    <div className="msgContent">
-                        {toInnerHTML(msg)}
-                    </div>
+                    <div className="msgContent" dangerouslySetInnerHTML={{__html:msg}}></div>
+                </div>
+                <div className="msgStatus">
+                    <img className="loading" src={loadingImg} />
                 </div>
                 <div className="clear5"></div>
             </div>
@@ -83,9 +85,13 @@ class MessageSessionHeader extends PureRenderComponent {
 
 
 function scrollToBottom(uniqueId, count) {
+
     var $scroll = $("#" + uniqueId).find('.chat-msg-scroll');
     var scrollDom = $scroll[0];
-    scrollDom.scrollTop = 1000000;
+    if (scrollDom) {
+        scrollDom.scrollTop = 1000000;
+    }
+
     if (count > 0) {
         window.setTimeout(function () {
             scrollToBottom(uniqueId, count - 1);

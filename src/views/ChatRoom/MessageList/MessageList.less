@@ -117,6 +117,7 @@
               display: block;
               clear: both;
               margin-top: 10px;
+              min-height: 100px;
             }
           }
 
@@ -126,7 +127,17 @@
           }
 
         }
+      }
 
+      .msgStatus{
+        float: left;
+        margin-left: 5px;
+        margin-top: 5px;
+        .loading{
+          width: 16px;
+          height: 16px;
+          display: none;
+        }
       }
 
 
@@ -154,6 +165,17 @@
         .mgsBody {
           .msgDesc{
             display: none;
+          }
+        }
+      }
+
+
+
+
+      &.isPending{
+        .msgStatus{
+          .loading{
+            display: block;
           }
         }
       }
