@@ -41,9 +41,9 @@ class MessageItem extends PureRenderComponent {
             "isCurrentUser": isCurrentUser,
             "isHideUserInfo": isHideUserInfo
         });
-
+        var msgId = valueIn(message, 'msgId');
         return (
-            <div className={msgItemClassName}>
+            <div className={msgItemClassName} data-mid={msgId}>
                 <img className="sendUserAvatar" data-uid={sendUser_uid} src={sendUser_avatar}/>
                 <div className="mgsBody">
                     <div className="msgDesc">
@@ -116,9 +116,10 @@ export default class MessageList extends PureRenderComponent {
 
     onClickMessageList(e){
         var that = this;
+        var {messageList} = that.props;
         var $target = $(e.target);
         if($target.hasClass('chat-uploaded-image')){
-            showImageCarousel(that.uniqueId,$target);
+            showImageCarousel(that.uniqueId,$target,messageList);
         }
     }
 
@@ -158,7 +159,7 @@ export default class MessageList extends PureRenderComponent {
                                 preMessageEqualCount = 0;
                             }
 
-                            var msgId = message.msgId;
+                            var msgId = valueIn(message, 'msgId');
                             var dom = <MessageItem key={msgId} isHideUserInfo={isHideUserInfo} message={message}
                                                    userInfo={userInfo}></MessageItem>;
                             preMessage = message;

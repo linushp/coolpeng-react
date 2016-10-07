@@ -26,25 +26,33 @@ function encodeHTML(m) {
 
 function createImageListHTML(imageList, targetImage) {
     var html = [];
-    var targetOid = targetImage.oid || "___________$$$$$$$$$_______";
+    var targetOid = targetImage.oid || "______$$$$_____";
     for (var i = 0; i < imageList.length; i++) {
         var img = imageList[i];
         var oid = img.oid;
         var isCurrent = (oid === targetOid) || (img.oSrc===targetImage.oSrc);
         var src = isCurrent ? img.oSrc : '';
         var imageItemClazz = isCurrent ? IMG_ITEM_CUR_CLASS:'';
+        var isFirst = (i===0);
+        var isLast = (i===(imageList.length-1));
+        if(isFirst){
+            imageItemClazz +=" isFirst ";
+        }
+        if(isLast){
+            imageItemClazz +=" isLast ";
+        }
         html.push('' +
             '<div class="'+IMG_ITEM_CLASS+'  '+imageItemClazz+'">' +
             '   <div class="closeCarousel"></div>' +
-            '   <div class="preImage"></div>' +
-            '   <div class="nextImage"></div>' +
+            `   <div class="preImage"></div>` +
+            `   <div class="nextImage"></div>` +
             '   <div class="imageName"> ' + encodeHTML(img.name) + ' </div>' +
             '   <div class="imageObjWrapper">' +
             '       <img class="imageObj closeCarousel" src="' + src + '" osrc="' + img.oSrc + '" alt="' + img.name + '" >' +
             '   </div>' +
             '</div>'
         );
-    }
+    };
     return html.join('');
 }
 
@@ -71,20 +79,22 @@ function initEvent() {
         var $this = $(this);
         var $imgItem = $this.closest(`.${IMG_ITEM_CLASS}`);
         $imgItem.removeClass(IMG_ITEM_CUR_CLASS);
-        var $nextImg = $imgItem.next();
+        var $nextItem = $imgItem.next();
+        var $nextImg = $nextItem.find(".imageObj");
         var osrc = $nextImg.attr('osrc');
         $nextImg.attr('src',osrc);
-        $nextImg.addClass(IMG_ITEM_CUR_CLASS);
+        $nextItem.addClass(IMG_ITEM_CUR_CLASS);
     });
 
     $(document).on('click', `#${PLACEHOLDER_ID} .preImage`, function () {
         var $this = $(this);
         var $imgItem = $this.closest(`.${IMG_ITEM_CLASS}`);
         $imgItem.removeClass(IMG_ITEM_CUR_CLASS);
-        var $nextImg = $imgItem.prev();
+        var $nextItem = $imgItem.prev();
+        var $nextImg = $nextItem.find(".imageObj");
         var osrc = $nextImg.attr('osrc');
         $nextImg.attr('src',osrc);
-        $nextImg.addClass(IMG_ITEM_CUR_CLASS);
+        $nextItem.addClass(IMG_ITEM_CUR_CLASS);
     });
 
     $(document).on('click', `#${PLACEHOLDER_ID} .closeCarousel`, function () {

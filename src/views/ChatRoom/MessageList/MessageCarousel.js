@@ -17,9 +17,9 @@ function getMessageImage($obj) {
 }
 
 
-function getMessageImageList(id) {
+function getMessageImageList(divId,messageList) {
     var imageList = [];
-    $('#' + id).find(".chat-uploaded-image").each(function () {
+    $('#' + divId).find(".chat-uploaded-image").each(function () {
         var $this = $(this);
         var imgObj = getMessageImage($this);
         imageList.push(imgObj);
@@ -28,8 +28,8 @@ function getMessageImageList(id) {
 }
 
 
-export function showImageCarousel(divId, $target) {
-    var imageList = getMessageImageList(divId);
+export function showImageCarousel(divId, $target,messageList) {
+    var imageList = getMessageImageList(divId,messageList);
     var targetImage = getMessageImage($target);
     jQueryCarousel.show(imageList, targetImage);
 }

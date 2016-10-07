@@ -10,6 +10,16 @@
 
   .imageItem{
     display: none;
+    &.isFirst{
+      .preImage{
+        display: none;
+      }
+    }
+    &.isLast{
+      .nextImage{
+        display: none;
+      }
+    }
   }
 
   .imageItemCurrent{
@@ -19,6 +29,24 @@
   .imageObjWrapper,.imageObj{
     max-width: 80%;
     max-height:80%;
+  }
+
+
+  .preImage,.nextImage{
+    width: 46px;
+    height: 46px;
+    border-radius: 1000px;
+    background: #CCCCCC;
+    position: absolute;
+  }
+
+  .preImage{
+    left: 50px;
+    top: 50%;
+  }
+  .nextImage{
+    right:50px;
+    top: 50%;
   }
 
 }
