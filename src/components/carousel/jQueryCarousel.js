@@ -24,6 +24,21 @@ function encodeHTML(m) {
     return m;
 }
 
+
+function getHeight(){
+    var scrollHeight = document.body.scrollHeight;//可以滚动区域高度
+    var clientHeight = document.documentElement.clientHeight;//浏览器可见区域的高度
+    var allHeight = Math.max(scrollHeight, clientHeight);
+    return allHeight;
+}
+
+function getWidth(){
+    var scrollWidth = document.body.scrollWidth;//可以滚动区域高度
+    var clientWidth = document.documentElement.clientWidth;//浏览器可见区域的高度
+    var allWidth = Math.max(scrollWidth, clientWidth);
+    return allWidth;
+}
+
 function createImageListHTML(imageList, targetImage) {
     var html = [];
     var targetOid = targetImage.oid || "______$$$$_____";
@@ -41,18 +56,20 @@ function createImageListHTML(imageList, targetImage) {
         if(isLast){
             imageItemClazz +=" isLast ";
         }
+        var topHeight = 0;
+        var imageObjWrapperHeight = getHeight() -60;
         html.push('' +
             '<div class="'+IMG_ITEM_CLASS+'  '+imageItemClazz+'">' +
-            '   <div class="closeCarousel"></div>' +
-            `   <div class="preImage"></div>` +
-            `   <div class="nextImage"></div>` +
+            '   <div class="closeCarousel">×</div>' +
+            `   <div class="preImage">←</div>` +
+            `   <div class="nextImage">→</div>` +
             '   <div class="imageName"> ' + encodeHTML(img.name) + ' </div>' +
-            '   <div class="imageObjWrapper">' +
-            '       <img class="imageObj closeCarousel" src="' + src + '" osrc="' + img.oSrc + '" alt="' + img.name + '" >' +
+            '   <div class="imageObjWrapper" style="height: '+imageObjWrapperHeight+'px">' +
+            '       <img class="imageObj" src="' + src + '" osrc="' + img.oSrc + '" alt="' + img.name + '" >' +
             '   </div>' +
             '</div>'
         );
-    };
+    }
     return html.join('');
 }
 
@@ -78,6 +95,9 @@ function initEvent() {
     $(document).on('click', `#${PLACEHOLDER_ID} .nextImage`, function () {
         var $this = $(this);
         var $imgItem = $this.closest(`.${IMG_ITEM_CLASS}`);
+        if($imgItem.hasClass('isLast')){
+            return;
+        }
         $imgItem.removeClass(IMG_ITEM_CUR_CLASS);
         var $nextItem = $imgItem.next();
         var $nextImg = $nextItem.find(".imageObj");
@@ -89,6 +109,10 @@ function initEvent() {
     $(document).on('click', `#${PLACEHOLDER_ID} .preImage`, function () {
         var $this = $(this);
         var $imgItem = $this.closest(`.${IMG_ITEM_CLASS}`);
+        if($imgItem.hasClass('isFirst')){
+            return;
+        }
+
         $imgItem.removeClass(IMG_ITEM_CUR_CLASS);
         var $nextItem = $imgItem.prev();
         var $nextImg = $nextItem.find(".imageObj");

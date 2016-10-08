@@ -7,17 +7,26 @@
   z-index: 1000;
   background-color: #ffffff;
 
+  .imageName{
+    height: 60px;
+    background: #FFFFFF;
+    box-shadow: 0px 1px 0px 0px #DEDEDE;;
+  }
 
   .imageItem{
     display: none;
+    background-color: rgba(233, 232, 232, 0.6);
+    height: 100%;
     &.isFirst{
       .preImage{
-        display: none;
+        color: #e9e8e8 !important;
+        cursor: not-allowed !important;
       }
     }
     &.isLast{
       .nextImage{
-        display: none;
+        color: #e9e8e8 !important;
+        cursor: not-allowed !important;
       }
     }
   }
@@ -27,17 +36,41 @@
   }
 
   .imageObjWrapper,.imageObj{
-    max-width: 80%;
-    max-height:80%;
+    margin: 0 auto;
+    display: block;
   }
+
+  .imageObjWrapper{
+    max-width: 80%;
+    display: flex;
+    align-items: center;/*垂直居中*/
+    justify-content: center;/*水平居中*/
+  }
+
+  .imageObj{
+    max-width: 100%;
+    max-height:100%;
+  }
+
 
 
   .preImage,.nextImage{
     width: 46px;
     height: 46px;
     border-radius: 1000px;
-    background: #CCCCCC;
     position: absolute;
+    line-height: 46px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    background: #FFFFFF;
+    box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.20);
+    cursor: pointer;
+    color: #958F8F;
+  }
+
+  .preImage:hover,.nextImage:hover{
+    color: #00ACC1;
   }
 
   .preImage{
@@ -47,6 +80,15 @@
   .nextImage{
     right:50px;
     top: 50%;
+  }
+
+  .closeCarousel{
+    position: absolute;
+    right: 24px;
+    top: 4px;
+    font-size: 30px;
+    cursor: pointer;
+    color: #958f8f;
   }
 
 }
