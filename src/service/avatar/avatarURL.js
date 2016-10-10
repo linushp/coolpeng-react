@@ -95,6 +95,9 @@
         return m.albumName + "/" + fileName;
     }
 
+    function getRandomAvatarURLFull() {
+        return "http://image.coolpeng.cn/avatar/" + getRandomAvatarURL();
+    }
 
     function formatNumber(num) {
         if (num < 10) {
@@ -133,6 +136,7 @@
     }
 
     var willExport = {
+        getRandomAvatarURLFull:getRandomAvatarURLFull,
         getRandomAvatarURL: getRandomAvatarURL,
         getRandomAvatarUrlList: getRandomAvatarUrlList
     };

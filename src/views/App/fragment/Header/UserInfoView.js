@@ -30,7 +30,8 @@ export function toUserInfoEditingView(userInfo,onFileChangeName){
             <td>
             <div class="avatar-wrapper">
                 <img class="avatar" src="${userInfo.avatar}" alt="">
-                <span class="modify-avatar">修改头像</span>
+                <span class="modify-avatar">上传头像</span>
+                <span class="random-avatar">随机头像</span>
                 <input type="file" class="modify-avatar-file" onchange="${onFileChangeName}(this)">
                 <input name='avatar' type="text" class="avatar-input" value="${userInfo.avatar}" style="display: none;">
             </div>

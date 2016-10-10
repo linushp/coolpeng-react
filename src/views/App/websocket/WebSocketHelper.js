@@ -1,4 +1,5 @@
 import React from 'react'
+import ReconnectingWebSocket from "ReconnectingWebSocket";
 import PureRenderComponent from '../../../core/PureRenderComponent';
 import ActionStoreHelper from '../../Common/ActionStoreHelper';
 import {createUUID} from '../../../core/utils/index';
@@ -28,10 +29,8 @@ class WebSocketHelper extends PureRenderComponent {
         var connectionId = createUUID(uid);
         var host = "ws://" + __SERVER_LOCATION_HOST__ + "/cloud/chat.websocket?uid=" + uid + "&connectionId=" + connectionId;
         var socket = null;
-        if ('WebSocket' in window) {
-            socket = new WebSocket(host);
-        } else if ('MozWebSocket' in window) {
-            socket = new MozWebSocket(host);
+        if ('WebSocket' in window || 'MozWebSocket' in window) {
+            socket = new ReconnectingWebSocket(host);
         } else {
             console.log('Error: WebSocket is not supported by this browser.');
             return;

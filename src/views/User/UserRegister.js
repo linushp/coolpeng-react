@@ -3,6 +3,7 @@ import {Link} from 'react-router'
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import ActionStoreHelper from '../Common/ActionStoreHelper';
+import * as avatarURL from '../../service/avatar/avatarURL';
 import PureRenderComponent from '../../core/PureRenderComponent';
 import ReactForm,{getReactFormValues,createReactFormUniqueId} from '../../components/form/ReactForm';
 import Dialog from '../../components/dialog/Dialog';
@@ -18,10 +19,9 @@ export default class UserRegister extends PureRenderComponent {
 
         that.reactFormUniqueId = createReactFormUniqueId();
         that.LoginFormLayout = [
-            {name:'mail',type:'input',placeholder:"请输入邮箱"},
-            {name: 'nickname', type: 'input', placeholder: "请输入昵称"},
-            {name: 'password', type: 'password', placeholder: "请输入密码"},
-            {name: 'password2', type: 'password', placeholder: "再次输入密码"},
+            {name:'mail',type:'input',placeholder:"邮箱"},
+            {name: 'nickname', type: 'input', placeholder: "昵称"},
+            {name: 'password', type: 'password', placeholder: "密码"},
             {
                 name: 'button',
                 type: 'button',
@@ -38,7 +38,8 @@ export default class UserRegister extends PureRenderComponent {
         var values = getReactFormValues(that.reactFormUniqueId);
         var username = values["username"];
         var password = values["password"];
-
+        values["password2"] = password;
+        values["avatar"] = avatarURL.getRandomAvatarURLFull();
         var {actions} = that.props;
         var register = actions.register;
         register(values,function(action,res){

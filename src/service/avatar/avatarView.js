@@ -175,7 +175,7 @@ function AvatarView(config) {
     }
 
     function getRandomAvatarURL() {
-        return "http://image.coolpeng.cn/avatar/" + avatarURL.getRandomAvatarURL();
+        return avatarURL.getRandomAvatarURLFull();
     }
 
     function renderLayerPlaceholder() {

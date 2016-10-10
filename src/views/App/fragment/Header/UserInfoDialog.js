@@ -1,5 +1,6 @@
 import Dialog from '../../../../components/dialog/Dialog';
 import $ from 'jquery';
+import * as avatarURL from '../../../../service/avatar/avatarURL';
 import {toUserInfoEditingView} from './UserInfoView';
 import {uniqueId} from '../../../../core/utils/index';
 import {onXhrUpload} from '../../../../service/upload/UploadUtils';
@@ -13,7 +14,6 @@ export function showUserInfoDialog(userInfo,updateUserInfo){
     var content = (
         <div dangerouslySetInnerHTML={{__html:view.html}}></div>
     );
-
     
     window[onFileChangeName] = function(e){
         var files = e.files;//FileList
