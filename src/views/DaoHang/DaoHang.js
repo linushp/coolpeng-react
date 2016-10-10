@@ -5,6 +5,7 @@ import PureRenderComponent from '../../core/PureRenderComponent';
 import ActionStoreHelper from '../Common/ActionStoreHelper';
 import DaohangCreateButton from './DaohangCreateButton';
 import DaoHangCategory from './DaoHangCategory';
+import GoogleSearch from './GoogleSearch';
 import {isAdmin,displayControl} from '../../core/utils';
 import './index.less';
 
@@ -59,6 +60,7 @@ class DaoHang extends PureRenderComponent {
         var adminControl = displayControl.bind(this,isAdminUser);
         return (
             <div className="cp-daohang">
+                <GoogleSearch></GoogleSearch>
                 <div className="cp-daohang-create">
                     {adminControl(
                         this.state.isEditing?
@@ -70,6 +72,7 @@ class DaoHang extends PureRenderComponent {
                 <div className="cp-daohang-ccs">
                     {this.renderCategoryList(categoryList)}
                 </div>
+                <div className="clear"></div>
             </div>
         );
     }

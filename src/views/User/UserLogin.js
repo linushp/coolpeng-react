@@ -55,7 +55,7 @@ class UserLogin extends PureRenderComponent {
             if (res && res.responseCode === 0) {
                 Dialog.showMsgSuccess("登录成功");
                 actions.staticClearNoteStore();
-                that.context.router.push("/note/");
+                that.context.router.push("/link");
             } else {
                 Dialog.showMsgError(res && res.responseText);
             }

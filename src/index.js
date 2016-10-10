@@ -47,12 +47,12 @@ ReactDOM.render(
     <Provider store={store}>
         <Router history={history}>
             <Route path="/" onEnter={validate}>
-                <IndexRedirect to="daohang"/>
+                <IndexRedirect to="link"/>
                 <Route component={App}>
                     <Route path="home" component={Home}/>
+                    <Route path="link" component={DaoHang} > </Route>
                     <Route path="note"  component={NoteApp} />
                     <Route path="note/:currentPath" component={NoteApp} />
-                    <Route path="daohang" component={DaoHang} > </Route>
                     <Route path="chat" component={ChatRoomIndex} > </Route>
                 </Route>
             </Route>

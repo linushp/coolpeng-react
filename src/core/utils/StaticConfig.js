@@ -1,7 +1,9 @@
 var URL_HOST_ORIGIN = __URL_HOST_ORIGIN__;
+var STATIC_FOLDER_PATH = __STATIC_FOLDER_PATH__;
 
 
 var staticConfig = {
+    STATIC_FOLDER_PATH:STATIC_FOLDER_PATH,
     URL_HOST_ORIGIN: URL_HOST_ORIGIN,
     BCE_UPLOADER_JS: URL_HOST_ORIGIN + '/static/lib/bce-bos-uploader.bundle.min.js',
     // SIMDITOR_CSS: __URL_HOST_ORIGIN__ + '/static/lib/combo/simditor.css',
