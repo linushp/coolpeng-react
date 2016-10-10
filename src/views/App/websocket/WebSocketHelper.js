@@ -26,7 +26,6 @@ class WebSocketHelper extends PureRenderComponent {
         }
 
         var connectionId = createUUID(uid);
-
         var host = "ws://" + __SERVER_LOCATION_HOST__ + "/cloud/chat.websocket?uid=" + uid + "&connectionId=" + connectionId;
         var socket = null;
         if ('WebSocket' in window) {

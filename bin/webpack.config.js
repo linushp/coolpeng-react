@@ -29,7 +29,7 @@ var isProduction = function () {
 var __URL_HOST_ORIGIN__ = isProduction() ? "'http://image.coolpeng.cn'" : "''";
 
 //服务端路径
-var __SERVER_LOCATION_HOST__ = isProduction() ? "'www.coolpeng.cn'" : "'127.0.0.1:10086'";
+var __SERVER_LOCATION_HOST__ = isProduction() ? "window.location.host" : "'127.0.0.1:10086'";
 
 //打包输出的静态文件的路径
 var publicPath = isProduction() ? "http://image.coolpeng.cn/" : "/";
