@@ -15,7 +15,7 @@ class App extends React.Component {
 
     componentDidMount() {
         const {user, actions} = this.props;
-        //actions.fetchProfile();
+        actions.fetchProfile();
     }
 
 

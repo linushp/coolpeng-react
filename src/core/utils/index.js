@@ -2,6 +2,7 @@ import EventBus from './EventBus';
 import GlobalEventName from './GlobalEventName';
 import StringUtils from './StringUtils';
 import JSXRenderUtils from './JSXRenderUtils';
+import StaticConfig from './StaticConfig';
 import $ from 'jquery';
 import _ from 'underscore';
 import {initUnderscoreMixin} from './underscore.mixin.js';
@@ -15,12 +16,17 @@ exports.EventBus = EventBus;
 exports.StringUtils = StringUtils;
 exports._undefined = _undefined;
 exports.JSXRenderUtils = JSXRenderUtils;
+exports.StaticConfig = StaticConfig;
 
 
 export function uniqueId(prefix) {
     return _.uniqueId(prefix);
 }
 
+export function getStaticImages(p){
+    //http://image.coolpeng.cn/static
+    return StaticConfig.STATIC_FOLDER_PATH + "/images/" + p;
+}
 
 export function isPromise(value) {
     if (value !== null && typeof value === 'object') {
@@ -174,8 +180,16 @@ export function isFunction(x) {
     return isType(x, 'Function');
 }
 
+export function isString(x) {
+    return isType(x, 'String');
+}
+
 export function isArray(x) {
     return isType(x, 'Array');
+}
+
+export function isObject(x) {
+    return isType(x, 'Object');
 }
 
 export function isNumber(x) {

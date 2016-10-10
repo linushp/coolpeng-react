@@ -76,6 +76,7 @@ export default class Header extends React.Component {
     }
 
     render() {
+        //{renderLink("/home", "想法")}
         var renderLink = this.renderLink.bind(this);
         return (
             <div className='cp-layout-header'>
@@ -87,10 +88,9 @@ export default class Header extends React.Component {
                             <span className="text">ubibi</span>
                         </Link>
                     </h1>
-                    {renderLink("/home", "首页")}
+                    {renderLink("/link", "链接")}
                     {renderLink("/chat", "聊天")}
-                    {renderLink("/daohang", "导航")}
-                    {renderLink("/note/", "随笔")}
+                    {renderLink("/note/", "笔记")}
                     <div className="float-r">
                         {this.renderRightLogin()}
                     </div>

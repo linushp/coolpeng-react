@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import {StringUtils,EventBus} from '../utils';
+import {StringUtils,EventBus,toQueryParam} from '../utils';
 
 
 function ajaxPost(userInfoGetter, url, queryCondition, success, onError) {
@@ -39,12 +39,13 @@ class AjaxPromise {
     }
 
 
-    post(url, queryCondition) {
+    post(url, queryCondition,validateCallback) {
         var that = this;
         url = that.urlPrefix + url;
         return new Promise(function (resolve, reject) {
             ajaxPost(that.userInfoGetter, url, queryCondition, function (data) {
-                if(data.responseCode!==0){
+                var isOK = validateCallback ? validateCallback(data) : (data.responseCode===0);
+                if(!isOK){
                     handNamedException(data);
                     reject(data);
                 }
@@ -56,6 +57,36 @@ class AjaxPromise {
                 reject(e);
             });
         });
+    }
+
+
+    ajaxGet(url, queryCondition,validateCallback) {
+        var that = this;
+        url = that.urlPrefix + url;
+        return new Promise(function (resolve, reject) {
+            var params = toQueryParam(queryCondition);
+            $.ajax({
+                type: 'GET',
+                url: url + params,
+                success: function(data){
+                    var isOK = validateCallback ? validateCallback(data) : (data.responseCode===0);
+                    if(!isOK){
+                        handNamedException(data);
+                        reject(data);
+                    }
+                    else {
+                        resolve(data);
+                    }
+                },
+                dataType: "json",
+                error: function(e){
+                    console.error(e);
+                    reject(e);
+                },
+                contentType: 'application/json; charset=utf-8'
+            });
+        });
+
     }
 }
 

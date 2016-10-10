@@ -3,6 +3,7 @@
  _.valueIn as valueIn;
  _.toInnerHTML as toInnerHTML
  " >
+
     <div style="margin-top: 100px;display:none" rt-repeat="m in categoryList" >
          mm:: {valueIn(m,"text.length") } <br>
          nn:: {valueIn(m,"text")}

@@ -64,9 +64,26 @@ class ChatRoomIndex extends PureRenderComponent {
             sessionVO: sessionVO,
             refreshRecent: true
         };
-        actions.sendMessage(sendObject, function () {
-            callback()
-        });
+
+        if(sessionVO.sessionType==='robot'){
+            if(!msgSummary){
+                msgSummary = "尴尬";
+            }
+            sendObject.$$URL_PARAMS$$ = {
+                userid:userInfo.id,
+                info:msgSummary,
+                key:"afee6aaebd54bc67af29f743f53c4ee5" //https://www.juhe.cn/myData
+            };
+
+            actions.sendMessageToRobot(sendObject, function () {
+                callback()
+            });
+        }else {
+            actions.sendMessage(sendObject, function () {
+                callback()
+            });
+        }
+
     }
 
     /**
@@ -120,6 +137,7 @@ ChatRoomIndex.ACTION_CONFIG = {
     "getSessionList": "chat.getSessionList",
     "createSession": "chat.createSession",
     "sendMessage": "chat.sendMessage",
+    "sendMessageToRobot":"chat.sendMessageToRobot",
     "getChatMsgList": "chat.getChatMsgList",
     "staticSetCurrentSessionId": "chat.staticSetCurrentSessionId"
 };

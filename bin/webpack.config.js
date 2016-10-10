@@ -28,6 +28,8 @@ var isProduction = function () {
 //js文件上传时候静态文件的路径
 var __URL_HOST_ORIGIN__ = isProduction() ? "'http://image.coolpeng.cn'" : "''";
 
+var __STATIC_FOLDER_PATH__ = isProduction() ? "'http://image.coolpeng.cn/static'" : "'/static'";
+
 //服务端路径
 var __SERVER_LOCATION_HOST__ = isProduction() ? "window.location.host" : "'127.0.0.1:10086'";
 
@@ -161,8 +163,9 @@ function createWebpackConfig(jsFile, htmlFile, mainFileName) {
             }),
             new webpack.NoErrorsPlugin(),
             new webpack.DefinePlugin({
-                __DEV__: !isProduction(),
-                __IS_HASH_HISTORY__: false,
+                '__DEV__': !isProduction(),
+                '__IS_HASH_HISTORY__': false,
+                '__STATIC_FOLDER_PATH__':__STATIC_FOLDER_PATH__,
                 '__SERVER_LOCATION_HOST__': __SERVER_LOCATION_HOST__,
                 '__URL_HOST_ORIGIN__': __URL_HOST_ORIGIN__,
                 'process.env.NODE_ENV': isProduction() ? '"production"' : '"development"'
@@ -186,9 +189,10 @@ function createWebpackConfig(jsFile, htmlFile, mainFileName) {
                     secure: false,
                     changeOrigin: true
                 },
-                '/upload/*': {
-                    target: 'https://www.coolpeng.cn',
-                    secure: false
+                '/robot/index': {
+                    target: 'http://op.juhe.cn',
+                    secure: false,
+                    changeOrigin: true
                 }
             }
         }
