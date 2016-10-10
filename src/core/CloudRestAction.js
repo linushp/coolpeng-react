@@ -1,22 +1,55 @@
-import api from './api'
+import api from './api';
+import {isString,isObject} from './utils/index';
 
 
 function createCloudRestAction(prefix, funcName) {
 
+
+
+        return function (data, callback, reqSeqId) {
+            var url = '/cloud/' + prefix + '/' + funcName + '.json';
+            var type = prefix + '_' + funcName;
+            return {
+                type: type,
+                payload: {
+                    promise: api.post(url, data)
+                },
+                meta: {
+                    reqData: data,
+                    reqUrl: url,
+                    reqType: type,
+                    reqActionPrefix: prefix,
+                    reqActionFuncName: funcName,
+                    reqSeqId: reqSeqId || '',
+                    actionSourceCallback: callback
+                }
+            }
+        }
+}
+
+
+
+function createCloudRestActionByObj(prefix, funObj){
     return function (data, callback, reqSeqId) {
-        var url = '/cloud/' + prefix + '/' + funcName + '.json';
-        var type = prefix + '_' + funcName;
+        var url = funObj.url;
+        var funcNameString = funObj.name;
+        var method = (funObj.method || '').toUpperCase();
+        var validateCallback = funObj.validateCallback;
+
+        var type = prefix + '_' + funcNameString;
+        data = data || {};
+        var $$URL_PARAMS$$ = data.$$URL_PARAMS$$ || {};
         return {
             type: type,
             payload: {
-                promise: api.post(url, data)
+                promise: (method === 'GET') ? api.ajaxGet(url, $$URL_PARAMS$$,validateCallback) : api.post(url, data)
             },
             meta: {
                 reqData: data,
                 reqUrl: url,
                 reqType: type,
                 reqActionPrefix: prefix,
-                reqActionFuncName: funcName,
+                reqActionFuncName: funcNameString,
                 reqSeqId: reqSeqId || '',
                 actionSourceCallback: callback
             }
@@ -45,7 +78,12 @@ export default class CloudRestAction {
         var that = this;
         for (var i = 0; i < funcNameList.length; i++) {
             var funcName = funcNameList[i];
-            that[funcName] = createCloudRestAction(prefix, funcName);
+            if(isString(funcName)){
+                that[funcName] = createCloudRestAction(prefix, funcName);
+            }else if(isObject(funcName)){
+                var funcNameStr = funcName.name;
+                that[funcNameStr] = createCloudRestActionByObj(prefix, funcName);
+            }
         }
 
         if (staticFunc && staticFunc.length > 0) {

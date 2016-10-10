@@ -1,6 +1,7 @@
 import CreateCloudRestReducer from '../../core/CreateCloudRestReducer';
 import immutable from 'immutable';
-import {updateImmutableObject, StringUtils, createUUID, getCurrentUser} from '../../core/utils/index';
+import {updateImmutableObject, StringUtils, createUUID, getCurrentUser,} from '../../core/utils/index';
+import StaticConfig from '../../core/utils/StaticConfig';
 
 var initialState = immutable.fromJS({
     onlineUserList: [],
@@ -94,6 +95,31 @@ function afterSendMsg_HandlePublicMsgEventSessionLastMsg(state, json) {
 }
 
 
+
+
+function addStaticMessage(state,sessionId,userInfo,msgId,msg,msgSummary,status){
+    var json = {
+        sessionId: sessionId,
+        msgSummary: msgSummary,
+        chatMsgVO: {
+            msgId: msgId,
+            sendUser: {
+                uid: userInfo.id,
+                username: userInfo.username,
+                nickname: userInfo.nickname,
+                avatar: userInfo.avatar
+            },
+            msg: msg,
+            createTimeMillis: new Date().getTime(),
+            status: status
+        }
+    };
+    state = beforeSendMsg_HandlePublicMsgEvent(state, json);
+    state = beforeSendMsg_HandlePublicMsgEventSessionLastMsg(state, json);
+    return state;
+}
+
+
 export default CreateCloudRestReducer({
     initialState: initialState,
     switchRestPrefix: "chat",
@@ -127,24 +153,24 @@ export default CreateCloudRestReducer({
                 var msgId = meta.reqData.msgId;
                 var msgSummary = meta.reqData.msgSummary;
                 var userInfo = getCurrentUser();
-                var json = {
-                    sessionId: sessionId,
-                    msgSummary: msgSummary,
-                    chatMsgVO: {
-                        msgId: msgId,
-                        sendUser: {
-                            uid: userInfo.id,
-                            username: userInfo.username,
-                            nickname: userInfo.nickname,
-                            avatar: userInfo.avatar
-                        },
-                        msg: msg,
-                        createTimeMillis: new Date().getTime(),
-                        status: "pending"
-                    }
-                };
-                state = beforeSendMsg_HandlePublicMsgEvent(state, json);
-                state = beforeSendMsg_HandlePublicMsgEventSessionLastMsg(state, json);
+                state = addStaticMessage(state,sessionId,userInfo,msgId,msg,msgSummary,'pending');
+            }
+            return state;
+        },
+        'sendMessageToRobot':function(state, res, restState, meta){
+            var sessionId = meta.reqData.sessionVO.sessionId;
+            if (restState.isPending()) {
+                var msg = meta.reqData.msg;
+                var msgId = meta.reqData.msgId;
+                var msgSummary = meta.reqData.msgSummary;
+                var userInfo = getCurrentUser();
+                state = addStaticMessage(state,sessionId,userInfo,msgId,msg,msgSummary,'sent');
+            }else if(restState.isSuccess()){
+                var text0 = res.result.text;
+                var userInfo0 = StaticConfig.bibiRobotUser;
+                var msg0 = text0;
+                var msgId0 = new Date().getTime();
+                state = addStaticMessage(state,sessionId,userInfo0,msgId0,msg0,msg0,'sent');
             }
             return state;
         },

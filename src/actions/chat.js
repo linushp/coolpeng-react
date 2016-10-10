@@ -11,7 +11,16 @@ var funcNameList = [
     'getSessionList',
     'createSession',
     'sendMessage',
-    'getChatMsgList'
+    'getChatMsgList',
+    {
+        name:"sendMessageToRobot",
+        //url:"/3rd-api/chat-robot",
+        url:(__DEV__?"/robot/index":"/3rd-api/chat-robot"),
+        method:'GET',
+        validateCallback:function(){
+            return true;
+        }
+    }
 ];
 
 var prefix = "chat";

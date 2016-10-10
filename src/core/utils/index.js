@@ -174,8 +174,16 @@ export function isFunction(x) {
     return isType(x, 'Function');
 }
 
+export function isString(x) {
+    return isType(x, 'String');
+}
+
 export function isArray(x) {
     return isType(x, 'Array');
+}
+
+export function isObject(x) {
+    return isType(x, 'Object');
 }
 
 export function isNumber(x) {

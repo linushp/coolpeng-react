@@ -186,9 +186,10 @@ function createWebpackConfig(jsFile, htmlFile, mainFileName) {
                     secure: false,
                     changeOrigin: true
                 },
-                '/upload/*': {
-                    target: 'https://www.coolpeng.cn',
-                    secure: false
+                '/robot/index': {
+                    target: 'http://op.juhe.cn',
+                    secure: false,
+                    changeOrigin: true
                 }
             }
         }
