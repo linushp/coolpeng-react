@@ -90,6 +90,14 @@ class Dialog extends React.Component {
         }
     }
 
+    onClickContent(e){
+        var data = this.props.data;
+        if (data.callback) {
+            //[{text:'确定',cls:'primary',action:'close'}];
+            data.callback({action:'onClickContent',name:'onClickContent'},e);
+        }
+    }
+
 
     getPopStyle(popStyle) {
         popStyle = popStyle || {};
@@ -165,16 +173,17 @@ class Dialog extends React.Component {
         popClass = popClass || '';
         var popClassDisplay = this.state.show?'':'cp-dialog-hidden';
         //draggable={true} onDragEnd={this.ondragend.bind(this)}
+        var that = this;
         return (
             <div className={`cp-dialog ${popClassDisplay}`}>
                 <div data-mid={id} className={`cp-dialog-${type}`}>
-                    <div className="cp-dialog-mask" style={{'zIndex':this.styleZIndex}}></div>
-                    <div className={`cp-dialog-pop ${popClass}`} style={this.getPopStyle(popStyle)} >
+                    <div className="cp-dialog-mask" style={{'zIndex':that.styleZIndex}}></div>
+                    <div className={`cp-dialog-pop ${popClass}`} style={that.getPopStyle(popStyle)} >
                         <div className="cp-dialog-header" > {title} </div>
-                        <div className="cp-dialog-ico cp-dialog-close" onClick={this.onClickClose.bind(this,btnCancel)}
-                             style={{'zIndex':(this.styleZIndex+2)}}></div>
-                        <div className="cp-dialog-content">
-                            <i className={this.getIconClass(type)}></i>
+                        <div className="cp-dialog-ico cp-dialog-close" onClick={that.onClickClose.bind(that,btnCancel)}
+                             style={{'zIndex':(that.styleZIndex+2)}}></div>
+                        <div className="cp-dialog-content" onClick={that.onClickContent.bind(that)}>
+                            <i className={that.getIconClass(type)}></i>
                             <div className="cp-dialog-inner">{content}&nbsp;</div>
                         </div>
                         <div className="cp-dialog-footer">

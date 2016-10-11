@@ -1,7 +1,7 @@
 import React from 'react'
 import {bindActionCreators} from 'redux';
 import immutable from 'immutable';
-import {createUUID} from '../../../core/utils/index';
+import {createUUID,isEmpty} from '../../../core/utils/index';
 import PureRenderComponent from '../../../core/PureRenderComponent';
 import {connect} from 'react-redux';
 import ActionStoreHelper from '../../Common/ActionStoreHelper';
@@ -9,6 +9,7 @@ import SessionList from '../SessionList/SessionList';
 import MessageList from '../MessageList/MessageList';
 import MessageInput from '../MessageInput/MessageInput';
 import LeftPanelPlaceHolder from '../LeftPanel/LeftPanelPlaceHolder';
+import OperationHolder from '../LeftPanel/OperationHolder';
 import './ChatRoomIndex.less'
 
 class ChatRoomIndex extends PureRenderComponent {
@@ -18,13 +19,17 @@ class ChatRoomIndex extends PureRenderComponent {
 
     componentDidMount() {
         var that = this;
-        var {actions} = that.props;
-        actions.getAllOnlineUserVO();
-        actions.getSessionList({}, function (a, b, c, d) {
-            var sessionVO = d[0];
-            var session = immutable.fromJS(sessionVO);
-            that.onSwitchSession(session, sessionVO);
-        });
+        var {actions,sessionList} = that.props;
+
+        //这个empty函数,可以判断immutable对象
+        if(isEmpty(sessionList)){
+            actions.getAllOnlineUserVO();
+            actions.getSessionList({}, function (a, b, c, d) {
+                var sessionVO = d[0];
+                var session = immutable.fromJS(sessionVO);
+                that.onSwitchSession(session, sessionVO);
+            });
+        }
     }
 
 
@@ -78,6 +83,7 @@ class ChatRoomIndex extends PureRenderComponent {
             actions.sendMessageToRobot(sendObject, function () {
                 callback()
             });
+
         }else {
             actions.sendMessage(sendObject, function () {
                 callback()
@@ -96,7 +102,7 @@ class ChatRoomIndex extends PureRenderComponent {
 
     render() {
         var that = this;
-        var {user, sessionList, sessionId2MessageList, currentSessionId} = that.props || {};
+        var {user, sessionList, sessionId2MessageList, currentSessionId,onlineUserList} = that.props || {};
         var userInfo = user.userInfo || {};
         var messageList = sessionId2MessageList.get(currentSessionId);
         var currentSession = sessionList.find(function (obj) {
@@ -106,14 +112,13 @@ class ChatRoomIndex extends PureRenderComponent {
         return (
             <div className="chat-room">
                 <div className="chat-side">
-
                     <LeftPanelPlaceHolder ref="LeftPanelPlaceHolder"></LeftPanelPlaceHolder>
-
                     <div className="session-list">
                         <SessionList sessionList={sessionList}
                                      currentSession={currentSession}
                                      onSwitchSession={that.onSwitchSession.bind(that)}></SessionList>
                     </div>
+                    <OperationHolder onlineUserList={onlineUserList} />
                 </div>
                 <div className="chat-content">
                     <MessageList messageList={messageList} currentSession={currentSession} userInfo={userInfo}></MessageList>
@@ -129,7 +134,8 @@ ChatRoomIndex.STATE_CONFIG = {
     "user": 'user',
     "sessionList": "chat.sessionList",
     "sessionId2MessageList": "chat.sessionId2MessageList",
-    "currentSessionId": "chat.currentSessionId"
+    "currentSessionId": "chat.currentSessionId",
+    "onlineUserList":"chat.onlineUserList"
 };
 
 ChatRoomIndex.ACTION_CONFIG = {

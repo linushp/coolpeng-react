@@ -27,7 +27,18 @@ export function showUserInfoDialog(userInfo,updateUserInfo){
         });
     };
 
-    var callback = function(btn,dialog,doCloseDialog){
+    var onClickContent = function(e){
+        if($(e.target).hasClass('random-avatar')){
+            var file_path = avatarURL.getRandomAvatarURLFull();
+            view.setAvatarUrl(file_path);
+        }
+    };
+
+    var callback = function(btn,d,doCloseDialog){
+        if(btn.action==='onClickContent'){
+            onClickContent(d);
+            return;
+        }
         if(btn.name==='ok'){
             var values = view.getInputValue();
             updateUserInfo({
@@ -36,7 +47,7 @@ export function showUserInfoDialog(userInfo,updateUserInfo){
             },function(){
                 Dialog.showMsgSuccess("修改成功");
             });
-        }else {
+        }else{
             delete window[onFileChangeName];
             doCloseDialog();
         }
