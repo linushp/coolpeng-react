@@ -22,7 +22,7 @@ class ChatRoomIndex extends PureRenderComponent {
         var {actions,sessionList} = that.props;
 
         //这个empty函数,可以判断immutable对象
-        if(isEmpty(sessionList)){
+        if (isEmpty(sessionList)) {
             actions.getAllOnlineUserVO();
             actions.getSessionList({}, function (a, b, c, d) {
                 var sessionVO = d[0];
@@ -38,7 +38,7 @@ class ChatRoomIndex extends PureRenderComponent {
      * @param session
      * @param sessionVO
      */
-    onSwitchSession(session, sessionVO) {
+    onSwitchSession(session, sessionVO, callback) {
         var sessionId = sessionVO.sessionId;
         var {sessionId2MessageList, actions} = this.props || {};
         actions.staticSetCurrentSessionId(sessionId);
@@ -48,6 +48,8 @@ class ChatRoomIndex extends PureRenderComponent {
         }
         actions.getChatMsgList({
             sessionVO: sessionVO
+        }, function () {
+            callback && callback();
         });
     }
 
@@ -70,21 +72,21 @@ class ChatRoomIndex extends PureRenderComponent {
             refreshRecent: true
         };
 
-        if(sessionVO.sessionType==='robot'){
-            if(!msgSummary){
+        if (sessionVO.sessionType === 'robot') {
+            if (!msgSummary) {
                 msgSummary = "尴尬";
             }
             sendObject.$$URL_PARAMS$$ = {
-                userid:userInfo.id,
-                info:msgSummary,
-                key:"afee6aaebd54bc67af29f743f53c4ee5" //https://www.juhe.cn/myData
+                userid: userInfo.id,
+                info: msgSummary,
+                key: "afee6aaebd54bc67af29f743f53c4ee5" //https://www.juhe.cn/myData
             };
 
             actions.sendMessageToRobot(sendObject, function () {
                 callback()
             });
 
-        }else {
+        } else {
             actions.sendMessage(sendObject, function () {
                 callback()
             });
@@ -92,37 +94,60 @@ class ChatRoomIndex extends PureRenderComponent {
 
     }
 
-    /**
-     * 右侧面板创建新会话
-     */
-    onSwitchLeftPanel(panelName){
-        this.refs['LeftPanelPlaceHolder'].onSwitchPanel(panelName);
+
+    onCreateNewSession(sessionType, participateUidList, callback) {
+        var that = this;
+        var {actions} = that.props || {};
+        var sessionVO = {
+            sessionType: sessionType,
+            participateUidList: participateUidList
+        };
+        actions.createSession({sessionVO}, function (a, b) {
+            var sessionVO = b.data;
+            actions.getSessionList({}, function (a, b, c, d) {
+                var session = immutable.fromJS(sessionVO);
+                that.onSwitchSession(session, sessionVO, function () {
+                    callback && callback();
+                });
+            });
+        });
     }
 
+    getFunctions() {
+        var that = this;
+        return {
+            onCreateNewSession: that.onCreateNewSession.bind(that)
+        };
+    }
 
     render() {
         var that = this;
-        var {user, sessionList, sessionId2MessageList, currentSessionId,onlineUserList} = that.props || {};
+        var {user, sessionList, sessionId2MessageList, currentSessionId,onlineUserList,actions} = that.props || {};
         var userInfo = user.userInfo || {};
         var messageList = sessionId2MessageList.get(currentSessionId);
         var currentSession = sessionList.find(function (obj) {
             var sessionId = obj.get("sessionId");
             return currentSessionId === sessionId;
         });
+        var functions = this.getFunctions();
         return (
             <div className="chat-room">
                 <div className="chat-side">
-                    <LeftPanelPlaceHolder ref="LeftPanelPlaceHolder"></LeftPanelPlaceHolder>
+                    <LeftPanelPlaceHolder />
                     <div className="session-list">
                         <SessionList sessionList={sessionList}
                                      currentSession={currentSession}
                                      onSwitchSession={that.onSwitchSession.bind(that)}></SessionList>
+                        <div style={{height:50}}></div>
                     </div>
-                    <OperationHolder onlineUserList={onlineUserList} />
+                    <OperationHolder onlineUserList={onlineUserList} userInfo={userInfo} actions={actions}
+                                     functions={functions}/>
                 </div>
                 <div className="chat-content">
-                    <MessageList messageList={messageList} currentSession={currentSession} userInfo={userInfo}></MessageList>
-                    <MessageInput onSendMessage={that.onSendMessage.bind(that,currentSession)} userInfo={userInfo}></MessageInput>
+                    <MessageList messageList={messageList} currentSession={currentSession}
+                                 userInfo={userInfo}></MessageList>
+                    <MessageInput onSendMessage={that.onSendMessage.bind(that,currentSession)}
+                                  userInfo={userInfo}></MessageInput>
                 </div>
             </div>
         );
@@ -135,7 +160,7 @@ ChatRoomIndex.STATE_CONFIG = {
     "sessionList": "chat.sessionList",
     "sessionId2MessageList": "chat.sessionId2MessageList",
     "currentSessionId": "chat.currentSessionId",
-    "onlineUserList":"chat.onlineUserList"
+    "onlineUserList": "chat.onlineUserList"
 };
 
 ChatRoomIndex.ACTION_CONFIG = {
@@ -143,7 +168,7 @@ ChatRoomIndex.ACTION_CONFIG = {
     "getSessionList": "chat.getSessionList",
     "createSession": "chat.createSession",
     "sendMessage": "chat.sendMessage",
-    "sendMessageToRobot":"chat.sendMessageToRobot",
+    "sendMessageToRobot": "chat.sendMessageToRobot",
     "getChatMsgList": "chat.getChatMsgList",
     "staticSetCurrentSessionId": "chat.staticSetCurrentSessionId"
 };
