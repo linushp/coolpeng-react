@@ -1,6 +1,6 @@
 import CreateCloudRestReducer from '../../core/CreateCloudRestReducer';
 import immutable from 'immutable';
-import {updateImmutableObject, StringUtils, createUUID, getCurrentUser,} from '../../core/utils/index';
+import {updateImmutableObject, StringUtils, createUUID, getCurrentUser,getServerTimeMillis} from '../../core/utils/index';
 import StaticConfig from '../../core/utils/StaticConfig';
 
 var initialState = immutable.fromJS({
@@ -22,6 +22,23 @@ function ifNullReturnNewList(listObj) {
 }
 
 
+function makeSureSessionListContainsSession(sessionList,obj){
+
+    //TODO test
+    var sessionId = obj.sessionId;
+
+    var oldSession = sessionList.find(function(s){
+        return s.get('sessionId') === sessionId;
+    });
+
+    if(!oldSession){
+        var chatSessionVO = obj.chatSessionVO;
+        var newSession = immutable.fromJS(chatSessionVO);
+        sessionList = sessionList.unshift(newSession);
+    }
+    return sessionList;
+}
+
 function beforeSendMsg_HandlePublicMsgEventSessionLastMsg(state, obj) {
     //var chatMsgVO = obj.chatMsgVO;
     var sessionId = obj.sessionId;
@@ -31,10 +48,19 @@ function beforeSendMsg_HandlePublicMsgEventSessionLastMsg(state, obj) {
         return c.get('sessionId') === sessionId;
     };
     var newValue = function (c) {
-        return c.set('lastMsgText', msgSummary);
+        c = c.set('lastMsgText', msgSummary);
+        c = c.set('lastMsgTimeMillis', getServerTimeMillis());
+        return c;
     };
     var sessionList = state.get('sessionList');
+    sessionList = makeSureSessionListContainsSession(sessionList,obj);
     sessionList = updateImmutableObject(sessionList, finder, newValue);
+
+    sessionList = sessionList.sort(function (s1, s2) {
+        var t1 = s1.get('lastMsgTimeMillis');
+        var t2 = s2.get('lastMsgTimeMillis');
+        return  t2 - t1;
+    });
     return state.set('sessionList', sessionList);
 }
 
@@ -146,6 +172,9 @@ export default CreateCloudRestReducer({
             }
             return state;
         },
+        'deleteSession':function (state, res, restState, meta) {
+            return state;
+        },
         'sendMessage': function (state, res, restState, meta) {
             if (restState.isPending()) {
                 var sessionId = meta.reqData.sessionVO.sessionId;
@@ -195,7 +224,7 @@ export default CreateCloudRestReducer({
                 var data = res.data.data;
                 var json = JSON.parse(data);
                 var messageName = json.name;
-                if (messageName === "PublicMsgEvent") {
+                if (messageName === "PublicMsgEvent" || messageName==='PeerMsgEvent') {
                     state = afterSendMsg_HandlePublicMsgEvent(state, json);
                     state = afterSendMsg_HandlePublicMsgEventSessionLastMsg(state, json);
                 }

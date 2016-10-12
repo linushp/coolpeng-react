@@ -44,6 +44,7 @@ class ChatRoomIndex extends PureRenderComponent {
         actions.staticSetCurrentSessionId(sessionId);
         var messageList = sessionId2MessageList.get(sessionId);
         if (messageList && messageList.size > 0) {
+            callback && callback();
             return;
         }
         actions.getChatMsgList({
@@ -83,7 +84,8 @@ class ChatRoomIndex extends PureRenderComponent {
             };
 
             actions.sendMessageToRobot(sendObject, function () {
-                callback()
+                callback();
+                actions.sendMessage(sendObject, function () {});
             });
 
         } else {
@@ -91,7 +93,6 @@ class ChatRoomIndex extends PureRenderComponent {
                 callback()
             });
         }
-
     }
 
 
@@ -109,6 +110,19 @@ class ChatRoomIndex extends PureRenderComponent {
                 that.onSwitchSession(session, sessionVO, function () {
                     callback && callback();
                 });
+            });
+        });
+    }
+
+
+    onDeleteSession(session, sessionVO){
+        var that = this;
+        var {actions} = that.props || {};
+        actions.deleteSession({sessionVO},function(){
+            actions.getSessionList({}, function (a, b, c, d) {
+                var sessionVO = d[0];
+                var session = immutable.fromJS(sessionVO);
+                that.onSwitchSession(session, sessionVO);
             });
         });
     }
@@ -137,6 +151,7 @@ class ChatRoomIndex extends PureRenderComponent {
                     <div className="session-list">
                         <SessionList sessionList={sessionList}
                                      currentSession={currentSession}
+                                     onDeleteSession={that.onDeleteSession.bind(that)}
                                      onSwitchSession={that.onSwitchSession.bind(that)}></SessionList>
                         <div style={{height:50}}></div>
                     </div>
@@ -167,6 +182,7 @@ ChatRoomIndex.ACTION_CONFIG = {
     "getAllOnlineUserVO": "chat.getAllOnlineUserVO",
     "getSessionList": "chat.getSessionList",
     "createSession": "chat.createSession",
+    "deleteSession":"chat.deleteSession",
     "sendMessage": "chat.sendMessage",
     "sendMessageToRobot": "chat.sendMessageToRobot",
     "getChatMsgList": "chat.getChatMsgList",

@@ -10,6 +10,7 @@ var funcNameList = [
     'getAllOnlineUserVO',
     'getSessionList',
     'createSession',
+    'deleteSession',
     'sendMessage',
     'getChatMsgList',
     {

@@ -1,13 +1,14 @@
 import React from 'react'
 import {bindActionCreators} from 'redux';
 import immutable from 'immutable';
-import {createUUID,immutableListMap,getObjValueInPath} from '../../../../core/utils/index';
+import {createUUID,immutableListMap,getObjValueInPath,StaticConfig} from '../../../../core/utils/index';
 import PureRenderComponent from '../../../../core/PureRenderComponent';
 import {connect} from 'react-redux';
 import $ from 'jquery';
 import ActionStoreHelper from '../../../Common/ActionStoreHelper';
 import LeftPanelHeader from '../LeftPanelHeader';
 import LeftPanelManager from '../LeftPanelManager';
+import UserAvatar from '../../../view-components/UserAvatar/UserAvatar';
 import './NewSessionPanel.less';
 const valueIn = getObjValueInPath;
 export default class NewSessionPanel extends PureRenderComponent {
@@ -40,7 +41,6 @@ export default class NewSessionPanel extends PureRenderComponent {
                 <div className="chat-LeftPanelBody userList" onClick={that.onClickUserList.bind(that)}>
                     {immutableListMap(onlineUserList, function (userObj) {
                         var nickname = valueIn(userObj, 'nickname');
-                        var avatar = valueIn(userObj, 'avatar');
                         var uid = parseInt(valueIn(userObj, 'uid'));
                         if (myUID === uid) {
                             return null;
@@ -48,7 +48,7 @@ export default class NewSessionPanel extends PureRenderComponent {
                         return (
                             <div className="user-line" data-uid={uid}>
                                 <div className="user">
-                                    <img className="avatar" src={avatar} alt={nickname}/>
+                                    <UserAvatar userInfo={userObj} ></UserAvatar>
                                     <div className="nickname"> {nickname}</div>
                                 </div>
                             </div>);

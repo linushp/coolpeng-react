@@ -28,6 +28,11 @@ export function getStaticImages(p){
     return StaticConfig.STATIC_FOLDER_PATH + "/images/" + p;
 }
 
+export function getServerTimeMillis(){
+    //TODO  获取服务端时间
+    return new Date().getTime();
+}
+
 export function isPromise(value) {
     if (value !== null && typeof value === 'object') {
         return value.promise && typeof value.promise.then === 'function';
