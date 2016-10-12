@@ -14,6 +14,7 @@ var staticConfig = {
 
     bibiRobotUser:{
         uid: "-1",
+        id: "1",
         username: "哔哔机器人",
         nickname: "哔哔机器人",
         avatar: "http://image.coolpeng.cn/avatar/mv-0001-1957/mv-0008.jpg"

@@ -65,7 +65,6 @@ function beforeSendMsg_HandlePublicMsgEventSessionLastMsg(state, obj) {
 }
 
 function beforeSendMsg_HandlePublicMsgEvent(state, obj) {
-
     var chatMsgVO = immutableFromJSON(obj.chatMsgVO);
     var sessionId = obj.sessionId;
     var sessionId2MessageList = state.get("sessionId2MessageList");
@@ -177,7 +176,12 @@ export default CreateCloudRestReducer({
         },
         'sendMessage': function (state, res, restState, meta) {
             if (restState.isPending()) {
-                var sessionId = meta.reqData.sessionVO.sessionId;
+                var sessionVO = meta.reqData.sessionVO;
+                var sessionId = sessionVO.sessionId;
+                var sessionType = sessionVO.sessionType;
+                if(sessionType==="robot"){
+                    return state;
+                }
                 var msg = meta.reqData.msg;
                 var msgId = meta.reqData.msgId;
                 var msgSummary = meta.reqData.msgSummary;
@@ -205,7 +209,7 @@ export default CreateCloudRestReducer({
         },
         'getChatMsgList': function (state, res, restState, meta) {
             if (restState.isSuccess()) {
-                var msgList = immutable.fromJS(res.data || []);
+                var msgList = immutableFromJSON(res.data || []);
                 var sessionVO = res["extendData"]["sessionVO"];
                 var sessionId = sessionVO["sessionId"];
                 var sessionId2MessageList = state.get('sessionId2MessageList');

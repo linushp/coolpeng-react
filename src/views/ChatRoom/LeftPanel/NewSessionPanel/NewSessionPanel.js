@@ -16,7 +16,11 @@ export default class NewSessionPanel extends PureRenderComponent {
     constructor(props) {
         super(props);
     }
-
+    componentDidMount() {
+        var that = this;
+        var {actions} = that.props;
+        actions.getAllOnlineUserVO();
+    }
 
     onClickUserList(e) {
         var that = this;
