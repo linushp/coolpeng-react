@@ -17,7 +17,11 @@ var staticConfig = {
         id: "-1",
         username: "哔哔机器人",
         nickname: "哔哔机器人",
-        avatar: "http://image.coolpeng.cn/avatar/mv-0001-1957/mv-0008.jpg"
+        avatar: "http://image.coolpeng.cn/avatar/mv-0001-1957/mv-0008.jpg",
+        mail:'不告诉你',
+        lastLoginIpStr:'无处不在',
+        viewCount:'无时不在',
+        lastLoginTime:new Date().getTime()
     }
 };
 

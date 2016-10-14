@@ -17,8 +17,8 @@ export default class PopupOperation extends React.Component {
         super(props);
         this.state = {
             show: false,
-            positionX:0,
-            positionY:0
+            positionX: 0,
+            positionY: 0
         };
         this.uniqueId = uniqueId('PopupOperationUniqueId');
         this.documentClickListener = this.documentClickListener0.bind(this);
@@ -30,10 +30,12 @@ export default class PopupOperation extends React.Component {
     }
 
     componentDidMount() {
+        console.log('componentDidMount PopupOperation')
         EventBus.addEventListener(EVENT_DOCUMENT_CLICK, this.documentClickListener)
     }
 
     componentWillUnmount() {
+        console.log('componentWillUnmount PopupOperation')
         EventBus.removeEventListener(EVENT_DOCUMENT_CLICK, this.documentClickListener);
     }
 
@@ -49,8 +51,8 @@ export default class PopupOperation extends React.Component {
         var y = e.pageY;
         this.setState({
             show: true,
-            positionX:offset.left+w,
-            positionY:offset.top+h
+            positionX: offset.left + w,
+            positionY: offset.top + h
         });
     }
 
@@ -70,10 +72,10 @@ export default class PopupOperation extends React.Component {
             'cp-popup-ctn-show': this.state.show
         });
 
-        var cntStyle ={
-            position:'absolute',
-            top:this.state.positionY+parseInt(this.props.positionY||0,10),
-            left:this.state.positionX+parseInt(this.props.positionX||0,10),
+        var cntStyle = {
+            position: 'absolute',
+            top: this.state.positionY + parseInt(this.props.positionY || 0, 10),
+            left: this.state.positionX + parseInt(this.props.positionX || 0, 10),
         };
 
         return (

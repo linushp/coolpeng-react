@@ -44,7 +44,7 @@ class MessageItem extends PureRenderComponent {
         var msgId = valueIn(message, 'msgId');
         return (
             <div className={msgItemClassName} data-mid={msgId}>
-                <img className="sendUserAvatar" data-uid={sendUser_uid} src={sendUser_avatar}/>
+                <img className="sendUserAvatar onClickShowUserInfoByUID" data-uid={sendUser_uid} src={sendUser_avatar} onClick={that.onClickAvatar} />
                 <div className="mgsBody">
                     <div className="msgDesc">
                         <div className="nickname">{sendUser_nickname}</div>
@@ -62,19 +62,47 @@ class MessageItem extends PureRenderComponent {
 }
 
 
+function toString(x){
+    return ""+x;
+}
+
 class MessageSessionHeader extends PureRenderComponent {
     constructor(props) {
         super(props);
     }
 
+    renderPeerChatImg(sessionIcon,sessionTitle,currentUserId,participateUidList){
+        var anotherUserId = null;
+
+        participateUidList.forEach(function(m){
+            if(toString(m)!==toString(currentUserId)){
+                anotherUserId = m;
+            }
+        });
+
+        return  <img className="sessionIcon onClickShowUserInfoByUID" data-uid={anotherUserId} src={sessionIcon} alt={sessionTitle} />
+
+    }
+
+    renderDefaultChatImg(sessionIcon,sessionTitle,currentUserId,participateUidList){
+        return <img className="sessionIcon" data-uid={1} src={sessionIcon} alt={sessionTitle} />
+    }
+
     render() {
-        var {currentSession} = this.props;
+        var that = this;
+        var {currentSession,userInfo} = that.props;
         var getValue = getObjValueInPath.bind({}, currentSession);
         var sessionIcon = getValue("sessionIcon");
         var sessionTitle = getValue("sessionTitle");
+        var sessionType = getValue('sessionType');
+        var currentUserId = getObjValueInPath(userInfo,'id');
+        var isPeerChat = (sessionType==='peer');
+        var participateUidList = getValue('participateUidList');
         return (
             <div className="chat-msg-header">
-                <img className="sessionIcon" src={sessionIcon} alt={sessionTitle}/>
+                {isPeerChat?
+                    that.renderPeerChatImg(sessionIcon,sessionTitle,currentUserId,participateUidList):
+                    that.renderDefaultChatImg(sessionIcon,sessionTitle,currentUserId,participateUidList)}
                 <div className="sessionTitle">
                     {sessionTitle}
                 </div>
@@ -116,10 +144,15 @@ export default class MessageList extends PureRenderComponent {
 
     onClickMessageList=(e)=>{
         var that = this;
-        var {messageList} = that.props;
+        var {messageList,onClickShowUserInfoByUID} = that.props;
         var $target = $(e.target);
         if($target.hasClass('chat-uploaded-image')){
             showImageCarousel(that.uniqueId,$target,messageList);
+        }
+
+        if($target.hasClass('onClickShowUserInfoByUID')){
+            var uid = $target.attr('data-uid');
+            onClickShowUserInfoByUID(uid)
         }
     };
 
@@ -131,8 +164,8 @@ export default class MessageList extends PureRenderComponent {
         var preMessage = null;
         var preMessageEqualCount = 0;
         return (
-            <div className="chat-msg-list" id={that.uniqueId} onClick={that.onClickMessageList}>
-                <MessageSessionHeader currentSession={currentSession}></MessageSessionHeader>
+            <div className="chat-msg-list" id={that.uniqueId} onClick={that.onClickMessageList} >
+                <MessageSessionHeader userInfo={userInfo} currentSession={currentSession}></MessageSessionHeader>
                 <div className="chat-msg-container">
                     <div className="chat-msg-scroll">
                         {immutableListMap(messageList, function (message) {

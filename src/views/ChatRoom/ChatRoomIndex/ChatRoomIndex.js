@@ -1,7 +1,7 @@
 import React from 'react'
 import {bindActionCreators} from 'redux';
 import immutable from 'immutable';
-import {createUUID,isEmpty} from '../../../core/utils/index';
+import {createUUID,isEmpty,StaticConfig} from '../../../core/utils/index';
 import PureRenderComponent from '../../../core/PureRenderComponent';
 import {connect} from 'react-redux';
 import ActionStoreHelper from '../../Common/ActionStoreHelper';
@@ -10,6 +10,7 @@ import MessageList from '../MessageList/MessageList';
 import MessageInput from '../MessageInput/MessageInput';
 import LeftPanelPlaceHolder from '../LeftPanel/LeftPanelPlaceHolder';
 import OperationHolder from '../LeftPanel/OperationHolder';
+import {showUserInfoDialog} from '../../dialogs/UserInfoDialog/UserInfoDialog';
 import './ChatRoomIndex.less'
 
 class ChatRoomIndex extends PureRenderComponent {
@@ -151,6 +152,28 @@ class ChatRoomIndex extends PureRenderComponent {
         return currentSession;
     };
 
+
+    /**
+     * 显示用户信息,根据用户的uid
+     */
+    onClickShowUserInfoByUID =(uid)=>{
+        if(!uid){
+            console.log("[ERROR] uid = ",uid);
+            return;
+        }
+        var that = this;
+        var {actions} = that.props || {};
+        if((''+uid)=='-1'){
+            showUserInfoDialog(StaticConfig.bibiRobotUser)
+        }else {
+            actions.getUserInfoByUid({uid},function(a,resp,c){
+                var userData = resp.data;
+                showUserInfoDialog(userData);
+            });
+        }
+
+    };
+
     render() {
 
         var that = this;
@@ -175,10 +198,15 @@ class ChatRoomIndex extends PureRenderComponent {
                                      functions={functions}/>
                 </div>
                 <div className="chat-content">
-                    <MessageList messageList={messageList} currentSession={currentSession}
+                    <MessageList onClickShowUserInfoByUID={that.onClickShowUserInfoByUID}
+                                 messageList={messageList}
+                                 currentSession={currentSession}
                                  userInfo={userInfo}></MessageList>
                     <MessageInput onSendMessage={that.onSendMessage}
                                   userInfo={userInfo}></MessageInput>
+                </div>
+                <div className="chat-right-side">
+
                 </div>
             </div>
         );
@@ -202,7 +230,8 @@ ChatRoomIndex.ACTION_CONFIG = {
     "sendMessage": "chat.sendMessage",
     "sendMessageToRobot": "chat.sendMessageToRobot",
     "getChatMsgList": "chat.getChatMsgList",
-    "staticSetCurrentSessionId": "chat.staticSetCurrentSessionId"
+    "staticSetCurrentSessionId": "chat.staticSetCurrentSessionId",
+    "getUserInfoByUid":"user.getUserInfoByUid"
 };
 
 

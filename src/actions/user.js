@@ -8,7 +8,6 @@ export const FETCH_PROFILE_SUCCESS = 'FETCH_PROFILE_SUCCESS';
 export const LOGIN_PENDING = 'LOGIN_PENDING';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_ERROR = 'LOGIN_ERROR';
-
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 
 export function fetchProfile() {
@@ -16,6 +15,19 @@ export function fetchProfile() {
         type: 'FETCH_PROFILE',
         payload: {
           promise: api.post('/cloud/user/getCurrentUserInfo.json',{})
+        }
+    }
+}
+
+
+export function getUserInfoByUid(data,callback) {
+    return {
+        type: 'getUserInfoByUid',
+        payload: {
+            promise: api.post('/cloud/user/getUserInfoByUid.json',data)
+        },
+        meta:{
+            actionSourceCallback:callback
         }
     }
 }
@@ -35,6 +47,7 @@ export function login(username, password,callback) {
       }
   }
 }
+
 
 export function logout(callback) {
     return {
