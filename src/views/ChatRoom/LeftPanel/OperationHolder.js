@@ -13,23 +13,19 @@ export default class OperationHolder extends PureRenderComponent {
 
     constructor(props) {
         super(props);
-        this.state = {
-            currentPanel:null,
-            show:false
-        };
     }
 
-    onClickUserIcon(onlineUserList,userInfo,actions,functions){
+    onClickUserIcon =()=>{
+        var that = this ;
+        var {onlineUserList,userInfo,actions,functions} = that.props;
         LeftPanelManager.pushPanel(PANEL_KEY.NewSessionPanel,{onlineUserList,userInfo,actions,functions})
-    }
+    };
 
     render(){
         var that = this;
-        var state = that.state;
-        var {onlineUserList,userInfo,actions,functions} = that.props;
         return (
             <div className="chat-OperationHolder">
-                <Icon icon="users" onClick={that.onClickUserIcon.bind(that,onlineUserList,userInfo,actions,functions)}></Icon>
+                <Icon icon="users" onClick={that.onClickUserIcon}></Icon>
             </div>
 
         );

@@ -1,6 +1,6 @@
 import React from 'react'
 import PureRenderComponent from '../../../core/PureRenderComponent';
-import {immutableListMap,StringUtils} from '../../../core/utils/index';
+import {immutableListMap,StringUtils,shallowEqual,getObjValueInPath} from '../../../core/utils/index';
 import {showStyle} from '../../../core/utils/JSXRenderUtils';
 import "./SessionList.less";
 
@@ -15,10 +15,11 @@ class SessionItem extends PureRenderComponent {
         onDeleteSession(session,s);
     }
 
+
     render() {
+        //console.log("SessionItem");
         var that = this;
-        var {session,currentSession,onSwitchSession,onDeleteSession} = that.props;//isImmutable
-        var isCurrent = currentSession===session;
+        var {session,isCurrent,onSwitchSession,onDeleteSession} = that.props;//isImmutable
         var s = session.toJS();
         var sessionIcon = s.sessionIcon;
         var isPeerChat = s.sessionType ==='peer';
@@ -51,16 +52,18 @@ export default class SessionList extends PureRenderComponent {
         var sessionList = props.sessionList;//isImmutable
         var onSwitchSession = props.onSwitchSession;
         var onDeleteSession = props.onDeleteSession;
-        var currentSession = props.currentSession;
+        var currentSessionId = props.currentSessionId;
         return (
                 <div className="chat-session-list">
                     <div className="clear2"></div>
                     {immutableListMap(sessionList, function (session) {
-                        var sessionId = session.sessionId;
+                        var sessionId = getObjValueInPath(session,"sessionId");
+                        var isCurrent = (sessionId === currentSessionId);
                         return <SessionItem key={sessionId} session={session}
-                                            currentSession={currentSession}
+                                            isCurrent={isCurrent}
                                             onDeleteSession={onDeleteSession}
                                             onSwitchSession={onSwitchSession}></SessionItem>
+
                     })}
                 </div>
         );

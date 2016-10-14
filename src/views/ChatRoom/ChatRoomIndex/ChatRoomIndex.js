@@ -33,12 +33,26 @@ class ChatRoomIndex extends PureRenderComponent {
     }
 
 
+    onDeleteSession = (session, sessionVO)=> {
+        var that = this;
+        var {actions} = that.props || {};
+        actions.deleteSession({sessionVO}, function () {
+            actions.getSessionList({}, function (a, b, c, d) {
+                var sessionVO = d[0];
+                var session = immutable.fromJS(sessionVO);
+                that.onSwitchSession(session, sessionVO);
+            });
+        });
+    };
+
+
     /**
      * 切换会话
      * @param session
      * @param sessionVO
+     * @param callback
      */
-    onSwitchSession(session, sessionVO, callback) {
+    onSwitchSession = (session, sessionVO, callback)=> {
         var sessionId = sessionVO.sessionId;
         var {sessionId2MessageList, actions} = this.props || {};
         actions.staticSetCurrentSessionId(sessionId);
@@ -52,17 +66,18 @@ class ChatRoomIndex extends PureRenderComponent {
         }, function () {
             callback && callback();
         });
-    }
+    };
 
     /**
      * 发送消息
-     * @param currentSession
      * @param msg
      * @param msgSummary
      * @param callback
      */
-    onSendMessage(currentSession, msg, msgSummary, callback) {
-        var {actions,user} = this.props;
+    onSendMessage = (msg, msgSummary, callback)=> {
+        var that = this;
+        var currentSession = that.getCurrentSession();
+        var {actions,user} = that.props;
         var userInfo = user.userInfo;
         var sessionVO = currentSession.toJS();
         var sendObject = {
@@ -85,7 +100,8 @@ class ChatRoomIndex extends PureRenderComponent {
 
             actions.sendMessageToRobot(sendObject, function () {
                 callback();
-                actions.sendMessage(sendObject, function () {});
+                actions.sendMessage(sendObject, function () {
+                });
             });
 
         } else {
@@ -93,10 +109,10 @@ class ChatRoomIndex extends PureRenderComponent {
                 callback()
             });
         }
-    }
 
+    };
 
-    onCreateNewSession(sessionType, participateUidList, callback) {
+    onCreateNewSession = (sessionType, participateUidList, callback)=> {
         var that = this;
         var {actions} = that.props || {};
         var sessionVO = {
@@ -112,47 +128,47 @@ class ChatRoomIndex extends PureRenderComponent {
                 });
             });
         });
-    }
+    };
 
 
-    onDeleteSession(session, sessionVO){
+    getFunctions =()=> {
         var that = this;
-        var {actions} = that.props || {};
-        actions.deleteSession({sessionVO},function(){
-            actions.getSessionList({}, function (a, b, c, d) {
-                var sessionVO = d[0];
-                var session = immutable.fromJS(sessionVO);
-                that.onSwitchSession(session, sessionVO);
-            });
-        });
-    }
+        if(!that.getFunctions_Functions){
+            that.getFunctions_Functions = {
+                onCreateNewSession: that.onCreateNewSession
+            };
+        }
+        return that.getFunctions_Functions;
+    };
 
-    getFunctions() {
+    getCurrentSession =()=>{
         var that = this;
-        return {
-            onCreateNewSession: that.onCreateNewSession.bind(that)
-        };
-    }
-
-    render() {
-        var that = this;
-        var {user, sessionList, sessionId2MessageList, currentSessionId,onlineUserList,actions} = that.props || {};
-        var userInfo = user.userInfo || {};
-        var messageList = sessionId2MessageList.get(currentSessionId);
+        var {sessionList, currentSessionId} = that.props || {};
         var currentSession = sessionList.find(function (obj) {
             var sessionId = obj.get("sessionId");
             return currentSessionId === sessionId;
         });
-        var functions = this.getFunctions();
+        return currentSession;
+    };
+
+    render() {
+
+        var that = this;
+        var {user, sessionList, sessionId2MessageList, currentSessionId,onlineUserList,actions} = that.props || {};
+        var userInfo = user.userInfo || {};
+        var messageList = sessionId2MessageList.get(currentSessionId);
+        var currentSession = that.getCurrentSession();
+        var functions = that.getFunctions();
+
         return (
             <div className="chat-room">
                 <div className="chat-side">
                     <LeftPanelPlaceHolder />
                     <div className="session-list">
                         <SessionList sessionList={sessionList}
-                                     currentSession={currentSession}
-                                     onDeleteSession={that.onDeleteSession.bind(that)}
-                                     onSwitchSession={that.onSwitchSession.bind(that)}></SessionList>
+                                     currentSessionId={currentSessionId}
+                                     onDeleteSession={that.onDeleteSession}
+                                     onSwitchSession={that.onSwitchSession}></SessionList>
                         <div style={{height:50}}></div>
                     </div>
                     <OperationHolder onlineUserList={onlineUserList} userInfo={userInfo} actions={actions}
@@ -161,7 +177,7 @@ class ChatRoomIndex extends PureRenderComponent {
                 <div className="chat-content">
                     <MessageList messageList={messageList} currentSession={currentSession}
                                  userInfo={userInfo}></MessageList>
-                    <MessageInput onSendMessage={that.onSendMessage.bind(that,currentSession)}
+                    <MessageInput onSendMessage={that.onSendMessage}
                                   userInfo={userInfo}></MessageInput>
                 </div>
             </div>
@@ -182,7 +198,7 @@ ChatRoomIndex.ACTION_CONFIG = {
     "getAllOnlineUserVO": "chat.getAllOnlineUserVO",
     "getSessionList": "chat.getSessionList",
     "createSession": "chat.createSession",
-    "deleteSession":"chat.deleteSession",
+    "deleteSession": "chat.deleteSession",
     "sendMessage": "chat.sendMessage",
     "sendMessageToRobot": "chat.sendMessageToRobot",
     "getChatMsgList": "chat.getChatMsgList",

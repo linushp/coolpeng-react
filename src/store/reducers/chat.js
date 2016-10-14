@@ -23,10 +23,7 @@ function ifNullReturnNewList(listObj) {
 
 
 function makeSureSessionListContainsSession(sessionList,obj){
-
-    //TODO test
     var sessionId = obj.sessionId;
-
     var oldSession = sessionList.find(function(s){
         return s.get('sessionId') === sessionId;
     });
@@ -36,6 +33,7 @@ function makeSureSessionListContainsSession(sessionList,obj){
         var newSession = immutable.fromJS(chatSessionVO);
         sessionList = sessionList.unshift(newSession);
     }
+
     return sessionList;
 }
 

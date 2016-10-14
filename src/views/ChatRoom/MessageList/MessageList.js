@@ -114,14 +114,14 @@ export default class MessageList extends PureRenderComponent {
 
 
 
-    onClickMessageList(e){
+    onClickMessageList=(e)=>{
         var that = this;
         var {messageList} = that.props;
         var $target = $(e.target);
         if($target.hasClass('chat-uploaded-image')){
             showImageCarousel(that.uniqueId,$target,messageList);
         }
-    }
+    };
 
 
 
@@ -131,7 +131,7 @@ export default class MessageList extends PureRenderComponent {
         var preMessage = null;
         var preMessageEqualCount = 0;
         return (
-            <div className="chat-msg-list" id={that.uniqueId} onClick={that.onClickMessageList.bind(that)}>
+            <div className="chat-msg-list" id={that.uniqueId} onClick={that.onClickMessageList}>
                 <MessageSessionHeader currentSession={currentSession}></MessageSessionHeader>
                 <div className="chat-msg-container">
                     <div className="chat-msg-scroll">
