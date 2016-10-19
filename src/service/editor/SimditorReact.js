@@ -171,13 +171,19 @@ export default class SimditorReact extends React.Component {
             }
         });
 
-
         var contentText = $content.text() || "";
+        var summary = (contentText.substring(0, 300) || "").trim();
+        if(summary.length===0){
+            summary = "[表情]";
+            if(imageList.length>0){
+                summary = "[图片]";
+            }
+        }
 
         return {
             imageList: imageList,
             contentText: contentText,
-            summary: contentText.substring(0, 300)
+            summary: summary
         };
     }
 
