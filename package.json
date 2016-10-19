@@ -14,7 +14,7 @@
     "watch": "webpack-dev-server  --config ./bin/webpack.config.js  --hot --inline --progress --colors",
     "watch_dev": "webpack-dev-server  --config ./bin/webpack.config.dev.js  --hot --inline --progress --colors"
   },
-  "author": "luanhaipeng",
+  "author": "coolpeng",
   "license": "WTFPL",
   "dependencies": {
     "antd": "^0.12.4",

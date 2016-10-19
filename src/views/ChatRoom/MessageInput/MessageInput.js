@@ -7,6 +7,30 @@ import {
 } from '../../../core/utils/index';
 import "./MessageInput.less";
 
+function toInteger(s){
+    return parseInt(s,10);
+}
+
+function calculateThumbSize(width,height){
+    var thumb_width = width;
+    var thumb_height = height;
+    if (width >= 300) {
+        thumb_width = 300;
+        var scale = width / 300;
+        thumb_height = toInteger(height / scale);
+    } else if (width <= 10) {
+        thumb_width = 10;
+        var scale2 = 10 / width;
+        thumb_height = toInteger(height * scale2);
+    }
+
+    return {
+        width: thumb_width,
+        height: thumb_height
+    };
+
+}
+
 export default class MessageInput extends PureRenderComponent {
     constructor(props) {
         super(props);
@@ -24,11 +48,13 @@ export default class MessageInput extends PureRenderComponent {
             } else {
                 var src = $img.attr('src');
                 var osrc = src;
-                var width = $img.attr('width') || 0;
-                var height = $img.attr('height') || 0;
+                var width = toInteger($img.attr('width') || 0);
+                var height = toInteger($img.attr('height') || 0);
+
+
+                var sizeCss = calculateThumbSize(width,height);
                 var oid = createUUID(userInfo.id);
                 src = src + '@s_0,w_300,q_90,f_png';
-
                 $img.removeAttr('width');
                 $img.removeAttr('height');
                 $img.attr('src', src);
@@ -36,6 +62,7 @@ export default class MessageInput extends PureRenderComponent {
                 $img.attr('oid', oid);
                 $img.attr('osrcwidth', width);
                 $img.attr('osrcheight', height);
+                $img.css(sizeCss);
                 $img.addClass('chat-uploaded-image');
             }
         });

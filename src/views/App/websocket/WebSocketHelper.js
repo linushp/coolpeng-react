@@ -8,16 +8,19 @@ import {createUUID,EventBus} from '../../../core/utils/index';
 function sendWebNotificationIfNecessary(message) {
     EventBus.emit("WebNotification",{
         title:"新消息提醒",
-        icon: 'img/icon.png',
-        body: 'you will have a meeting 5 minutes later.'
+        //icon: 'img/icon.png',
+        body: '收到了一条新消息'
     });
+}
+
+function ConsoleLog(str){
+    console.log(str);
 }
 
 class WebSocketHelper extends PureRenderComponent {
     constructor(props) {
         super(props);
         this.socket = null;
-        this.webSocketUid = null;
         this.initWebSocket();
     }
 
@@ -40,15 +43,15 @@ class WebSocketHelper extends PureRenderComponent {
         if ('WebSocket' in window || 'MozWebSocket' in window) {
             socket = new ReconnectingWebSocket(host);
         } else {
-            console.log('Error: WebSocket is not supported by this browser.');
+            ConsoleLog('[ERROR] WebSocket is not supported by this browser.');
             return;
         }
-
         socket.onopen = function () {
-
+            ConsoleLog('[INFO] WebSocket Opened');
         };
 
         socket.onclose = function () {
+            ConsoleLog('[INFO] WebSocket Closed');
         };
 
         socket.onmessage = function (message) {
