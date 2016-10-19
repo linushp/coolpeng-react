@@ -2,8 +2,16 @@ import React from 'react'
 import ReconnectingWebSocket from "ReconnectingWebSocket";
 import PureRenderComponent from '../../../core/PureRenderComponent';
 import ActionStoreHelper from '../../Common/ActionStoreHelper';
-import {createUUID} from '../../../core/utils/index';
+import {createUUID,EventBus} from '../../../core/utils/index';
 
+
+function sendWebNotificationIfNecessary(message) {
+    EventBus.emit("WebNotification",{
+        title:"新消息提醒",
+        icon: 'img/icon.png',
+        body: 'you will have a meeting 5 minutes later.'
+    });
+}
 
 class WebSocketHelper extends PureRenderComponent {
     constructor(props) {
@@ -45,6 +53,7 @@ class WebSocketHelper extends PureRenderComponent {
 
         socket.onmessage = function (message) {
             actions.staticOnWebSocketMessage(message);
+            sendWebNotificationIfNecessary(message);
         };
 
         this.socket = socket;

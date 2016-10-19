@@ -69,7 +69,8 @@ $(function(){
     $(document).on('click',function(evt){
         EventBus.emit('EVENT_DOCUMENT_CLICK',evt,this);
     });
-    
+
+
     var showAlertError = false;
     EventBus.addEventListener('UserNoLoginException',function (data) {
         if(showAlertError){
@@ -81,5 +82,17 @@ $(function(){
             history.pushState(null, '/login');
         });
     });
+
+    var win = window;
+    var Notification = win.Notification || win.mozNotification || win.webkitNotification;
+    Notification.requestPermission(function (permission) {
+        console.log(permission);
+    });
+
+    EventBus.addEventListener('WebNotification',function (data) {
+        var title = data.title;
+        new Notification(title, data  );
+    });
+
 
 });
