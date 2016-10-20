@@ -2717,57 +2717,57 @@ Simditor.i18n = {
     'fontScaleXSmall': '超小字体'
   },
   'en-US': {
-    'blockquote': 'Block Quote',
-    'bold': 'Bold',
-    'code': 'Code',
-    'color': 'Text Color',
-    'coloredText': 'Colored Text',
-    'hr': 'Horizontal Line',
-    'image': 'Insert Image',
-    'externalImage': 'External Image',
-    'uploadImage': 'Upload Image',
-    'uploadFailed': 'Upload failed',
-    'uploadError': 'Error occurs during upload',
-    'imageUrl': 'Url',
-    'imageSize': 'Size',
-    'imageAlt': 'Alt',
-    'restoreImageSize': 'Restore Origin Size',
-    'uploading': 'Uploading',
-    'indent': 'Indent',
-    'outdent': 'Outdent',
-    'italic': 'Italic',
-    'link': 'Insert Link',
-    'linkText': 'Text',
-    'linkUrl': 'Url',
-    'linkTarget': 'Target',
-    'openLinkInCurrentWindow': 'Open link in current window',
-    'openLinkInNewWindow': 'Open link in new window',
-    'removeLink': 'Remove Link',
-    'ol': 'Ordered List',
-    'ul': 'Unordered List',
-    'strikethrough': 'Strikethrough',
-    'table': 'Table',
-    'deleteRow': 'Delete Row',
-    'insertRowAbove': 'Insert Row Above',
-    'insertRowBelow': 'Insert Row Below',
-    'deleteColumn': 'Delete Column',
-    'insertColumnLeft': 'Insert Column Left',
-    'insertColumnRight': 'Insert Column Right',
-    'deleteTable': 'Delete Table',
-    'title': 'Title',
-    'normalText': 'Text',
-    'underline': 'Underline',
-    'alignment': 'Alignment',
-    'alignCenter': 'Align Center',
-    'alignLeft': 'Align Left',
-    'alignRight': 'Align Right',
-    'selectLanguage': 'Select Language',
-    'fontScale': 'Font Size',
-    'fontScaleXLarge': 'X Large Size',
-    'fontScaleLarge': 'Large Size',
-    'fontScaleNormal': 'Normal Size',
-    'fontScaleSmall': 'Small Size',
-    'fontScaleXSmall': 'X Small Size'
+    //'blockquote': 'Block Quote',
+    //'bold': 'Bold',
+    //'code': 'Code',
+    //'color': 'Text Color',
+    //'coloredText': 'Colored Text',
+    //'hr': 'Horizontal Line',
+    //'image': 'Insert Image',
+    //'externalImage': 'External Image',
+    //'uploadImage': 'Upload Image',
+    //'uploadFailed': 'Upload failed',
+    //'uploadError': 'Error occurs during upload',
+    //'imageUrl': 'Url',
+    //'imageSize': 'Size',
+    //'imageAlt': 'Alt',
+    //'restoreImageSize': 'Restore Origin Size',
+    //'uploading': 'Uploading',
+    //'indent': 'Indent',
+    //'outdent': 'Outdent',
+    //'italic': 'Italic',
+    //'link': 'Insert Link',
+    //'linkText': 'Text',
+    //'linkUrl': 'Url',
+    //'linkTarget': 'Target',
+    //'openLinkInCurrentWindow': 'Open link in current window',
+    //'openLinkInNewWindow': 'Open link in new window',
+    //'removeLink': 'Remove Link',
+    //'ol': 'Ordered List',
+    //'ul': 'Unordered List',
+    //'strikethrough': 'Strikethrough',
+    //'table': 'Table',
+    //'deleteRow': 'Delete Row',
+    //'insertRowAbove': 'Insert Row Above',
+    //'insertRowBelow': 'Insert Row Below',
+    //'deleteColumn': 'Delete Column',
+    //'insertColumnLeft': 'Insert Column Left',
+    //'insertColumnRight': 'Insert Column Right',
+    //'deleteTable': 'Delete Table',
+    //'title': 'Title',
+    //'normalText': 'Text',
+    //'underline': 'Underline',
+    //'alignment': 'Alignment',
+    //'alignCenter': 'Align Center',
+    //'alignLeft': 'Align Left',
+    //'alignRight': 'Align Right',
+    //'selectLanguage': 'Select Language',
+    //'fontScale': 'Font Size',
+    //'fontScaleXLarge': 'X Large Size',
+    //'fontScaleLarge': 'Large Size',
+    //'fontScaleNormal': 'Normal Size',
+    //'fontScaleSmall': 'Small Size',
+    //'fontScaleXSmall': 'X Small Size'
   }
 };
 
@@ -2818,8 +2818,15 @@ Button = (function(superClass) {
         e.preventDefault();
         noFocus = _this.needFocus && !_this.editor.inputManager.focused;
         if (_this.el.hasClass('disabled') || noFocus) {
-          return false;
+
+          //add by 栾海鹏 luanhaipeng
+          if(_this.el.hasClass('ubibiAutoFocus')){
+            _this.editor.focus();
+          }else {
+            return false;
+          }
         }
+
         if (_this.menu) {
           _this.wrapper.toggleClass('menu-on').siblings('li').removeClass('menu-on');
           if (_this.wrapper.is('.menu-on')) {
@@ -2910,6 +2917,14 @@ Button = (function(superClass) {
     this.wrapper = $(this._tpl.item).appendTo(this.editor.toolbar.list);
     this.el = this.wrapper.find('a.toolbar-item');
     this.el.attr('title', this.title).addClass("toolbar-item-" + this.name).data('button', this);
+
+
+    //add by luanhaipeng
+    if(this.ubibiAutoFocus){
+      this.el.addClass('ubibiAutoFocus');
+    }
+
+
     this.setIcon(this.icon);
     if (!this.menu) {
       return;
@@ -5581,8 +5596,11 @@ AlignmentButton = (function(superClass) {
 
 })(Button);
 
+
 Simditor.Toolbar.addButton(AlignmentButton);
 
+
+  Simditor.__$$functions_extend = extend;//add by luanhaipeng
 return Simditor;
 
 }));

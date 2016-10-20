@@ -122,6 +122,7 @@ export default class MessageInput extends PureRenderComponent {
         var editorOptions = {
             cleanPaste: true,
             toolbar: ['emoji', 'image'],
+            //toolbar: ['emoji', 'image','ubibiCode'],
             triggerHandler: triggerHandler
         };
         // <button className="sendButton" onClick={that.onSendMessage.bind(that)}>发送</button>

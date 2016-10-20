@@ -68,7 +68,7 @@ gulp.task('minifySimditorJS', function() {
         './static/lib/simditor-2.3.6/scripts/simditor-emoji.js'
     ];
 
-    return gulp.src(jsArray).pipe(concat('simditor-v20160923.js'))
+    return gulp.src(jsArray).pipe(concat('simditorV20161020.js'))
         .pipe(gulp.dest('./static/lib/combo'))
         .pipe(rename({suffix: '.min'}))
         .pipe(uglify())
@@ -83,7 +83,7 @@ gulp.task('minifySimditorCss', function() {
         './static/lib/simditor-2.3.6/styles/simditor-emoji.css'
     ];
 
-    return gulp.src(cssArray).pipe(concat('simditor-v20160923.css'))
+    return gulp.src(cssArray).pipe(concat('simditorV20161020.css'))
         .pipe(gulp.dest('./static/lib/combo'));
 });
 

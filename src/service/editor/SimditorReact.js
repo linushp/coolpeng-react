@@ -1,9 +1,18 @@
 import $ from 'jquery';
 import _ from 'underscore';
-import {loadStaticJS,loadStaticCSS,createUUID,StringUtils,uniqueId,isFunction} from '../../core/utils/index';
+import {loadStaticJS,loadStaticCSS,createUUID,StringUtils,uniqueId,isFunction,EventBus} from '../../core/utils/index';
 import StaticConfig from '../../core/utils/StaticConfig';
 import {onXhrUpload} from '../upload/UploadUtils';
+import makeExtendButton from './makeExtendButton';
 import './index.less';
+
+
+var EVENT_SimditorReactUbibiCodeButton = "SimditorReactUbibiCodeButton";
+
+makeExtendButton('ubibiCode', 'code', '插入代码', function(name){
+    EventBus.emit(EVENT_SimditorReactUbibiCodeButton,name);
+});
+
 
 var URL_HOST_ORIGIN = StaticConfig.URL_HOST_ORIGIN;
 
@@ -39,17 +48,26 @@ export default class SimditorReact extends React.Component {
         this.contentValue = null;
         this.callbackList = [];
         this.uniqueId = uniqueId("SimditorReactUniqueId");
+
     }
 
     componentWillMount() {
 
     }
 
-
     componentDidMount() {
         var that = this;
         var content = that.props.content;
         that.setContentValue(content);
+        that._onUbibiExtendBtn = that.onUbibiExtendBtn.bind(that);
+        EventBus.addEventListener(EVENT_SimditorReactUbibiCodeButton,that._onUbibiExtendBtn)
+    }
+
+    onUbibiExtendBtn(name){
+        var onUbibiExtendBtn = this.props.onUbibiExtendBtn;
+        if(onUbibiExtendBtn){
+            onUbibiExtendBtn(name);
+        }
     }
 
     initSimditorView(callback) {
@@ -205,6 +223,7 @@ export default class SimditorReact extends React.Component {
         this.isInited = false;
         this.editor = null;
         this.contentValue = null;
+        EventBus.removeEventListener(EVENT_SimditorReactUbibiCodeButton,this._onUbibiExtendBtn)
     }
 
     render() {

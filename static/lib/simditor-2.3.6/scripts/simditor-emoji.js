@@ -39,6 +39,9 @@
 
         EmojiButton.prototype.menu = true;
 
+        //add by luanhaipeng
+        EmojiButton.prototype.ubibiAutoFocus = true;
+
         function EmojiButton() {
             var args;
             args = 1 <= arguments.length ? slice.call(arguments, 0) : [];

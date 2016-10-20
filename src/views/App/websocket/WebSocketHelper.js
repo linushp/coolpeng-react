@@ -60,7 +60,7 @@ function sendWebNotificationIfNecessary(e,currentUserInfo) {
 }
 
 function ConsoleLog(str){
-    console.log(str);
+    console.log(str,new Date());
 }
 
 class WebSocketHelper extends PureRenderComponent {
