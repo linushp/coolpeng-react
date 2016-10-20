@@ -73,7 +73,12 @@ export default class MessageInput extends PureRenderComponent {
             $link.attr('target', '_blank');
         });
 
-        return $content.html();
+
+        var contentHtml =  $content.html() || "";
+        contentHtml = contentHtml.replace(/(<br>)+/gm,"<br>");
+        contentHtml = contentHtml.replace(/(<br\/>)+/gm,"<br>");
+
+        return contentHtml;
     }
 
 
