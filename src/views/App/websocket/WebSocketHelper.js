@@ -5,10 +5,56 @@ import ActionStoreHelper from '../../Common/ActionStoreHelper';
 import {createUUID,EventBus} from '../../../core/utils/index';
 
 
-function sendWebNotificationIfNecessary(message) {
-    EventBus.emit("WebNotification",{
-        title:"新消息提醒",
-        //icon: 'img/icon.png',
+var isWindowActive = true;
+document.addEventListener("visibilitychange", function () {
+    if (document.hidden) {
+        isWindowActive = false;
+    } else  {
+        isWindowActive = true;
+    }
+}, false);
+
+
+function sendWebNotificationIfNecessary(e,currentUserInfo) {
+
+    //如果浏览器获取了焦点,不提醒.
+    if(isWindowActive){
+        return;
+    }
+
+    var data = e.data;
+    var eventVO = JSON.parse(data);
+
+    var name = eventVO.name;//"PeerMsgEvent"
+
+    var chatMsgVO, chatSessionVO, receiveUserId, sessionId, msgSummary;
+    if (name === 'PeerMsgEvent') {
+        chatMsgVO = eventVO.chatMsgVO;//{sendUser:{uid:}}
+        chatSessionVO = eventVO.chatSessionVO; //{entityId:40,}
+        receiveUserId = eventVO.receiveUserId;//"19"
+        sessionId = eventVO.sessionId;//"peer_40"
+        msgSummary = eventVO.msgSummary;
+    }
+
+    if (name === 'PublicMsgEvent') {
+        chatMsgVO = eventVO.chatMsgVO;//{sendUser:{uid:}}
+        msgSummary = eventVO.msgSummary;
+        sessionId = eventVO.sessionId;//"public_1"
+    }
+
+    if(!chatMsgVO || !chatMsgVO.sendUser){
+        return;
+    }
+
+    //如果是我自己发的,不弹提醒
+    if (currentUserInfo.id === chatMsgVO.sendUser.uid) {
+        return;
+    }
+
+    var icon = chatMsgVO.sendUser.avatar;
+    EventBus.emit("WebNotification", {
+        title: "新消息提醒",
+        icon: icon,
         body: '收到了一条新消息'
     });
 }
@@ -56,7 +102,9 @@ class WebSocketHelper extends PureRenderComponent {
 
         socket.onmessage = function (message) {
             actions.staticOnWebSocketMessage(message);
-            sendWebNotificationIfNecessary(message);
+            try {
+                sendWebNotificationIfNecessary(message,userInfo);
+            }catch (e){ConsoleLog(e)}
         };
 
         this.socket = socket;
