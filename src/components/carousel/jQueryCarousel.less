@@ -10,8 +10,33 @@
   .imageName{
     height: 60px;
     background: #FFFFFF;
-    box-shadow: 0px 1px 0px 0px #DEDEDE;;
+    box-shadow: 0px 1px 0px 0px #DEDEDE;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 20px;
+
+    .ownerUserAvatar{
+      img{
+        width: 40px;
+        height: 40px;
+        border-radius: 100px;
+      }
+    }
+
+    .ownerUserNickname{
+      font-size: 16px;
+      margin: 0 20px;
+    }
+    .imaName{
+      flex-grow: 1;
+      text-align: center;
+      margin-right: 163px;
+    }
+
   }
+
+
 
   .imageItem{
     display: none;
