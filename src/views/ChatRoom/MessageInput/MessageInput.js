@@ -120,7 +120,9 @@ export default class MessageInput extends PureRenderComponent {
 
     onUbibiExtendBtn(name){
         if(name==='ubibiCode'){
-            showCodeInputDialog();
+            showCodeInputDialog(function(data){
+
+            });
         }
     }
 

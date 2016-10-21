@@ -8,8 +8,9 @@ import menu from './reducers/menu';
 import note from './reducers/note';
 import daohang from './reducers/daohang';
 import chat from './reducers/chat';
+import filesCode from './reducers/filesCode';
 
-const reducer = combineReducers({user, menu, note,daohang,chat});
+const reducer = combineReducers({user, menu, note,daohang,chat,filesCode});
 
 const createStoreWithMiddleware = applyMiddleware(
   thunkMiddleware,
