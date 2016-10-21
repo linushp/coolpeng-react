@@ -119,9 +119,10 @@ export default class MessageInput extends PureRenderComponent {
 
 
     onUbibiExtendBtn(name){
+        var {onSaveCloudCode} = this.props;
         if(name==='ubibiCode'){
             showCodeInputDialog(function(data){
-
+                onSaveCloudCode(data);
             });
         }
     }

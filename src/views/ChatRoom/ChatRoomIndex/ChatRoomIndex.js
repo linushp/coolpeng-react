@@ -171,7 +171,38 @@ class ChatRoomIndex extends PureRenderComponent {
                 showUserInfoDialog(userData);
             });
         }
+    };
 
+
+    /**
+     * 保存代码
+     * @param data
+     */
+    onSaveCloudCode =(data)=>{
+        var that = this;
+        var {actions,user} = that.props;
+        actions.saveCloudCode({CloudCode:data},function(a,b){
+
+            var currentSession = that.getCurrentSession();
+            var userInfo = user.userInfo;
+            var sessionVO = currentSession.toJS();
+            var msg = JSON.stringify(data);
+            msg.content=null;
+            msg.codeEntityId = b.data;
+            debugger;
+            var sendObject = {
+                msg: msg,
+                msgSummary: "[一段代码]",
+                msgId: createUUID(userInfo.id),
+                sessionVO: sessionVO,
+                refreshRecent: true,
+                type:'code'
+            };
+            debugger;
+            actions.sendMessage(sendObject, function (aa,bb) {
+                debugger;
+            });
+        });
     };
 
     render() {
@@ -203,6 +234,7 @@ class ChatRoomIndex extends PureRenderComponent {
                                  currentSession={currentSession}
                                  userInfo={userInfo}></MessageList>
                     <MessageInput onSendMessage={that.onSendMessage}
+                                  onSaveCloudCode={that.onSaveCloudCode}
                                   userInfo={userInfo}></MessageInput>
                 </div>
                 <div className="chat-right-side">
@@ -231,7 +263,8 @@ ChatRoomIndex.ACTION_CONFIG = {
     "sendMessageToRobot": "chat.sendMessageToRobot",
     "getChatMsgList": "chat.getChatMsgList",
     "staticSetCurrentSessionId": "chat.staticSetCurrentSessionId",
-    "getUserInfoByUid":"user.getUserInfoByUid"
+    "getUserInfoByUid":"user.getUserInfoByUid",
+    "saveCloudCode":"filesCode.saveCloudCode"
 };
 
 
