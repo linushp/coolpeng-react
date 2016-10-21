@@ -264,7 +264,7 @@ export class FormItem extends PureRenderComponent{
         var itemRender = getTypeRender(type);
         config = config || this.props;
         return (
-            <div className="formItem" data-name={name} data-type={type}>
+            <div className={`formItem  formItem__${name}`} data-name={name} data-type={type}>
                 <div className="formItemTitle">{text}</div>
                 <div className="formItemCont">
                     {itemRender(name, text, options,config)}
@@ -336,8 +336,9 @@ export default class ReactForm extends PureRenderComponent{
         var id = this.props.id;
         var children = this.props.children;
         return (
-            <div ref="formRef" id={id} >
+            <div ref="formRef" id={id} className="UbibiReactForm">
                 {this.renderContent(layout,children)}
+                <div className="clear"></div>
             </div>
         );
     }
