@@ -1,4 +1,4 @@
-var hljs = require('highlight.js');
+var hljs = require('hljs');
 var React = require('react');
 var ReactDOM = require('react-dom');
 
@@ -7,7 +7,7 @@ var Highlight = React.createClass({
         return {
             innerHTML: false,
             className: null,
-            element: null,
+            element: null
         };
     },
     componentDidMount: function () {

@@ -142,7 +142,8 @@ function createWebpackConfig(jsFile, htmlFile, mainFileName) {
             "antd": "window.antd",
             "md5": "window.UbibiLib_Md5",
             "immutable": "window.Immutable",
-            "ReconnectingWebSocket":"window.ReconnectingWebSocket"
+            "ReconnectingWebSocket":"window.ReconnectingWebSocket",
+            "hljs":"window.hljs"
         },
 
 

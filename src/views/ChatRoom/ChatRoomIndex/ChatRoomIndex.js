@@ -176,32 +176,34 @@ class ChatRoomIndex extends PureRenderComponent {
 
     /**
      * 保存代码
-     * @param data
+     * @param cloudCodeEntity
      */
-    onSaveCloudCode =(data)=>{
+    onSaveCloudCode =(cloudCodeEntity)=>{
+
         var that = this;
-        var {actions,user} = that.props;
-        actions.saveCloudCode({CloudCode:data},function(a,b){
+        var {actions, user} = that.props;
+        var language = cloudCodeEntity.language;
+        var codeContent = cloudCodeEntity.content || "";
+        actions.saveCloudCode({CloudCode: cloudCodeEntity}, function (a, b) {
 
             var currentSession = that.getCurrentSession();
             var userInfo = user.userInfo;
             var sessionVO = currentSession.toJS();
-            var msg = JSON.stringify(data);
-            msg.content=null;
-            msg.codeEntityId = b.data;
-            debugger;
+            var mm = Object.assign({}, cloudCodeEntity);
+            delete mm.content;
+            mm.codeEntityId = b.data;
+            mm.codeSize = codeContent.length;
+            var msg = JSON.stringify(mm);
             var sendObject = {
                 msg: msg,
-                msgSummary: "[一段代码]",
+                msgSummary: `[一段${language}代码]`,
                 msgId: createUUID(userInfo.id),
                 sessionVO: sessionVO,
                 refreshRecent: true,
-                type:'code'
+                type: 'code'
             };
-            debugger;
-            actions.sendMessage(sendObject, function (aa,bb) {
-                debugger;
-            });
+
+            actions.sendMessage(sendObject);
         });
     };
 

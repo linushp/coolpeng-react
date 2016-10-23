@@ -1,8 +1,17 @@
 import React from 'react'
 import PureRenderComponent from '../../../core/PureRenderComponent';
-import {immutableListMap,getObjValueInPath,uniqueId,StringUtils,JSXRenderUtils,className,toInnerHTML} from '../../../core/utils/index';
+import {
+    immutableListMap,
+    getObjValueInPath,
+    uniqueId,
+    StringUtils,
+    JSXRenderUtils,
+    className,
+    toInnerHTML
+} from '../../../core/utils/index';
 import StaticConfig from '../../../core/utils/StaticConfig';
 import {showImageCarousel} from './MessageCarousel'
+import MessageContent from './MessageContent';
 import $ from 'jquery';
 import "./MessageList.less";
 var hideStyle = JSXRenderUtils.hideStyle;
@@ -16,20 +25,20 @@ class MessageItem extends PureRenderComponent {
 
     render() {
         var that = this;
-        var {message,userInfo,isHideUserInfo} = that.props;
+        var {message, userInfo, isHideUserInfo} = that.props;
         var getValue = valueIn.bind({}, message);
 
+        var msgId = getValue('msgId');
+        var msgType = getValue("type");
         var msg = getValue("msg");
         var createTimeMillis = getValue("createTimeMillis");
-        var createTimStr = StringUtils.toPrettyString(createTimeMillis || 0);
         var status = getValue('status') || "";
-
         var sendUser = getValue("sendUser");
+
         var sendUser_avatar = valueIn(sendUser, 'avatar');
-        if(!sendUser_avatar){
+        if (!sendUser_avatar) {
             sendUser_avatar = StaticConfig.DEFAULT_AVATAR
         }
-
         var sendUser_nickname = valueIn(sendUser, 'nickname');
         var sendUser_uid = valueIn(sendUser, 'uid');
         var loginUserUid = valueIn(userInfo, "id");
@@ -41,19 +50,21 @@ class MessageItem extends PureRenderComponent {
             "isCurrentUser": isCurrentUser,
             "isHideUserInfo": isHideUserInfo
         });
-        var msgId = valueIn(message, 'msgId');
+
+        var createTimStr = StringUtils.toPrettyString(createTimeMillis || 0);
         return (
             <div className={msgItemClassName} data-mid={msgId}>
-                <img className="sendUserAvatar onClickShowUserInfoByUID" data-uid={sendUser_uid} src={sendUser_avatar} onClick={that.onClickAvatar} />
+                <img className="sendUserAvatar onClickShowUserInfoByUID" data-uid={sendUser_uid} src={sendUser_avatar}
+                     onClick={that.onClickAvatar}/>
                 <div className="mgsBody">
                     <div className="msgDesc">
                         <div className="nickname">{sendUser_nickname}</div>
                         <div className="createTime">{createTimStr}</div>
                     </div>
-                    <div className="msgContent" dangerouslySetInnerHTML={{__html:msg}}></div>
+                    <MessageContent msg={msg} msgType={msgType} msgId={msgId}></MessageContent>
                 </div>
                 <div className="msgStatus">
-                    <img className="loading" src={loadingImg} />
+                    <img className="loading" src={loadingImg}/>
                 </div>
                 <div className="clear5"></div>
             </div>
@@ -62,8 +73,8 @@ class MessageItem extends PureRenderComponent {
 }
 
 
-function toString(x){
-    return ""+x;
+function toString(x) {
+    return "" + x;
 }
 
 class MessageSessionHeader extends PureRenderComponent {
@@ -71,38 +82,39 @@ class MessageSessionHeader extends PureRenderComponent {
         super(props);
     }
 
-    renderPeerChatImg(sessionIcon,sessionTitle,currentUserId,participateUidList){
+    renderPeerChatImg(sessionIcon, sessionTitle, currentUserId, participateUidList) {
         var anotherUserId = null;
 
-        participateUidList.forEach(function(m){
-            if(toString(m)!==toString(currentUserId)){
+        participateUidList.forEach(function (m) {
+            if (toString(m) !== toString(currentUserId)) {
                 anotherUserId = m;
             }
         });
 
-        return  <img className="sessionIcon onClickShowUserInfoByUID" data-uid={anotherUserId} src={sessionIcon} alt={sessionTitle} />
+        return <img className="sessionIcon onClickShowUserInfoByUID" data-uid={anotherUserId} src={sessionIcon}
+                    alt={sessionTitle}/>
 
     }
 
-    renderDefaultChatImg(sessionIcon,sessionTitle,currentUserId,participateUidList){
-        return <img className="sessionIcon" data-uid={1} src={sessionIcon} alt={sessionTitle} />
+    renderDefaultChatImg(sessionIcon, sessionTitle, currentUserId, participateUidList) {
+        return <img className="sessionIcon" data-uid={1} src={sessionIcon} alt={sessionTitle}/>
     }
 
     render() {
         var that = this;
-        var {currentSession,userInfo} = that.props;
+        var {currentSession, userInfo} = that.props;
         var getValue = getObjValueInPath.bind({}, currentSession);
         var sessionIcon = getValue("sessionIcon");
         var sessionTitle = getValue("sessionTitle");
         var sessionType = getValue('sessionType');
-        var currentUserId = getObjValueInPath(userInfo,'id');
-        var isPeerChat = (sessionType==='peer');
+        var currentUserId = getObjValueInPath(userInfo, 'id');
+        var isPeerChat = (sessionType === 'peer');
         var participateUidList = getValue('participateUidList');
         return (
             <div className="chat-msg-header">
-                {isPeerChat?
-                    that.renderPeerChatImg(sessionIcon,sessionTitle,currentUserId,participateUidList):
-                    that.renderDefaultChatImg(sessionIcon,sessionTitle,currentUserId,participateUidList)}
+                {isPeerChat ?
+                    that.renderPeerChatImg(sessionIcon, sessionTitle, currentUserId, participateUidList) :
+                    that.renderDefaultChatImg(sessionIcon, sessionTitle, currentUserId, participateUidList)}
                 <div className="sessionTitle">
                     {sessionTitle}
                 </div>
@@ -141,30 +153,28 @@ export default class MessageList extends PureRenderComponent {
     }
 
 
-
-    onClickMessageList=(e)=>{
+    onClickMessageList = (e)=> {
         var that = this;
-        var {messageList,onClickShowUserInfoByUID} = that.props;
+        var {messageList, onClickShowUserInfoByUID} = that.props;
         var $target = $(e.target);
-        if($target.hasClass('chat-uploaded-image')){
-            showImageCarousel(that.uniqueId,$target,messageList);
+        if ($target.hasClass('chat-uploaded-image')) {
+            showImageCarousel(that.uniqueId, $target, messageList);
         }
 
-        if($target.hasClass('onClickShowUserInfoByUID')){
+        if ($target.hasClass('onClickShowUserInfoByUID')) {
             var uid = $target.attr('data-uid');
             onClickShowUserInfoByUID(uid)
         }
     };
 
 
-
     render() {
         var that = this;
-        var {messageList,userInfo,currentSession} = that.props;
+        var {messageList, userInfo, currentSession} = that.props;
         var preMessage = null;
         var preMessageEqualCount = 0;
         return (
-            <div className="chat-msg-list" id={that.uniqueId} onClick={that.onClickMessageList} >
+            <div className="chat-msg-list" id={that.uniqueId} onClick={that.onClickMessageList}>
                 <MessageSessionHeader userInfo={userInfo} currentSession={currentSession}></MessageSessionHeader>
                 <div className="chat-msg-container">
                     <div className="chat-msg-scroll">
@@ -193,8 +203,7 @@ export default class MessageList extends PureRenderComponent {
                             }
 
                             var msgId = valueIn(message, 'msgId');
-                            var dom = <MessageItem key={msgId} isHideUserInfo={isHideUserInfo} message={message}
-                                                   userInfo={userInfo}></MessageItem>;
+                            var dom = <MessageItem key={msgId} isHideUserInfo={isHideUserInfo} message={message} userInfo={userInfo}></MessageItem>;
                             preMessage = message;
                             return dom;
                         })}

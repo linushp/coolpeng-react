@@ -120,7 +120,7 @@ function afterSendMsg_HandlePublicMsgEventSessionLastMsg(state, json) {
 
 
 
-function addStaticMessage(state,sessionId,userInfo,msgId,msg,msgSummary,status){
+function addStaticMessage(state,sessionId,userInfo,msgId,msg,msgSummary,msgType,status){
     var json = {
         sessionId: sessionId,
         msgSummary: msgSummary,
@@ -134,7 +134,8 @@ function addStaticMessage(state,sessionId,userInfo,msgId,msg,msgSummary,status){
             },
             msg: msg,
             createTimeMillis: new Date().getTime(),
-            status: status
+            status: status,
+            type:msgType
         }
     };
     state = beforeSendMsg_HandlePublicMsgEvent(state, json);
@@ -183,25 +184,27 @@ export default CreateCloudRestReducer({
                 var msg = meta.reqData.msg;
                 var msgId = meta.reqData.msgId;
                 var msgSummary = meta.reqData.msgSummary;
+                var type = meta.reqData.type;
                 var userInfo = getCurrentUser();
-                state = addStaticMessage(state,sessionId,userInfo,msgId,msg,msgSummary,'pending');
+                state = addStaticMessage(state,sessionId,userInfo,msgId,msg,msgSummary,type,'pending');
             }
             return state;
         },
         'sendMessageToRobot':function(state, res, restState, meta){
+            var type = "";
             var sessionId = meta.reqData.sessionVO.sessionId;
             if (restState.isPending()) {
                 var msg = meta.reqData.msg;
                 var msgId = meta.reqData.msgId;
                 var msgSummary = meta.reqData.msgSummary;
                 var userInfo = getCurrentUser();
-                state = addStaticMessage(state,sessionId,userInfo,msgId,msg,msgSummary,'sent');
+                state = addStaticMessage(state,sessionId,userInfo,msgId,msg,msgSummary,type,'sent');
             }else if(restState.isSuccess()){
                 var text0 = res.result.text;
                 var userInfo0 = StaticConfig.bibiRobotUser;
                 var msg0 = text0;
                 var msgId0 = new Date().getTime();
-                state = addStaticMessage(state,sessionId,userInfo0,msgId0,msg0,msg0,'sent');
+                state = addStaticMessage(state,sessionId,userInfo0,msgId0,msg0,msg0,type,'sent');
             }
             return state;
         },

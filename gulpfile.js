@@ -34,7 +34,7 @@ gulp.task('clean', function() {
 });
 
 //压缩js
-gulp.task('minifyCommonJS3', function() {
+gulp.task('minifyCommonJS', function() {
 
 
     var jsArray = [
@@ -46,15 +46,31 @@ gulp.task('minifyCommonJS3', function() {
         './static/lib/immutable.min.js',
         './static/lib/underscore-min.js',
         './static/lib/md5.js',
-        './static/lib/ReconnectingWebSocket.js'
+        './static/lib/ReconnectingWebSocket.js',
+        "./static/lib/highlight/highlight.min.js"
     ];
 
-    return gulp.src(jsArray).pipe(concat('router-redux-history-immutable-md5-underscore-rws.js'))
+    return gulp.src(jsArray).pipe(concat('router-redux-history-immutable-md5-underscore-rws-highlight.js'))
         .pipe(gulp.dest('./static/lib/combo'))
         .pipe(rename({suffix: '.min'}))
         .pipe(uglify())
         .pipe(gulp.dest('./static/lib/combo'))
 });
+
+
+//压缩js
+gulp.task('minifyCommonCss', function() {
+
+    var cssArray = [
+        './static/lib/simditor-2.3.6/styles/simditor.css',
+        './static/lib/simditor-2.3.6/styles/simditor-emoji.css',
+        './static/lib/highlight/atom-one-dark.css'
+    ];
+
+    return gulp.src(cssArray).pipe(concat('simditor-highlight-v20161023.css'))
+        .pipe(gulp.dest('./static/lib/combo'));
+});
+
 
 
 //压缩js
@@ -73,18 +89,6 @@ gulp.task('minifySimditorJS', function() {
         .pipe(rename({suffix: '.min'}))
         .pipe(uglify())
         .pipe(gulp.dest('./static/lib/combo'))
-});
-
-//压缩js
-gulp.task('minifySimditorCss', function() {
-
-    var cssArray = [
-        './static/lib/simditor-2.3.6/styles/simditor.css',
-        './static/lib/simditor-2.3.6/styles/simditor-emoji.css'
-    ];
-
-    return gulp.src(cssArray).pipe(concat('simditorV20161020.css'))
-        .pipe(gulp.dest('./static/lib/combo'));
 });
 
 

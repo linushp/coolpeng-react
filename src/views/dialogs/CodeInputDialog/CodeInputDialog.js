@@ -83,7 +83,7 @@ export function showCodeInputDialog(outCallback) {
     var popClass = "dialogs-CodeInputDialog";
     var id = uniqueId(popClass);
     var buttons = [
-        {text: '修改', name: 'ok', cls: 'primary', action: 'close'},
+        {text: '确定', name: 'ok', cls: 'primary', action: 'close'},
         {text: '关闭', name: 'cancel', cls: '', action: 'close'}
     ];
 
