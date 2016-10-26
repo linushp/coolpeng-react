@@ -313,7 +313,7 @@ function createShowDialog(type,defaultTitle, defaultButtons,defaultCloseControl)
 
         //如果现在内容是一个类,第三个参数是传递给对话框视力的所有参数
         var instanceArgs = null;
-        if(isClassContent && !_.isFunction(title)&& _.isObject(title)){
+        if(isClassContent && !_.isFunction(title) && _.isObject(title)){
             instanceArgs = title;
         }
 
