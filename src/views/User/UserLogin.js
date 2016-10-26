@@ -7,7 +7,7 @@ import PureRenderComponent from '../../core/PureRenderComponent';
 import ReactForm,{getReactFormValues,createReactFormUniqueId} from '../../components/form/ReactForm';
 import UserRegister from './UserRegister';
 import Dialog from '../../components/dialog/Dialog';
-import {getRandomNumString,uniqueId,JSXRenderUtils} from '../../core/utils/index';
+import {getRandomNumString,uniqueId,JSXRenderUtils,plainToMd51} from '../../core/utils/index';
 import './index.less'
 const showStyle = JSXRenderUtils.showStyle;
 
@@ -48,7 +48,7 @@ class UserLogin extends PureRenderComponent {
         var that = this;
         var values = getReactFormValues(that.reactFormUniqueId);
         var username = values["username"];
-        var password = values["password"];
+        var password = plainToMd51(values["password"]);
         var actions = that.props.actions;
 
         actions.login(username, password, function (action, res) {

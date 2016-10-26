@@ -7,7 +7,7 @@ import * as avatarURL from '../../service/avatar/avatarURL';
 import PureRenderComponent from '../../core/PureRenderComponent';
 import ReactForm,{getReactFormValues,createReactFormUniqueId} from '../../components/form/ReactForm';
 import Dialog from '../../components/dialog/Dialog';
-import {getRandomNumString,uniqueId} from '../../core/utils/index';
+import {getRandomNumString,uniqueId,plainToMd51} from '../../core/utils/index';
 
 export default class UserRegister extends PureRenderComponent {
 
@@ -38,7 +38,9 @@ export default class UserRegister extends PureRenderComponent {
         var values = getReactFormValues(that.reactFormUniqueId);
         var username = values["username"];
         var password = values["password"];
-        values["password2"] = password;
+        var md51Password = plainToMd51(password);
+        values['password'] = md51Password;
+        values["password2"] = md51Password;
         values["avatar"] = avatarURL.getRandomAvatarURLFull();
         var {actions} = that.props;
         var register = actions.register;

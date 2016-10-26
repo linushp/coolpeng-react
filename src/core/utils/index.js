@@ -5,6 +5,7 @@ import JSXRenderUtils from './JSXRenderUtils';
 import StaticConfig from './StaticConfig';
 import $ from 'jquery';
 import _ from 'underscore';
+import md5 from 'md5';
 import {initUnderscoreMixin} from './underscore.mixin.js';
 
 var win = window;
@@ -495,6 +496,16 @@ export function toInnerHTML(html){
     );
 }
 
+
+/**
+ * 明文转md51
+ * @param plaintexts 明文
+ * @return
+ */
+export function plainToMd51(plaintexts) {
+    var md51 = md5.hex_md5(plaintexts + "MD51");
+    return md51;
+}
 
 
 initUnderscoreMixin({
