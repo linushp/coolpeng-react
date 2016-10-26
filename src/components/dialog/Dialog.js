@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 import PureRenderComponent from '../../core/PureRenderComponent';
+import _ from 'underscore';
 import './index.less';
 var document = window.document;
 var undefined = window.undefined;
@@ -75,15 +76,20 @@ class Dialog extends PureRenderComponent{
 
 
     onClickClose(btn) {
-        var data = this.props.data;
-        var doCloseDialog = this.doCloseDialog.bind(this);
+        var that = this;
+        var data = that.props.data;
+        var doCloseDialog = that.doCloseDialog.bind(that);
         if (data.callback) {
             if(data.closeControl===true){
                 data.callback(btn,data,function(){
                     doCloseDialog();
                 });
             }else {
-                data.callback(btn,data);
+                var dialogContentInner = null;
+                if(data.isClassContent){
+                    dialogContentInner = that.refs['dialogContentInner'];
+                }
+                data.callback(btn,data,dialogContentInner,that);
                 doCloseDialog();
             }
         }else {
@@ -176,15 +182,28 @@ class Dialog extends PureRenderComponent{
         return null;
     }
 
+
+    getDialogInstanceMethods(that){
+        return {
+            closeDialog:that.doCloseDialog.bind(that)
+        };
+    }
+
     render() {
-        var {type,title, content,callback,id,buttons,popStyle,popClass} = this.props.data;
+        var {type,title, content,callback,id,buttons,popStyle,popClass,isClassContent} = this.props.data;
         id = id || dialogUniqueId();
         popClass = popClass || '';
         var popClassDisplay = this.state.show?'':'cp-dialog-hidden';
         //draggable={true} onDragEnd={this.ondragend.bind(this)}
         var that = this;
+        var dialogInstanceMethods = that.getDialogInstanceMethods(that);
 
-        //console.log("Dialog popClassDisplay",popClassDisplay);
+        var dialogContentInner = content;
+        if(isClassContent){
+            dialogContentInner  = (<content ref="dialogContentInner" dialog={that} methods={dialogInstanceMethods}></content>);
+        }else {
+            dialogContentInner = content;
+        }
 
         return (
             <div className={`cp-dialog ${popClassDisplay}`}>
@@ -196,7 +215,7 @@ class Dialog extends PureRenderComponent{
                              style={{'zIndex':(that.styleZIndex+2)}}></div>
                         <div className="cp-dialog-content" onClick={that.onClickContent.bind(that)}>
                             <i className={that.getIconClass(type)}></i>
-                            <div className="cp-dialog-inner">{content}</div>
+                            <div className="cp-dialog-inner"> {dialogContentInner}</div>
                         </div>
                         <div className="cp-dialog-footer">
                             {that.renderFooter(buttons)}
@@ -264,10 +283,32 @@ function getDialogManagerInstance() {
 
 function createShowDialog(type,defaultTitle, defaultButtons,defaultCloseControl) {
     return function (content,callback,title, buttons, popStyle, popClass,closeControl) {
+
         buttons = buttons || defaultButtons;
         title = title || defaultTitle;
-        if(closeControl===undefined){
+        if (closeControl === undefined) {
             closeControl = defaultCloseControl;
+        }
+
+        var isClassContent = false;
+
+        //第二个参数是一个对象的话,第一个参数就默认是一个Dialog类
+        if (!_.isFunction(callback) && !_.isArray(callback) && _.isObject(callback)) {
+            var args = callback;
+            title = args.title || title;
+            buttons = args.buttons || buttons;
+            callback = args.callback || callback;
+            popStyle = args.popStyle || popStyle;
+            popClass = args.popClass || popClass;
+            if (args.closeControl !== undefined) {
+                closeControl = args.closeControl;
+            }
+
+            //第二个参数是一个对象的话,第一个参数就默认是一个Dialog类
+            isClassContent = true;
+            if (args.isClassContent !== undefined) {
+                isClassContent = args.isClassContent;
+            }
         }
 
         getDialogManagerInstance().pushDialog({
@@ -278,7 +319,8 @@ function createShowDialog(type,defaultTitle, defaultButtons,defaultCloseControl)
             callback: callback,
             popStyle: popStyle,
             popClass: popClass,
-            closeControl:closeControl
+            closeControl: closeControl,
+            isClassContent:isClassContent
         });
     }
 }
@@ -298,9 +340,7 @@ module.exports = {
     showMsgInfo: createShowDialog(DIALOG_TYPE_MSG_INFO,NULL,NULL,false),
     showMsgSuccess: createShowDialog(DIALOG_TYPE_MSG_SUCCESS,NULL,NULL,false),
     showMsgError: createShowDialog(DIALOG_TYPE_MSG_ERROR,NULL,NULL,false),
-
     showNotification: createShowDialog(DIALOG_TYPE_NOTIFICATION,NULL,NULL,false),
-
 
     Dialog: Dialog
 
