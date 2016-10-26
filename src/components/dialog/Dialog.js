@@ -190,7 +190,7 @@ class Dialog extends PureRenderComponent{
     }
 
     render() {
-        var {type,title, content,callback,id,buttons,popStyle,popClass,isClassContent} = this.props.data;
+        var {type,title, content,callback,id,buttons,popStyle,popClass,isClassContent,instanceArgs} = this.props.data;
         id = id || dialogUniqueId();
         popClass = popClass || '';
         var popClassDisplay = this.state.show?'':'cp-dialog-hidden';
@@ -200,7 +200,7 @@ class Dialog extends PureRenderComponent{
 
         var dialogContentInner = content;
         if(isClassContent){
-            dialogContentInner  = (<content ref="dialogContentInner" dialog={that} methods={dialogInstanceMethods}></content>);
+            dialogContentInner  = (<content ref="dialogContentInner" dialog={that} methods={dialogInstanceMethods} args={instanceArgs}></content>);
         }else {
             dialogContentInner = content;
         }
@@ -311,6 +311,12 @@ function createShowDialog(type,defaultTitle, defaultButtons,defaultCloseControl)
             }
         }
 
+        //如果现在内容是一个类,第三个参数是传递给对话框视力的所有参数
+        var instanceArgs = null;
+        if(isClassContent && !_.isFunction(title)&& _.isObject(title)){
+            instanceArgs = title;
+        }
+
         getDialogManagerInstance().pushDialog({
             type: type,
             title: title,
@@ -320,7 +326,8 @@ function createShowDialog(type,defaultTitle, defaultButtons,defaultCloseControl)
             popStyle: popStyle,
             popClass: popClass,
             closeControl: closeControl,
-            isClassContent:isClassContent
+            isClassContent:isClassContent,
+            instanceArgs:instanceArgs
         });
     }
 }
