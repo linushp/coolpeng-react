@@ -140,34 +140,13 @@ function scrollToBottom(uniqueId, count) {
 }
 
 
-function getNowTime() {
-    return new Date().getTime();
-}
 
 export default class MessageList extends PureRenderComponent {
     constructor(props) {
         super(props);
         this.uniqueId = uniqueId('MessageListUniqueId');
-        this.state = {
-            nowTime: getNowTime()
-        };
     }
 
-    componentDidMount() {
-        var that = this;
-        that.timeIntervalHandler = setInterval(function () {
-            that.setState({
-                nowTime: getNowTime()
-            });
-        }, 1000 * 60 * 2);
-    }
-
-    componentWillUnmount() {
-        var that = this;
-        if (that.timeIntervalHandler) {
-            clearInterval(that.timeIntervalHandler);
-        }
-    }
 
     componentDidUpdate() {
         var that = this;
@@ -191,8 +170,7 @@ export default class MessageList extends PureRenderComponent {
 
     render() {
         var that = this;
-        var nowTime = that.state.nowTime;
-        var {messageList, userInfo, currentSession} = that.props;
+        var {messageList, userInfo, currentSession,nowTime} = that.props;
         var preMessage = null;
         var preMessageEqualCount = 0;
         return (

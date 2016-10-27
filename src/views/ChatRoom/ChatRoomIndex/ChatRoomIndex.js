@@ -13,10 +13,20 @@ import OperationHolder from '../LeftPanel/OperationHolder';
 import {showUserInfoDialog} from '../../dialogs/UserInfoDialog/UserInfoDialog';
 import './ChatRoomIndex.less'
 
+
+function getNowTime() {
+    return new Date().getTime();
+}
+
+
 class ChatRoomIndex extends PureRenderComponent {
     constructor(props) {
         super(props);
+        this.state = {
+            nowTime: getNowTime()
+        };
     }
+
 
     componentDidMount() {
         var that = this;
@@ -30,6 +40,22 @@ class ChatRoomIndex extends PureRenderComponent {
                 var session = immutable.fromJS(sessionVO);
                 that.onSwitchSession(session, sessionVO);
             });
+        }
+
+
+        //定时刷新时间相关
+        that.timeIntervalHandler = setInterval(function () {
+            that.setState({
+                nowTime: getNowTime()
+            });
+        }, 1000 * 60 * 2);
+
+    }
+
+    componentWillUnmount() {
+        var that = this;
+        if (that.timeIntervalHandler) {
+            clearInterval(that.timeIntervalHandler);
         }
     }
 
@@ -210,6 +236,7 @@ class ChatRoomIndex extends PureRenderComponent {
     render() {
 
         var that = this;
+        var {nowTime} = that.state;
         var {user, sessionList, sessionId2MessageList, currentSessionId,onlineUserList,actions} = that.props || {};
         var userInfo = user.userInfo || {};
         var messageList = sessionId2MessageList.get(currentSessionId);
@@ -222,6 +249,7 @@ class ChatRoomIndex extends PureRenderComponent {
                     <LeftPanelPlaceHolder />
                     <div className="session-list">
                         <SessionList sessionList={sessionList}
+                                     nowTime={nowTime}
                                      currentSessionId={currentSessionId}
                                      onDeleteSession={that.onDeleteSession}
                                      onSwitchSession={that.onSwitchSession}></SessionList>
@@ -232,6 +260,7 @@ class ChatRoomIndex extends PureRenderComponent {
                 </div>
                 <div className="chat-content">
                     <MessageList onClickShowUserInfoByUID={that.onClickShowUserInfoByUID}
+                                 nowTime={nowTime}
                                  messageList={messageList}
                                  currentSession={currentSession}
                                  userInfo={userInfo}></MessageList>

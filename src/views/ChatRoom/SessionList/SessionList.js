@@ -19,10 +19,12 @@ class SessionItem extends PureRenderComponent {
     render() {
         //console.log("SessionItem");
         var that = this;
-        var {session,isCurrent,onSwitchSession,onDeleteSession} = that.props;//isImmutable
+        var {session,isCurrent,onSwitchSession,onDeleteSession,nowTime} = that.props;//isImmutable
         var s = session.toJS();
         var sessionIcon = s.sessionIcon;
         var isPeerChat = s.sessionType ==='peer';
+        var timeDisplayString = StringUtils.toPrettyString(s.lastMsgTimeMillis,null,nowTime);
+        
         return (
             <div className ={`itemWrapper itemWrapper-${isCurrent}`}>
                 <div className="onDeleteSession" style={showStyle(isPeerChat)} onClick={that.onDeleteSession.bind(that)}>×</div>
@@ -31,7 +33,7 @@ class SessionItem extends PureRenderComponent {
                      data-eid={s.entityId} data-type={s.sessionType}>
                     <img className="avatar" src={sessionIcon} alt={s.sessionTitle}/>
                     <div className="content">
-                        <div className="lastMsgTimeMillis">{StringUtils.toPrettyString(s.lastMsgTimeMillis)}</div>
+                        <div className="lastMsgTimeMillis">{timeDisplayString}</div>
                         <div className="title">{s.sessionTitle}</div>
                         <div className="msg">{s.lastMsgText}</div>
                     </div>
@@ -53,6 +55,8 @@ export default class SessionList extends PureRenderComponent {
         var onSwitchSession = props.onSwitchSession;
         var onDeleteSession = props.onDeleteSession;
         var currentSessionId = props.currentSessionId;
+        var nowTime = props.nowTime;
+
         return (
                 <div className="chat-session-list">
                     <div className="clear2"></div>
@@ -60,6 +64,7 @@ export default class SessionList extends PureRenderComponent {
                         var sessionId = getObjValueInPath(session,"sessionId");
                         var isCurrent = (sessionId === currentSessionId);
                         return <SessionItem key={sessionId} session={session}
+                                            nowTime={nowTime}
                                             isCurrent={isCurrent}
                                             onDeleteSession={onDeleteSession}
                                             onSwitchSession={onSwitchSession}></SessionItem>
