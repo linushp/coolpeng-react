@@ -78,7 +78,7 @@ export default class MessageInput extends PureRenderComponent {
         var contentHtml =  $content.html() || "";
         contentHtml = contentHtml.replace(/(<br>)+/gm,"<br>");
         contentHtml = contentHtml.replace(/(<br\/>)+/gm,"<br>");
-        
+
         contentHtml = contentHtml.replace(/(<p><br>)+/gm,"<p>");
         contentHtml = contentHtml.replace(/(<p><br\/>)+/gm,"<p>");
 
