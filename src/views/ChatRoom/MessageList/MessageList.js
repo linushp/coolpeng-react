@@ -59,7 +59,7 @@ class MessageItem extends PureRenderComponent {
                 <div className="mgsBody">
                     <div className="msgDesc">
                         <div className="nickname">{sendUser_nickname}</div>
-                        <div className="createTime">{createTimStr}</div>
+                        <div className="createTime" title={createTimeMillis} >{createTimStr}</div>
                     </div>
                     <MessageContent msg={msg} msgType={msgType} msgId={msgId}></MessageContent>
                 </div>
