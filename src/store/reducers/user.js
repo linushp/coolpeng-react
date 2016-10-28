@@ -42,18 +42,35 @@ var defaultInitState = {
     loginErrors: null
 };
 
+
+
 const initialState = Object.assign({}, defaultInitState, oldState);
 
 window.COOLPENG_USER_STATE = initialState;
 
+function receiveUpdateUserInfo(state, response) {
+    var newState = state;
+    if (response.responseCode === 0) {
+        var changedUserInfo = response.data;
+        var userInfo = state.userInfo;
+        userInfo = Object.assign({},userInfo,changedUserInfo);
+        state.userInfo = userInfo;
+        newState = Object.assign({},state);
+    }
+
+    setLocalStorage(STATE_STORAGE_KEY, newState);
+    window.COOLPENG_USER_STATE = newState;
+    return newState;
+}
 
 function receiveUserInfo(state, response) {
+    var newState;
     if (response.responseCode === 0) {
         var userInfo = response.data;
         if(!userInfo.avatar){
             userInfo.avatar = StaticConfig.DEFAULT_AVATAR;
         }
-        var newState = Object.assign({}, state, {
+        newState = Object.assign({}, state, {
             userInfo: userInfo,
             loggingIn: false,
             loggingOut: false,
@@ -62,7 +79,7 @@ function receiveUserInfo(state, response) {
             isTempUser: false
         });
     } else {
-        var newState = Object.assign({}, state, {
+        newState = Object.assign({}, state, {
             userInfo: null,
             loggingIn: false,
             loggingOut: false,
@@ -123,7 +140,7 @@ export default function auth(state = initialState, action = {}) {
         case 'LOGIN_TEMP_USER':
             return receiveTempUserInfo(state, action.payload);
         case 'updateUserInfo_SUCCESS':
-            return receiveUserInfo(state, action.payload);
+            return receiveUpdateUserInfo(state, action.payload);
         default:
             return state;
     }
