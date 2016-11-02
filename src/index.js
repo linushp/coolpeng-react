@@ -97,7 +97,11 @@ $(function(){
         var title = data.title;
         var notify = new Notification(title, data);
         notify.onclick = function(event){
-            notify.close();
+            if(notify.cancel){
+                notify.cancel();
+            }else if(notify.close){
+                notify.close();
+            }
         };
     });
 
