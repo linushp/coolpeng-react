@@ -95,7 +95,10 @@ $(function(){
 
     EventBus.addEventListener('WebNotification',function (data) {
         var title = data.title;
-        new Notification(title, data  );
+        var notify = new Notification(title, data);
+        notify.onclick = function(event){
+            notify.close();
+        };
     });
 
 
