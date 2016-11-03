@@ -147,6 +147,11 @@ export default class MessageList extends PureRenderComponent {
         this.uniqueId = uniqueId('MessageListUniqueId');
     }
 
+    componentDidMount() {
+        var that = this;
+        scrollToBottom(this.uniqueId, 10);
+    }
+
 
     componentDidUpdate() {
         var that = this;
