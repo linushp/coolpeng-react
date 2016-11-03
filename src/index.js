@@ -97,12 +97,19 @@ $(function(){
         var title = data.title;
         var notify = new Notification(title, data);
         notify.onclick = function(event){
+
+            win.blur();
+            win.focus();
+
             if(notify.cancel){
                 notify.cancel();
             }else if(notify.close){
                 notify.close();
             }
         };
+
+        setTimeout(notify.close.bind(notify), 3000);
+
     });
 
 
