@@ -136,17 +136,19 @@ function clearSessionUnReadCount(state,currentSessionId){
 
 
 function addStaticMessage(state,sessionId,userInfo,msgId,msg,msgSummary,msgType,status){
+    userInfo.uid = userInfo.id;
     var json = {
         sessionId: sessionId,
         msgSummary: msgSummary,
         chatMsgVO: {
             msgId: msgId,
-            sendUser: {
-                uid: userInfo.id,
-                username: userInfo.username,
-                nickname: userInfo.nickname,
-                avatar: userInfo.avatar
-            },
+            sendUser:userInfo,
+            //{
+            //    uid: userInfo.id,
+            //    username: userInfo.username,
+            //    nickname: userInfo.nickname,
+            //    avatar: userInfo.avatar
+            //},
             msg: msg,
             createTimeMillis: new Date().getTime(),
             status: status,
