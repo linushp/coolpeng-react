@@ -45,10 +45,10 @@ function beforeSendMsg_HandlePublicMsgEventSessionLastMsg(state, obj) {
     var finder = function (c) {
         return c.get('sessionId') === sessionId;
     };
-    var newValue = function (c) {
-        c = c.set('lastMsgText', msgSummary);
-        c = c.set('lastMsgTimeMillis', getServerTimeMillis());
-        return c;
+    var newValue = function (sessionVO) {
+        sessionVO = sessionVO.set('lastMsgText', msgSummary);
+        sessionVO = sessionVO.set('lastMsgTimeMillis', getServerTimeMillis());
+        return sessionVO;
     };
     var sessionList = state.get('sessionList');
     sessionList = makeSureSessionListContainsSession(sessionList,obj);
@@ -117,7 +117,22 @@ function afterSendMsg_HandlePublicMsgEventSessionLastMsg(state, json) {
     return beforeSendMsg_HandlePublicMsgEventSessionLastMsg(state, json);
 }
 
+/**
+ * 收到消息后,计算session未读消息的数量.
+ */
+function calculateSessionUnReadCount(state, json){
+    //TODO
+    return state;
+}
 
+
+/**
+ * 清空当前消息的未读数量.
+ */
+function clearSessionUnReadCount(state,currentSessionId){
+    //TODO
+    return state;
+}
 
 
 function addStaticMessage(state,sessionId,userInfo,msgId,msg,msgSummary,msgType,status){
@@ -222,6 +237,7 @@ export default CreateCloudRestReducer({
         "staticSetCurrentSessionId": function (state, res, restState, meta) {
             var sessionId = res.data;
             state = state.set("currentSessionId", sessionId);
+            state = clearSessionUnReadCount(state,sessionId);
             return state;
         },
         "staticOnWebSocketMessage": function (state, res, restState, meta) {
@@ -232,6 +248,7 @@ export default CreateCloudRestReducer({
                 if (messageName === "PublicMsgEvent" || messageName==='PeerMsgEvent') {
                     state = afterSendMsg_HandlePublicMsgEvent(state, json);
                     state = afterSendMsg_HandlePublicMsgEventSessionLastMsg(state, json);
+                    state = calculateSessionUnReadCount(state,json);
                 }
             } catch (e) {
                 console.error("[ERROR]", e);
