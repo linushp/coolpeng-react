@@ -84,6 +84,7 @@ export default class SimditorReact extends React.Component {
         var that = this;
         var options = this.props.options || {};
         var triggerHandler = options.triggerHandler;
+        var emojiPanelRender = options.emojiPanelRender;
         var isNewLoad = false;
 
         var Simditor = window.Simditor;
@@ -98,7 +99,8 @@ export default class SimditorReact extends React.Component {
                 }
             },
             emoji: {
-                imagePath: 'http://image.coolpeng.cn/static/images/emoji/'
+                imagePath: 'http://image.coolpeng.cn/static/images/emoji/',
+                emojiPanelRender:emojiPanelRender
             },
             pasteImage: true,
             defaultImage: 'http://image.coolpeng.cn/static/images/editor-default-img.png',

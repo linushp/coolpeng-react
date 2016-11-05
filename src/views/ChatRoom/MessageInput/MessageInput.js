@@ -3,6 +3,7 @@ import $ from 'jquery'
 import PureRenderComponent from '../../../core/PureRenderComponent';
 import SimditorReact from '../../../service/editor/SimditorReact';
 import {showCodeInputDialog} from '../../dialogs/CodeInputDialog/CodeInputDialog';
+import {emojiPanelRender} from "./EmojiPanelRender";
 import {
     immutableListMap,createUUID
 } from '../../../core/utils/index';
@@ -45,7 +46,8 @@ export default class MessageInput extends PureRenderComponent {
             var $img = $(this);
             var isEmoji = $img.data('emoji');
             if (("" + isEmoji) === 'true') {
-                //do nothing
+                var ubibiclass = $img.attr("data-ubibiclass");
+                $img.attr("class",ubibiclass);
             } else {
                 var src = $img.attr('src');
                 var osrc = src;
@@ -135,11 +137,11 @@ export default class MessageInput extends PureRenderComponent {
         var triggerHandler = that.triggerHandler.bind(that);
         var editorOptions = {
             cleanPaste: true,
-            //toolbar: ['emoji', 'image'],
             toolbar: ['emoji', 'image','ubibiCode'],
-            triggerHandler: triggerHandler
+            triggerHandler: triggerHandler,
+            emojiPanelRender:emojiPanelRender
         };
-        // <button className="sendButton" onClick={that.onSendMessage.bind(that)}>发送</button>
+
         return (
             <div className="chat-message-input">
                 <SimditorReact options={editorOptions} ref="SimditorReact" content={''} onUbibiExtendBtn={that.onUbibiExtendBtn.bind(that)}></SimditorReact>

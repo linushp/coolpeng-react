@@ -477,7 +477,7 @@ Formatter = (function(superClass) {
     this.editor = this._module;
     this._allowedTags = $.merge(['br', 'span', 'a', 'img', 'b', 'strong', 'i', 'strike', 'u', 'font', 'p', 'ul', 'ol', 'li', 'blockquote', 'pre', 'code', 'h1', 'h2', 'h3', 'h4', 'hr'], this.opts.allowedTags);
     this._allowedAttributes = $.extend({
-      img: ['src', 'alt', 'width', 'height', 'data-non-image'],
+      img: ['src', 'alt', 'width', 'height', 'data-non-image','data-ubibiclass'],
       a: ['href', 'target'],
       font: ['color'],
       code: ['class']
@@ -1903,13 +1903,36 @@ Toolbar = (function(superClass) {
     this.list.on('click', function(e) {
       return false;
     });
+
+    //add by luanhaipeng
+    function isInUbibiHandleHide(e) {
+      var $target = $(e.target);
+      var $ubibiHandleHide = $target.closest(".ubibiHandleHide");
+      if ($ubibiHandleHide && $ubibiHandleHide.length > 0) {
+        return true;
+      }
+      return false;
+    }
+
     this.wrapper.on('mousedown', (function(_this) {
       return function(e) {
+
+        //add by luanhaipeng
+        if(isInUbibiHandleHide(e)){
+          return;
+        }
+
         return _this.list.find('.menu-on').removeClass('.menu-on');
       };
     })(this));
     $(document).on('mousedown.simditor' + this.editor.id, (function(_this) {
       return function(e) {
+
+        //add by luanhaipeng
+        if(isInUbibiHandleHide(e)){
+          return;
+        }
+
         return _this.list.find('.menu-on').removeClass('.menu-on');
       };
     })(this));
@@ -1964,6 +1987,10 @@ Toolbar = (function(superClass) {
     })(this));
     return $(document).on("mousedown.simditor-" + this.editor.id, (function(_this) {
       return function(e) {
+        //add by luanhaipeng
+        if(isInUbibiHandleHide(e)){
+          return;
+        }
         return _this.list.find('li.menu-on').removeClass('menu-on');
       };
     })(this));
@@ -2923,7 +2950,6 @@ Button = (function(superClass) {
     if(this.ubibiAutoFocus){
       this.el.addClass('ubibiAutoFocus');
     }
-
 
     this.setIcon(this.icon);
     if (!this.menu) {

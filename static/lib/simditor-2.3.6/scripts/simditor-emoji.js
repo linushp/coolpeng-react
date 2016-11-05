@@ -31,7 +31,7 @@
             }
         };
 
-        EmojiButton.images = ['smile', 'smiley', 'laughing', 'blush', 'heart_eyes', 'smirk', 'flushed', 'grin', 'wink', 'kissing_closed_eyes', 'stuck_out_tongue_winking_eye', 'stuck_out_tongue', 'sleeping', 'worried', 'expressionless', 'sweat_smile', 'cold_sweat', 'joy', 'sob', 'angry', 'mask', 'scream', 'sunglasses', 'heart', 'broken_heart', 'star', 'anger', 'exclamation', 'question', 'zzz', 'thumbsup', 'thumbsdown', 'ok_hand', 'punch', 'v', 'clap', 'muscle', 'pray', 'skull', 'trollface'];
+        EmojiButton.images = ['smile', 'smiley', 'laughing'];
 
         EmojiButton.prototype.name = 'emoji';
 
@@ -41,6 +41,8 @@
 
         //add by luanhaipeng
         EmojiButton.prototype.ubibiAutoFocus = true;
+        //add by luanhaipeng , 返回一个jQuery对象，并且已经绑定了点击tab按钮的事件
+        EmojiButton.prototype.emojiPanelRender = null;
 
         function EmojiButton() {
             var args;
@@ -49,22 +51,38 @@
             $.merge(this.editor.formatter._allowedAttributes['img'], ['data-emoji', 'alt']);
         }
 
+        function toEmojiItem(dir,name) {
+           return "<li data-name='" + name + "'><img src='" + dir + name + ".png' width='30' height='30' alt='" + name + "' /></li>";
+        }
+
         EmojiButton.prototype.renderMenu = function() {
             var $list, dir, html, i, len, name, opts, ref, tpl;
-            tpl = '<ul class="emoji-list">\n</ul>';
+
             opts = $.extend({
                 imagePath: 'images/emoji/',
                 images: EmojiButton.images
             }, this.editor.opts.emoji || {});
-            html = "";
+
             dir = opts.imagePath.replace(/\/$/, '') + '/';
-            ref = opts.images;
-            for (i = 0, len = ref.length; i < len; i++) {
-                name = ref[i];
-                html += "<li data-name='" + name + "'><img src='" + dir + name + ".png' width='30' height='30' alt='" + name + "' /></li>";
+
+            //add by luanhaipeng , 返回一个jQuery对象，并且已经绑定了点击tab按钮的事件
+            if(opts.emojiPanelRender){
+                $list = opts.emojiPanelRender(function (name) {
+                    return toEmojiItem(dir,name);
+                });
+                $list.appendTo(this.menuWrapper);
+            }else {
+                tpl = '<ul class="emoji-list">\n</ul>';
+                html = "";
+                ref = opts.images;
+                for (i = 0, len = ref.length; i < len; i++) {
+                    name = ref[i];
+                    html += toEmojiItem(dir,name);
+                }
+                $list = $(tpl);
+                $list.html(html).appendTo(this.menuWrapper);
             }
-            $list = $(tpl);
-            $list.html(html).appendTo(this.menuWrapper);
+
             return $list.on('mousedown', 'li', (function(_this) {
                 return function(e) {
                     var $img;
@@ -72,10 +90,15 @@
                     if (!_this.editor.inputManager.focused) {
                         return;
                     }
-                    $img = $(e.currentTarget).find('img').clone().attr({
+
+                    var $oldImg = $(e.currentTarget).find('img');
+                    var oldClass = $oldImg.attr("class");
+                    $img = $oldImg.clone().attr({
                         'data-emoji': true,
-                        'data-non-image': true
+                        'data-non-image': false,
+                        'data-ubibiclass':oldClass||""
                     });
+
                     _this.editor.selection.insertNode($img);
                     _this.editor.trigger('valuechanged');
                     _this.editor.trigger('selectionchanged');

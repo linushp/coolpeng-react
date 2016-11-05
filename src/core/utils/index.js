@@ -25,7 +25,7 @@ export function uniqueId(prefix) {
 }
 
 export function getStaticImages(p){
-    //http://image.coolpeng.cn/static
+    //http://image.coolpeng.cn/static/images/+p
     return StaticConfig.STATIC_FOLDER_PATH + "/images/" + p;
 }
 
@@ -505,6 +505,30 @@ export function toInnerHTML(html){
 export function plainToMd51(plaintexts) {
     var md51 = md5.hex_md5(plaintexts + "MD51");
     return md51;
+}
+
+
+function formatNumberByLength(num,length) {
+    var str = ""+num;
+    if(str.length>=length){
+        return str;
+    }
+    var char0Array = [];
+    var addCount = length - str.length;
+    for(var i=0;i<addCount;i++){
+        char0Array.push("0");
+    }
+    var ss = char0Array.join('');
+    return ss+str;
+}
+
+export function toStringNumberArray (start,end,length) {
+    var stringArray = [];
+    for(var i = start;i<=end;i++){
+        var stringValue = formatNumberByLength(i,length);
+        stringArray.push(stringValue);
+    }
+    return stringArray;
 }
 
 

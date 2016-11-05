@@ -44,7 +44,7 @@ module.exports = {
             return c.toUpperCase();
         });
     },
-
+    
     toPrettyString: function (timeStr, nowTime0) {
 
         try {

@@ -84,7 +84,7 @@ gulp.task('minifySimditorJS', function() {
         './static/lib/simditor-2.3.6/scripts/simditor-emoji.js'
     ];
 
-    return gulp.src(jsArray).pipe(concat('simditorV20161020.js'))
+    return gulp.src(jsArray).pipe(concat('simditorV20161104.js'))
         .pipe(gulp.dest('./static/lib/combo'))
         .pipe(rename({suffix: '.min'}))
         .pipe(uglify())
