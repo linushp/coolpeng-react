@@ -25,7 +25,8 @@ class App extends React.Component {
         Dialog.showAlertPrompt("确定要退出吗？",function (btn) {
             if(btn.name==='ok'){
                 actions.logout(function () {
-                    that.context.router.push("/login");
+                    // that.context.router.push("/login");
+                    window.location.href = "/login";
                 });
             }
         });
