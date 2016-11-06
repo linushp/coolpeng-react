@@ -48,6 +48,7 @@ class ChatRoomIndex extends PureRenderComponent {
             that.setState({
                 nowTime: getNowTime()
             });
+            actions.staticJudgeCurrentSessionUnreadCount();
         }, 1000 * 60 * 2);
 
     }
@@ -294,6 +295,7 @@ ChatRoomIndex.ACTION_CONFIG = {
     "sendMessageToRobot": "chat.sendMessageToRobot",
     "getChatMsgList": "chat.getChatMsgList",
     "staticSetCurrentSessionId": "chat.staticSetCurrentSessionId",
+    "staticJudgeCurrentSessionUnreadCount":"chat.staticJudgeCurrentSessionUnreadCount",
     "getUserInfoByUid":"user.getUserInfoByUid",
     "saveCloudCode":"filesCode.saveCloudCode"
 };

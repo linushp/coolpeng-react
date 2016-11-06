@@ -2,6 +2,7 @@ import CloudRestAction from '../core/CloudRestAction';
 
 var staticFunc = [
     "staticSetCurrentSessionId",
+    "staticJudgeCurrentSessionUnreadCount",
     "staticOnWebSocketMessage"
 ];
 

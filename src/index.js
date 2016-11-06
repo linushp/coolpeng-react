@@ -65,14 +65,16 @@ ReactDOM.render(
 
 $(function(){
 
+    //1、执行显示界面的渐变动画
     $("#root").addClass('rootShow');
 
+    //2、广播点击事件
     $(document).on('click',function(evt){
         EventBus.emit('EVENT_DOCUMENT_CLICK',evt,this);
     });
 
 
-    //监听用户没有登录时间
+    //3、监听用户没有登录时间
     var showAlertError = false;
     EventBus.addEventListener('UserNoLoginException',function (data) {
         if(showAlertError){
@@ -86,7 +88,7 @@ $(function(){
     });
 
 
-    //显示桌面通知
+    //4、显示桌面通知
     var win = window;
     var Notification = win.Notification || win.mozNotification || win.webkitNotification;
     Notification.requestPermission(function (permission) {
@@ -115,7 +117,7 @@ $(function(){
 
 
 
-    //处理键盘事件 禁止后退键（Backspace）密码或单行、多行文本框除外
+    //5、处理键盘事件 禁止后退键（Backspace）密码或单行、多行文本框除外
     function forbidBackSpace(e) {
         var ev = e || window.event;
         var obj = ev.target || ev.srcElement;
@@ -139,5 +141,23 @@ $(function(){
     document.onkeypress = forbidBackSpace;
     //禁止后退键  作用于IE、Chrome
     document.onkeydown = forbidBackSpace;
+
+
+
+
+
+    //6、重写console
+    var noop = function () {};
+    var showWindowConsole = localStorage.getItem("showWindowConsole");
+    if(showWindowConsole!=="1"){
+        window.console = {
+            log:noop,
+            debug:noop,
+            error:noop,
+            info:noop
+        };
+    }
+    
+
 
 });

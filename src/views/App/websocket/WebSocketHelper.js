@@ -2,23 +2,13 @@ import React from 'react'
 import ReconnectingWebSocket from "ReconnectingWebSocket";
 import PureRenderComponent from '../../../core/PureRenderComponent';
 import ActionStoreHelper from '../../Common/ActionStoreHelper';
-import {createUUID,EventBus} from '../../../core/utils/index';
-
-
-var isWindowActive = true;
-document.addEventListener("visibilitychange", function () {
-    if (document.hidden) {
-        isWindowActive = false;
-    } else  {
-        isWindowActive = true;
-    }
-}, false);
+import {createUUID,EventBus,getIsWindowActive} from '../../../core/utils/index';
 
 
 function sendWebNotificationIfNecessary(e,currentUserInfo) {
 
     //如果浏览器获取了焦点,不提醒.
-    if(isWindowActive){
+    if(getIsWindowActive()){
         return;
     }
 

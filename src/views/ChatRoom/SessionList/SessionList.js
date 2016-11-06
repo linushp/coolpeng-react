@@ -24,7 +24,10 @@ class SessionItem extends PureRenderComponent {
         var sessionIcon = s.sessionIcon;
         var isPeerChat = s.sessionType ==='peer';
         var timeDisplayString = StringUtils.toPrettyString(s.lastMsgTimeMillis,null,nowTime);
-
+        var unReadCount = s.unReadCount || 0;
+        if(unReadCount>=99){
+            unReadCount = 99;
+        }
         return (
             <div className ={`itemWrapper itemWrapper-${isCurrent}`}>
                 <div className="onDeleteSession" style={showStyle(isPeerChat)} onClick={that.onDeleteSession.bind(that)}>×</div>
@@ -36,6 +39,7 @@ class SessionItem extends PureRenderComponent {
                         <div className="lastMsgTimeMillis">{timeDisplayString}</div>
                         <div className="title">{s.sessionTitle}</div>
                         <div className="msg">{s.lastMsgText}</div>
+                        <div className="unReadCount" style={showStyle(unReadCount>0)}>{unReadCount}</div>
                     </div>
                 </div>
             </div>

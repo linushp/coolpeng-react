@@ -532,6 +532,23 @@ export function toStringNumberArray (start,end,length) {
 }
 
 
+var isWindowActive = true;
+document.addEventListener("visibilitychange", function () {
+    if (document.hidden) {
+        isWindowActive = false;
+    } else  {
+        isWindowActive = true;
+    }
+}, false);
+
+/**
+ * 判断窗口是否获取了焦点
+ */
+export function getIsWindowActive() {
+    return isWindowActive;
+}
+
+
 initUnderscoreMixin({
     valueIn: getObjValueInPath,
     toInnerHTML:toInnerHTML

@@ -1,6 +1,12 @@
 import CreateCloudRestReducer from '../../core/CreateCloudRestReducer';
 import immutable from 'immutable';
-import {updateImmutableObject, StringUtils, createUUID, getCurrentUser,getServerTimeMillis} from '../../core/utils/index';
+import {
+    updateImmutableObject,
+    StringUtils,
+    getIsWindowActive,
+    getCurrentUser,
+    getServerTimeMillis
+} from '../../core/utils/index';
 import StaticConfig from '../../core/utils/StaticConfig';
 
 var initialState = immutable.fromJS({
@@ -22,13 +28,13 @@ function ifNullReturnNewList(listObj) {
 }
 
 
-function makeSureSessionListContainsSession(sessionList,obj){
+function makeSureSessionListContainsSession(sessionList, obj) {
     var sessionId = obj.sessionId;
-    var oldSession = sessionList.find(function(s){
+    var oldSession = sessionList.find(function (s) {
         return s.get('sessionId') === sessionId;
     });
 
-    if(!oldSession){
+    if (!oldSession) {
         var chatSessionVO = obj.chatSessionVO;
         var newSession = immutable.fromJS(chatSessionVO);
         sessionList = sessionList.unshift(newSession);
@@ -51,13 +57,13 @@ function beforeSendMsg_HandlePublicMsgEventSessionLastMsg(state, obj) {
         return sessionVO;
     };
     var sessionList = state.get('sessionList');
-    sessionList = makeSureSessionListContainsSession(sessionList,obj);
+    sessionList = makeSureSessionListContainsSession(sessionList, obj);
     sessionList = updateImmutableObject(sessionList, finder, newValue);
 
     sessionList = sessionList.sort(function (s1, s2) {
         var t1 = s1.get('lastMsgTimeMillis');
         var t2 = s2.get('lastMsgTimeMillis');
-        return  t2 - t1;
+        return t2 - t1;
     });
     return state.set('sessionList', sessionList);
 }
@@ -120,29 +126,64 @@ function afterSendMsg_HandlePublicMsgEventSessionLastMsg(state, json) {
 /**
  * 收到消息后,计算session未读消息的数量.
  */
-function calculateSessionUnReadCount(state, json){
-    //TODO
-    return state;
+function calculateSessionUnReadCount(state, obj) {
+
+    var isWindowActive = getIsWindowActive();
+
+    var sessionId = obj.sessionId;
+
+    var currentSessionId = state.get("currentSessionId");
+
+    //如果窗口获取了焦点，并且当前正在进行当前会话，则不计算
+    if (isWindowActive && sessionId === currentSessionId) {
+        return state;
+    }
+
+    var finder = function (c) {
+        return c.get('sessionId') === sessionId;
+    };
+
+    var newValue = function (sessionVO) {
+        var unReadCount = sessionVO.get('unReadCount') || 0;
+        sessionVO = sessionVO.set('unReadCount', unReadCount + 1);
+        return sessionVO;
+    };
+
+    var sessionList = state.get('sessionList');
+    sessionList = updateImmutableObject(sessionList, finder, newValue);
+    return state.set('sessionList', sessionList);
+
 }
 
 
 /**
  * 清空当前消息的未读数量.
  */
-function clearSessionUnReadCount(state,currentSessionId){
-    //TODO
-    return state;
+function clearSessionUnReadCount(state, currentSessionId) {
+
+    var finder = function (c) {
+        return c.get('sessionId') === currentSessionId;
+    };
+
+    var newValue = function (sessionVO) {
+        sessionVO = sessionVO.set('unReadCount', 0);
+        return sessionVO;
+    };
+
+    var sessionList = state.get('sessionList');
+    sessionList = updateImmutableObject(sessionList, finder, newValue);
+    return state.set('sessionList', sessionList);
 }
 
 
-function addStaticMessage(state,sessionId,userInfo,msgId,msg,msgSummary,msgType,status){
+function addStaticMessage(state, sessionId, userInfo, msgId, msg, msgSummary, msgType, status) {
     userInfo.uid = userInfo.id;
     var json = {
         sessionId: sessionId,
         msgSummary: msgSummary,
         chatMsgVO: {
             msgId: msgId,
-            sendUser:userInfo,
+            sendUser: userInfo,
             //{
             //    uid: userInfo.id,
             //    username: userInfo.username,
@@ -152,7 +193,7 @@ function addStaticMessage(state,sessionId,userInfo,msgId,msg,msgSummary,msgType,
             msg: msg,
             createTimeMillis: new Date().getTime(),
             status: status,
-            type:msgType
+            type: msgType
         }
     };
     state = beforeSendMsg_HandlePublicMsgEvent(state, json);
@@ -187,7 +228,7 @@ export default CreateCloudRestReducer({
             }
             return state;
         },
-        'deleteSession':function (state, res, restState, meta) {
+        'deleteSession': function (state, res, restState, meta) {
             return state;
         },
         'sendMessage': function (state, res, restState, meta) {
@@ -195,7 +236,7 @@ export default CreateCloudRestReducer({
                 var sessionVO = meta.reqData.sessionVO;
                 var sessionId = sessionVO.sessionId;
                 var sessionType = sessionVO.sessionType;
-                if(sessionType==="robot"){
+                if (sessionType === "robot") {
                     return state;
                 }
                 var msg = meta.reqData.msg;
@@ -203,11 +244,12 @@ export default CreateCloudRestReducer({
                 var msgSummary = meta.reqData.msgSummary;
                 var type = meta.reqData.type;
                 var userInfo = getCurrentUser();
-                state = addStaticMessage(state,sessionId,userInfo,msgId,msg,msgSummary,type,'pending');
+                state = addStaticMessage(state, sessionId, userInfo, msgId, msg, msgSummary, type, 'pending');
+                state = clearSessionUnReadCount(state, sessionId);
             }
             return state;
         },
-        'sendMessageToRobot':function(state, res, restState, meta){
+        'sendMessageToRobot': function (state, res, restState, meta) {
             var type = "";
             var sessionId = meta.reqData.sessionVO.sessionId;
             if (restState.isPending()) {
@@ -215,13 +257,13 @@ export default CreateCloudRestReducer({
                 var msgId = meta.reqData.msgId;
                 var msgSummary = meta.reqData.msgSummary;
                 var userInfo = getCurrentUser();
-                state = addStaticMessage(state,sessionId,userInfo,msgId,msg,msgSummary,type,'sent');
-            }else if(restState.isSuccess()){
+                state = addStaticMessage(state, sessionId, userInfo, msgId, msg, msgSummary, type, 'sent');
+            } else if (restState.isSuccess()) {
                 var text0 = res.result.text;
                 var userInfo0 = StaticConfig.bibiRobotUser;
                 var msg0 = text0;
                 var msgId0 = new Date().getTime();
-                state = addStaticMessage(state,sessionId,userInfo0,msgId0,msg0,msg0,type,'sent');
+                state = addStaticMessage(state, sessionId, userInfo0, msgId0, msg0, msg0, type, 'sent');
             }
             return state;
         },
@@ -239,7 +281,15 @@ export default CreateCloudRestReducer({
         "staticSetCurrentSessionId": function (state, res, restState, meta) {
             var sessionId = res.data;
             state = state.set("currentSessionId", sessionId);
-            state = clearSessionUnReadCount(state,sessionId);
+            state = clearSessionUnReadCount(state, sessionId);
+            return state;
+        },
+        //每隔两分钟，会调用一下这个方法,定时清空未读消息数量
+        "staticJudgeCurrentSessionUnreadCount": function (state, res, restState, meta) {
+            if (getIsWindowActive()) {
+                var currentSessionId = state.get("currentSessionId");
+                state = clearSessionUnReadCount(state, currentSessionId);
+            }
             return state;
         },
         "staticOnWebSocketMessage": function (state, res, restState, meta) {
@@ -247,10 +297,10 @@ export default CreateCloudRestReducer({
                 var data = res.data.data;
                 var json = JSON.parse(data);
                 var messageName = json.name;
-                if (messageName === "PublicMsgEvent" || messageName==='PeerMsgEvent') {
+                if (messageName === "PublicMsgEvent" || messageName === 'PeerMsgEvent') {
                     state = afterSendMsg_HandlePublicMsgEvent(state, json);
                     state = afterSendMsg_HandlePublicMsgEventSessionLastMsg(state, json);
-                    state = calculateSessionUnReadCount(state,json);
+                    state = calculateSessionUnReadCount(state, json);
                 }
             } catch (e) {
                 console.error("[ERROR]", e);
