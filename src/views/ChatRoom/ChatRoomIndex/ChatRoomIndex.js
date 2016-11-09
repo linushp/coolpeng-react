@@ -1,7 +1,7 @@
 import React from 'react'
 import {bindActionCreators} from 'redux';
 import immutable from 'immutable';
-import {createUUID,isEmpty,StaticConfig} from '../../../core/utils/index';
+import {createUUID,isEmpty,StaticConfig,EventBus} from '../../../core/utils/index';
 import PureRenderComponent from '../../../core/PureRenderComponent';
 import {connect} from 'react-redux';
 import ActionStoreHelper from '../../Common/ActionStoreHelper';
@@ -102,8 +102,12 @@ class ChatRoomIndex extends PureRenderComponent {
      * @param msgSummary
      * @param callback
      */
-    onSendMessage = (msg, msgSummary, callback)=> {
+    onSendMessage = (msg, msgSummary, callbackFunc)=> {
         var that = this;
+        var callback = function(){
+            EventBus.emit("sendMessageCallback");
+            callbackFunc();
+        };
         var currentSession = that.getCurrentSession();
         var {actions,user} = that.props;
         var userInfo = user.userInfo;
@@ -267,7 +271,8 @@ class ChatRoomIndex extends PureRenderComponent {
                                  userInfo={userInfo}></MessageList>
                     <MessageInput onSendMessage={that.onSendMessage}
                                   onSaveCloudCode={that.onSaveCloudCode}
-                                  userInfo={userInfo}></MessageInput>
+                                  actions={actions}
+                                  userInfo={userInfo} />
                 </div>
                 <div className="chat-right-side">
 

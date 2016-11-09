@@ -108,6 +108,8 @@ export default class MessageInput extends PureRenderComponent {
 
     triggerHandler(e) {
         var that = this;
+
+        //按下回车键
         if (e && !e.shiftKey && e.keyCode === 13) {
             if (e.type === 'keydown') {
                 return false;
@@ -119,6 +121,13 @@ export default class MessageInput extends PureRenderComponent {
                 return false;
             }
         }
+
+        //输入框获取到了焦点,清除掉未读消息的红点点
+        if (e === 'focus') {
+            var actions = that.props.actions;
+            actions.staticJudgeCurrentSessionUnreadCount();
+        }
+
         return true;
     }
 

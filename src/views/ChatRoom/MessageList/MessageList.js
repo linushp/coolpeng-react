@@ -6,6 +6,7 @@ import {
     uniqueId,
     StringUtils,
     JSXRenderUtils,
+    EventBus,
     className,
     toInnerHTML
 } from '../../../core/utils/index';
@@ -148,14 +149,20 @@ export default class MessageList extends PureRenderComponent {
     }
 
     componentDidMount() {
-        var that = this;
-        scrollToBottom(this.uniqueId, 10);
+        this.scrollToBottomDefault();
     }
 
-
-    componentDidUpdate() {
-        var that = this;
+    scrollToBottomDefault=()=>{
         scrollToBottom(this.uniqueId, 10);
+    };
+
+
+    componentWillMount() {
+        EventBus.addEventListener('sendMessageCallback',this.scrollToBottomDefault);
+    }
+
+    componentWillUnmount() {
+        EventBus.removeEventListener('sendMessageCallback',this.scrollToBottomDefault);
     }
 
     onClickMessageList = (e)=> {
