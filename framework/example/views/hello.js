@@ -20,7 +20,7 @@ class Hello extends React.Component {
 
 
         actions.getPostList('absdf', 'sdf').then(function () {
-
+            debugger;
         });
 
         setTimeout(function () {
