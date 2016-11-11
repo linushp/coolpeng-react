@@ -8,7 +8,7 @@ var store = reubibiConfigure.getStore();
 
 console.log(store);
 ReactDOM.render(
-    <Provider store={store} >
+    <Provider store={store}>
         <Hello></Hello>
     </Provider>,
     document.getElementById('root')

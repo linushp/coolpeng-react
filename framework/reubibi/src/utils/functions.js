@@ -1,4 +1,3 @@
-
 const _undefined = undefined;
 
 export function isType(x, type) {
@@ -10,11 +9,11 @@ export function isFunction(x) {
 }
 
 
-export function toArray(aaa){
-    if(!aaa){
+export function toArray(aaa) {
+    if (!aaa) {
         return [];
     }
-    
+
     var argsArray = Array.prototype.slice.call(aaa);
     var args = [].concat(argsArray);
     return args;
@@ -52,7 +51,7 @@ export function getValueByKey(obj, key) {
  *  var d = getObjectValue(a,'b.c.d');
  */
 export function getValueInPath(obj, str) {
-    if(!obj){
+    if (!obj) {
         return null;
     }
     try {

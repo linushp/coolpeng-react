@@ -3,25 +3,26 @@ import connect from './component/connect';
 import {getValueInPath,toArray} from './utils/functions';
 import objectForEach from './utils/objectForEach';
 import warning from './utils/warning';
+import isPromise from './utils/isPromise';
 
-function createConfiguredActionWrapper(actionWrapper,path){
+function createConfiguredActionWrapper(actionWrapper, path) {
 
     //actionGroup 其实就是在createConfigure中定义的action的key
     //例如在example中将得到config/reubibiConfigure中配置的 'user'或'post'
     var actionGroup = path.split('.')[0];
 
     //这才是真正调用的函数
-    return function (){
+    return function () {
         var args = toArray(arguments);
         //@see createAction ActionImplWrapper
-        var action =  actionWrapper(actionGroup,args);
+        var action = actionWrapper(actionGroup, args);
         //{group,name,status,args,payload}
         return action;
     }
 }
 
 
-function getActionsFromConfig(reubibiConfigure,componentConfig){
+function getActionsFromConfig(reubibiConfigure, componentConfig) {
     var actionsResult = {};
     if (!componentConfig || !reubibiConfigure) {
         return null;
@@ -31,12 +32,12 @@ function getActionsFromConfig(reubibiConfigure,componentConfig){
     var allActions = reubibiConfigure.getActions();
 
 
-    objectForEach(actionsConfig,function(key, path){
+    objectForEach(actionsConfig, function (key, path) {
         var actionWrapper = getValueInPath(allActions, path || '');
         if (actionWrapper === undefined) {
             warning(`[ERROR]cannot get Object by key : ${key} and path: ${path} `);
-        }else {
-            actionsResult[key] = createConfiguredActionWrapper(actionWrapper,path);
+        } else {
+            actionsResult[key] = createConfiguredActionWrapper(actionWrapper, path);
         }
     });
 
@@ -45,13 +46,28 @@ function getActionsFromConfig(reubibiConfigure,componentConfig){
 }
 
 
-function bindActionPromise(actions){
-    //TODO
-    return actions;
+function createPromiseActionFunc(actionFunc) {
+    return function () {
+        var args = toArray(arguments);
+        var actionResult = actionFunc.apply({}, args);
+        if (isPromise(actionResult.promise)) {
+            return actionResult.promise;
+        }
+        return actionResult.payload;
+    }
 }
 
 
-function getStateByConfig(state,componentConfig){
+function bindActionPromise(actionFunctions) {
+    var promiseActions = {};
+    objectForEach(actionFunctions, function (key, actionFunc) {
+        promiseActions[key] = createPromiseActionFunc(actionFunc);
+    });
+    return promiseActions;
+}
+
+
+function getStateByConfig(state, componentConfig) {
     var result = {};
     if (!componentConfig || !state) {
         return null;
@@ -59,7 +75,7 @@ function getStateByConfig(state,componentConfig){
 
     var propsConfig = componentConfig.props || {};
 
-    objectForEach(propsConfig,function(key, path){
+    objectForEach(propsConfig, function (key, path) {
         result[key] = getValueInPath(state, path || '');
         if (result[key] === undefined) {
             warning(`[ERROR]cannot get Object by key : ${key} and path: ${path} `);
@@ -88,20 +104,19 @@ function getStateByConfig(state,componentConfig){
  *
  *  }
  */
-export default function createComponent(reubibiConfigure,BaseComponentImpl, componentConfig) {
-
+export default function createComponent(reubibiConfigure, BaseComponentImpl, componentConfig) {
 
 
     function mapStateToProps(state) {
-        var props = getStateByConfig(state,componentConfig);
+        var props = getStateByConfig(state, componentConfig);
         return props;
     }
 
 
     function mapDispatchToProps(dispatch) {
         //每次数据变化时,不会执行此处代码
-        var actions = getActionsFromConfig(reubibiConfigure,componentConfig); //这里的action执行后返回{group,name,status,args,payload}
-        var actionDefs  = bindActionCreators(actions, dispatch);//这里的action执行后返回
+        var actions = getActionsFromConfig(reubibiConfigure, componentConfig); //这里的action执行后返回{group,name,status,args,payload}
+        var actionDefs = bindActionCreators(actions, dispatch);//这里的action执行后返回
         var actionPromise = bindActionPromise(actionDefs);
         return {actions: actionPromise};
     }

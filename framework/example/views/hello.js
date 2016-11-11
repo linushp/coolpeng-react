@@ -15,16 +15,20 @@ class Hello extends React.Component {
     componentDidMount() {
         var that = this;
         var {actions} = that.props;
-        actions.getUserList(1234);
-        actions.getPostList('absdf', 'sdf');
-        setTimeout(function () {
+        var mm = actions.getUserList(1234);
+        var mm2 = actions.beginEditUserInfo(1234);
 
+
+        actions.getPostList('absdf', 'sdf').then(function () {
+
+        });
+
+        setTimeout(function () {
             //直接访问Store中的数据
             var userInfo = UserStore.getUserInfo(121);
             that.setState({userInfo: userInfo});
-        }, 3000)
+        }, 2000)
     }
-
 
 
     render() {
@@ -34,12 +38,14 @@ class Hello extends React.Component {
 
         return (
             <div>
-                {userInfo.name}
+                aaa---{userInfo.name}
                 <br/>
+                bbb---
                 {userList.map(function (x) {
                     return <div>{x}</div>
                 })}
                 <hr/>
+                ccc---
                 {postList.map(function (x) {
                     return <div>{x}</div>
                 })}
@@ -55,7 +61,8 @@ export default createReubibiComponent(Hello, {
 
     actions: {
         getUserList: 'user.getUserList',
-        getPostList: 'post.getPostList'
+        getPostList: 'post.getPostList',
+        beginEditUserInfo: 'user.beginEditUserInfo'
     },
 
     props: {

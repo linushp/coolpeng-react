@@ -1,4 +1,3 @@
-
 import createActions from './createActions';
 import createComponent from './createComponent';
 import createStore from './createStore';
@@ -10,7 +9,7 @@ var Reubibi = {
     createComponent: createComponent,
     createStore: createStore,
     createConfigure: createConfigure,
-    Provider:Provider
+    Provider: Provider
 };
 
 

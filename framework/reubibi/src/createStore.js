@@ -80,7 +80,7 @@ function createGetterFunction(getterDef, exportStore) {
         //每次执行,都是获取最新的state
         var state = exportStore['$$state'];
         var args = [state].concat(args0);
-        return getterDef.apply({},args);
+        return getterDef.apply({}, args);
     }
 }
 

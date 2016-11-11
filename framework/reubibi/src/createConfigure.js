@@ -7,9 +7,7 @@ const createStoreWithMiddleware = applyMiddleware(
 )(createStore);
 
 
-
-
-const getCombineReducers = function(config){
+const getCombineReducers = function (config) {
     /**
      * {
      *      $$state:{},
@@ -21,8 +19,8 @@ const getCombineReducers = function(config){
      */
     var storesMap = config.stores || {};
     var reducerMap = {};
-    for(var i in storesMap){
-        if(storesMap.hasOwnProperty(i)){
+    for (var i in storesMap) {
+        if (storesMap.hasOwnProperty(i)) {
             var v = storesMap[i];
             //这是在createStore方法中定义的,就一个函数.
             var reducer = v['$$reducer']; //是一个function
@@ -46,11 +44,11 @@ const getCombineReducers = function(config){
  * /Reubibi.createConfigure 配置后UserStore实例中能够获取自己的配置信息
  * @param config
  */
-function setStoreGroupName(config){
+function setStoreGroupName(config) {
     var storesConfig = config.stores;//Reubibi.createConfigure
-    if(storesConfig){
+    if (storesConfig) {
         //UserStore只是一个示例
-        objectForEach(storesConfig,function(key, UserStore){
+        objectForEach(storesConfig, function (key, UserStore) {
             UserStore['$$StoreGroupName'] = key;
         });
     }
@@ -76,23 +74,27 @@ class ReubibiConfig {
         this.config = config;
         var initialState = config.initialState;
         var reducer = getCombineReducers(this.config);
-        //唯一的一个store
-        this.store = createStoreWithMiddleware(reducer, undefined);
+
+        if(initialState){
+            //唯一的一个store
+            this.store = createStoreWithMiddleware(reducer, initialState);
+        }else {
+            //唯一的一个store
+            this.store = createStoreWithMiddleware(reducer);
+        }
     }
 
-    getStore(){
+    getStore() {
         return this.store;
     }
 
-    getActions(){
+    getActions() {
         return this.config.actions;
     }
 
 }
 
 
-
-
-export default function createConfigure(config){
+export default function createConfigure(config) {
     return new ReubibiConfig(config);
 }

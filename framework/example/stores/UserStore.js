@@ -1,7 +1,6 @@
 import Reubibi from '../../reubibi/src/index';
 
 
-
 export default Reubibi.createStore({
 
     initialState: {
@@ -11,11 +10,26 @@ export default Reubibi.createStore({
 
     'onGetUserList': function (state, action) {
         console.log(action.status);
-        state = Object.assign({},state);
+        state = Object.assign({}, state);
         var userList = action.payload;
         state.userList = userList;
         return state;
     },
+
+
+    'onBeginEditUserInfo': function (state) {
+        state = Object.assign({}, state);
+        state.isEditing = true;
+        return state;
+    },
+
+
+    'onEndEditUserInfo': function (state) {
+        state = Object.assign({}, state);
+        state.isEditing = false;
+        return state;
+    },
+
 
     /**
      * 通过CreateStore创建的on函数
@@ -23,9 +37,13 @@ export default Reubibi.createStore({
      * 这样就保证了单项数据流
      */
     'post#onGetPostList': function (state, action) {
-        state = Object.assign({},state);
-        var postList = action.payload;
-        state.postList = postList;
+        console.log(action.status);
+        if (action.status === 'success') {
+            state = Object.assign({}, state);
+            var postList = action.payload;
+            state.postList = postList;
+        }
+
         return state;
     },
 
@@ -37,9 +55,10 @@ export default Reubibi.createStore({
      */
     'getUserInfo': function (state, a, b, c, d) {
         return {
-            name:a
+            name: a
         };
     }
+
 
 });
 
