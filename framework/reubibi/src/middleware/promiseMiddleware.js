@@ -33,8 +33,8 @@ export default function promiseMiddleware(_ref) {
             },
 
             (rejected = {}) => {
-                var successAction = createAction('error', null, rejected);
-                return dispatch(successAction);
+                var errorAction = createAction('error', null, rejected);
+                return dispatch(errorAction);
             }
         );
 
