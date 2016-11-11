@@ -156,6 +156,13 @@ export default class MessageList extends PureRenderComponent {
         scrollToBottom(this.uniqueId, 10);
     };
 
+    componentWillReceiveProps(nextProps){
+        var currentSession0 = this.props.currentSession;
+        var currentSession1 = nextProps.currentSession;
+        if(currentSession0!==currentSession1){
+            this.scrollToBottomDefault();
+        }
+    }
 
     componentWillMount() {
         EventBus.addEventListener('sendMessageCallback',this.scrollToBottomDefault);
