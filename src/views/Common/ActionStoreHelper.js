@@ -3,9 +3,9 @@ import {connect} from 'react-redux';
 import actions from '../../actions/index';
 import {getObjValueInPath,isArray} from '../../core/utils';
 
-function getObjectByConfig(obj, config) {
+function getObjectByConfig(state, config) {
     var result = {};
-    if (!config || !obj) {
+    if (!config || !state) {
         return null;
     }
     if (isArray(config)) {
@@ -13,10 +13,10 @@ function getObjectByConfig(obj, config) {
             var conf = config[j] || '';
             if (conf.indexOf('!') !== -1) {
                 conf = conf.replace('!', '');
-                var x = getObjValueInPath(obj, conf) || {};
+                var x = getObjValueInPath(state, conf) || {};
                 result = Object.assign({}, result, x);
             } else {
-                result[conf] = getObjValueInPath(obj, conf);
+                result[conf] = getObjValueInPath(state, conf);
             }
         }
     } else {
@@ -24,7 +24,7 @@ function getObjectByConfig(obj, config) {
         for (var i = 0; i < keys.length; i++) {
             var key = keys[i];
             var path = config[key] || '';
-            result[key] = getObjValueInPath(obj, path);
+            result[key] = getObjValueInPath(state, path);
             if (result[key]===undefined) {
                 console.log(`[ERROR]cannot get Object by key : ${key} and path: ${path} `);
             }
