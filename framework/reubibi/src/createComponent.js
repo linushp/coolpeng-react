@@ -50,10 +50,13 @@ function createPromiseActionFunc(actionFunc) {
     return function () {
         var args = toArray(arguments);
         var actionResult = actionFunc.apply({}, args);
-        if (isPromise(actionResult.promise)) {
-            return actionResult.promise;
+        if(actionResult){
+            if (isPromise(actionResult.promise)) {
+                return actionResult.promise;
+            }
+            return actionResult.payload;
         }
-        return actionResult.payload;
+        return null;
     }
 }
 
