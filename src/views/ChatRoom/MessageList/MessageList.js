@@ -104,11 +104,11 @@ class MessageSessionHeader extends PureRenderComponent {
     render() {
         var that = this;
         var {currentSession, userInfo} = that.props;
-        var getValue = getObjValueInPath.bind({}, currentSession);
+        var getValue = valueIn.bind({}, currentSession);
         var sessionIcon = getValue("sessionIcon");
         var sessionTitle = getValue("sessionTitle");
         var sessionType = getValue('sessionType');
-        var currentUserId = getObjValueInPath(userInfo, 'id');
+        var currentUserId = valueIn(userInfo, 'id');
         var isPeerChat = (sessionType === 'peer');
         var participateUidList = getValue('participateUidList');
         return (
@@ -157,9 +157,11 @@ export default class MessageList extends PureRenderComponent {
     };
 
     componentWillReceiveProps(nextProps){
-        var currentSession0 = this.props.currentSession;
-        var currentSession1 = nextProps.currentSession;
-        if(currentSession0!==currentSession1){
+        var currentSession0 = this.props.currentSession||{};
+        var currentSession1 = nextProps.currentSession||{};
+        var sessionId0 = valueIn(currentSession0,"sessionId");
+        var sessionId1 = valueIn(currentSession1,"sessionId");
+        if(sessionId0!==sessionId1){
             this.scrollToBottomDefault();
         }
     }
