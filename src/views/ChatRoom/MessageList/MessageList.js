@@ -152,6 +152,10 @@ export default class MessageList extends PureRenderComponent {
         this.scrollToBottomDefault();
     }
 
+    componentDidUpdate() {
+        this.scrollToBottomDefault();
+    }
+
     scrollToBottomDefault=()=>{
         scrollToBottom(this.uniqueId, 10);
     };
