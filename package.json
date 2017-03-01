@@ -12,30 +12,17 @@
     "package_win": "set NODE_ENV=production && webpack  --config ./bin/webpack.config.js --progress --profile --colors",
     "release_win": "gulp clean && set NODE_ENV=production && webpack  --config ./bin/webpack.config.js --progress --profile --colors && gulp release1",
     "watch": "webpack-dev-server  --config ./bin/webpack.config.js  --hot --inline --progress --colors",
-    "watch_dev": "webpack-dev-server  --config ./bin/webpack.config.dev.js  --hot --inline --progress --colors",
-    "watch_reubibi": "webpack-dev-server  --config ./bin/webpack.config.reubibi.js  --hot --inline --progress --colors"
+    "watch_dev": "webpack-dev-server  --config ./bin/webpack.config.dev.js  --hot --inline --progress --colors"
   },
-  "author": "coolpeng",
+  "author": "ubibi",
   "license": "WTFPL",
   "dependencies": {
-    "antd": "^0.12.4",
-    "body-parser": "^1.15.0",
-    "bundle-loader": "^0.5.4",
-    "chart.js": "^1.0.2",
-    "express": "^4.13.4",
-    "history": "^2.0.0",
     "immutable": "^3.8.1",
-    "jquery": "^3.1.0",
-    "lodash": "^4.6.1",
-    "react": "^0.14.7",
-    "react-chartjs": "^0.7.3",
-    "react-dom": "^0.14.7",
-    "react-redux": "^4.4.0",
-    "react-router": "^2.0.0",
-    "redux": "^3.3.1",
-    "redux-immutablejs": "0.0.8",
-    "redux-thunk": "^1.0.3",
-    "whatwg-fetch": "^1.0.0"
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "react-rebixflux": "^0.0.9",
+    "react-router": "^3.0.2",
+    "rebix-utils": "^0.0.8"
   },
   "devDependencies": {
     "babel-core": "^6.5.2",
