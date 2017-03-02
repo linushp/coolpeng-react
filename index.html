@@ -5,12 +5,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style type="text/css">
-        #root {opacity: 0; margin: 0; transition: opacity 0.3s linear;}
-        #root.rootShow { opacity: 1;}
+        #root {
+            opacity: 0;
+            margin: 0;
+            transition: opacity 0.3s linear;
+        }
+
+        #root.rootShow {
+            opacity: 1;
+        }
     </style>
 
 </head>
 <body>
+
 <div id="root"></div>
 
 <script src="/node_modules/react/dist/react.min.js"></script>
@@ -19,6 +27,7 @@
 <script src="/node_modules/react-router/umd/ReactRouter.min.js"></script>
 <script src="/node_modules/rebix-utils/dist/RebixUtils.addon.min.js"></script>
 <script src="/node_modules/immutable/dist/immutable.min.js"></script>
+<script src="/node_modules/reconnectingwebsocket/reconnecting-websocket.min.js"></script>
 
 </body>
 </html>

@@ -126,9 +126,6 @@ function createWebpackConfig(jsFile, htmlFile, mainFileName) {
         },
 
         externals: {
-            "jquery": "window.jQuery",
-            "jQuery": "window.jQuery",
-            "$": "window.jQuery",
             "react": "window.React",
             "ReactDOM": "window.ReactDOM",
             "react-dom": "window.ReactDOM",
@@ -139,7 +136,7 @@ function createWebpackConfig(jsFile, htmlFile, mainFileName) {
             "redux": "window.Redux",
             "history": "window.History",
             "immutable": "window.Immutable",
-            "ReconnectingWebSocket":"window.ReconnectingWebSocket",
+            "reconnectingwebsocket":"window.ReconnectingWebSocket",
             "hljs":"window.hljs"
         },
 
@@ -163,10 +160,6 @@ function createWebpackConfig(jsFile, htmlFile, mainFileName) {
             new webpack.NoErrorsPlugin(),
             new webpack.DefinePlugin({
                 '__DEV__': !isProduction(),
-                '__IS_HASH_HISTORY__': false,
-                '__STATIC_FOLDER_PATH__':__STATIC_FOLDER_PATH__,
-                '__SERVER_LOCATION_HOST__': __SERVER_LOCATION_HOST__,
-                '__URL_HOST_ORIGIN__': __URL_HOST_ORIGIN__,
                 'process.env.NODE_ENV': isProduction() ? '"production"' : '"development"'
             }),
             new ExtractTextPlugin("static/app/[name].[hash].css", {
