@@ -27,16 +27,17 @@ onDomReady(function(){
         }
     }
 
+    var domRoot =  document.getElementById('root');
+    domRoot.className = 'rootShow';
 
     ReactDOM.render(
         <Router history={hashHistory}>
             <Route path="/" component={AppMainWindow}>
                 <IndexRoute component={ChattingPage} onEnter={requireLogin} />
-                <Route path="*" component={NotFoundPage}/>
             </Route>
-            <Route path="login" component={LoginPage} />
+            <Route path="/login" component={LoginPage} />
         </Router>,
-        document.getElementById('root')
+        domRoot
     );
 });
 
