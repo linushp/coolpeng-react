@@ -134,7 +134,6 @@ function createWebpackConfig(jsFile, htmlFile, mainFileName) {
             "react-rebixflux": "window.ReactRebixflux",
             "rebix-utils": "window.RebixUtils",
             "redux": "window.Redux",
-            "history": "window.History",
             "immutable": "window.Immutable",
             "reconnectingwebsocket":"window.ReconnectingWebSocket",
             "hljs":"window.hljs"

@@ -4,6 +4,7 @@ npm-debug.log
 .DS_Store
 /dist/
 dist/*
+/dist/*
 /.idea/
 workspace.xml
 /.idea/workspace.xml
