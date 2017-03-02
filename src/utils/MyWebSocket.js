@@ -150,20 +150,26 @@ class MyWebSocket {
     };
 
 
-    _onMessage = (response)=> {
+    _onMessage = (response0)=> {
         var that = this;
 
-        response = JSON.parse(response.data);
+        var responseData = JSON.parse(response0.data);
 
-        tryLogSocket(response);
+        tryLogSocket(responseData);
 
-        var responseType = response.responseType;
+        var responseType = responseData.responseType;
         if (responseType === 'sql') {
 
-            var requestId = response.reqId;
+            var requestId = responseData.reqId;
             var promiseResolve = PROMISE_CALLBACK_CHCHE[requestId];
             if (promiseResolve) {
-                promiseResolve.resolve(response);
+
+                if(responseData['errCode']!==0){
+                    promiseResolve.reject(responseData);
+                }else {
+                    promiseResolve.resolve(responseData);
+                }
+
                 PROMISE_CALLBACK_CHCHE[requestId] = null;
                 delete PROMISE_CALLBACK_CHCHE[requestId];
             }

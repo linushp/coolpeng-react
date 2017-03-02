@@ -5,6 +5,7 @@ import LoginStore from '../../stores/LoginStore';
 import getRandomNumString from '../../functions/getRandomNumString';
 import getFormValues from '../../functions/getFormValues';
 import MyWebSocket from '../../utils/MyWebSocket';
+import UserRegActions from '../../actions/UserRegActions';
 import './LoginPage.less';
 
 
@@ -58,7 +59,7 @@ class LoginPage extends RebixFlux.PureRenderComponent {
     handleRegSubmit = (e,e2)=> {
         var values = getFormValues(e.target,['mail','nickname','password']);
 
-
+        UserRegActions.c
         e.preventDefault();
         return false;
     };
