@@ -4,9 +4,16 @@ import BigStore from '../../stores/BigStore';
 import './App.less';
 import AppHeader from './AppHeader';
 import AppNav from './AppNav';
-
+import SocketManager from '../../api/socket/SocketManager';
 
 class AppComponent extends RebixFlux.PureRenderComponent {
+
+
+    componentDidMount() {
+        var {id, token} = this.props.userInfo;
+        SocketManager.openAuthWebSocket(id, token);
+    }
+
     render() {
         return (
             <div className="AppComponent">
@@ -26,5 +33,7 @@ class AppComponent extends RebixFlux.PureRenderComponent {
 }
 
 export default RebixFlux.connect(AppComponent, BigStore, function (bigStore, props, context, connectState, that) {
-    return {};
+    return {
+        userInfo: bigStore.loginState
+    };
 });

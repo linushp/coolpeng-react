@@ -33,3 +33,7 @@ export function deleteSession(sessionId,uid) {
         return response.result;
     });
 }
+
+
+
+window.createSession = createSession;

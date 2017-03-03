@@ -77,9 +77,12 @@ class SocketManager {
 
     _sendSocketFrame(socketFrame) {
         var that = this;
-        that._ws.send(JSON.stringify(socketFrame));
+        var ws = that._ws;
+        var dataString = JSON.stringify(socketFrame);
+        ws.send(dataString);
         tryLogSocket(socketFrame);
     }
+
 
     _resetState() {
         if (this._interval) {

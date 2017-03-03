@@ -3,6 +3,7 @@ import RebixFlux from 'react-rebixflux';
 import RebixUtils from 'rebix-utils';
 const createPureComponent = RebixFlux.createPureComponent;
 const PureRenderComponent = RebixFlux.PureRenderComponent;
+import SessionActions from '../../actions/SessionActions';
 
 class ChattingPage extends PureRenderComponent{
     constructor(props) {
@@ -10,6 +11,10 @@ class ChattingPage extends PureRenderComponent{
         this.state = {
 
         };
+    }
+
+    componentDidMount() {
+//        SessionActions.getMySessions();
     }
 
     render(){
@@ -22,5 +27,7 @@ class ChattingPage extends PureRenderComponent{
 }
 
 export default RebixFlux.connect(ChattingPage,function(store, props, context, connectState, that){
+    return {
 
+    }
 });
