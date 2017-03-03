@@ -5,11 +5,11 @@ import './App.less';
 import AppHeader from './AppHeader';
 
 class AppComponent extends RebixFlux.PureRenderComponent {
-    render(){
+    render() {
         return (
-            <div className="u-app">
+            <div className="AppComponent">
                 <AppHeader />
-                <div className="u-body">
+                <div className="AppBody">
                     {this.props.children}
                 </div>
             </div>

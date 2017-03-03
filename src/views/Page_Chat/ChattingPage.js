@@ -7,6 +7,6 @@ class AppComponent extends RebixFlux.PureRenderComponent {
 }
 
 
-export default RebixFlux.connect(AppComponent,function(){
+export default RebixFlux.connect(AppComponent, function () {
 
 });

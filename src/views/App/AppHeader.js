@@ -1,9 +1,9 @@
 import React from 'react';
 
 export default class AppHeader extends React.Component {
-    render(){
+    render() {
         return (
-            <div className="u-header">
+            <div className="AppHeader">
                 header...
             </div>
         );

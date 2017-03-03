@@ -1,13 +1,12 @@
 import RebixFlux from 'react-rebixflux';
 import RebixUtils from 'rebix-utils';
-import MyWebSocket from '../utils/MyWebSocket';
+import LoginStore from '../stores/LoginStore';
 
 export default RebixFlux.createActions("session", {
 
     getSessionList: function () {
-        var {LoginStore} = RebixUtils.setServices();
         var myUid = LoginStore.getUid();
-        return MyWebSocket.sendSQLQuery('getSessionList', [myUid]);
+        return SocketManager.sendSQLQuery('getSessionList', [myUid]);
     }
 
 });

@@ -1,8 +1,8 @@
-import SqlConstUtils from './SqlConstUtils';
-import getUniqueId from './getUniqueId';
+import SocketSqlManager from './SocketSqlManager';
+import getUniqueId from '../../utils/getUniqueId';
 import ReconnectingWebSocket from 'reconnectingwebsocket';
 
-var PROMISE_CALLBACK_CHCHE = {};
+
 
 
 const _logSocketFrames = () => localStorage.getItem('dev$$logSocketFrames') === 'true';
@@ -24,12 +24,13 @@ function noop() {
 }
 
 
-class MyWebSocket {
+var PROMISE_CALLBACK_CACHE = {};
+
+class SocketManager {
 
     constructor() {
         this._resetState();
     }
-
 
     sendPing() {
         this._sendSocketFrame({
@@ -53,12 +54,11 @@ class MyWebSocket {
 
     sendSQLQuery(sqlId, params) {
         var that = this;
-        var requestId = 1221;
-
-        this._sendSocketFrame({
+        var requestId = getUniqueId();
+        that._sendSocketFrame({
             "action": 'sql',
             "message": {
-                webSql: SqlConstUtils[sqlId],
+                webSql: SocketSqlManager[sqlId] || '',
                 sqlId: sqlId,
                 params: params,
                 reqId: requestId
@@ -66,7 +66,7 @@ class MyWebSocket {
         });
 
         return new Promise(function (resolve, reject) {
-            PROMISE_CALLBACK_CHCHE[requestId] = {resolve: resolve, reject: reject};
+            PROMISE_CALLBACK_CACHE[requestId] = {resolve: resolve, reject: reject};
         });
     }
 
@@ -127,7 +127,7 @@ class MyWebSocket {
     _startPing() {
         this._interval = setInterval(() => {
             this.sendPing();
-        }, 10000);
+        }, 60 * 1000);
     }
 
     _onOpen = () => {
@@ -161,17 +161,17 @@ class MyWebSocket {
         if (responseType === 'sql') {
 
             var requestId = responseData.reqId;
-            var promiseResolve = PROMISE_CALLBACK_CHCHE[requestId];
+            var promiseResolve = PROMISE_CALLBACK_CACHE[requestId];
             if (promiseResolve) {
 
-                if(responseData['errCode']!==0){
+                if (responseData['errCode'] !== 0) {
                     promiseResolve.reject(responseData);
-                }else {
+                } else {
                     promiseResolve.resolve(responseData);
                 }
 
-                PROMISE_CALLBACK_CHCHE[requestId] = null;
-                delete PROMISE_CALLBACK_CHCHE[requestId];
+                PROMISE_CALLBACK_CACHE[requestId] = null;
+                delete PROMISE_CALLBACK_CACHE[requestId];
             }
 
         } else if (responseType === 'msg') {
@@ -187,7 +187,6 @@ class MyWebSocket {
     }
 
     openAuthWebSocket(uid, token) {
-        console.log('openAuthWebSocket', uid, token);
         var connectionId = getUniqueId();
         this._openWebSocket(`ws://111.206.45.12:30318?p=1&connectionId=${connectionId}&uid=${uid}&token=${token}`);
         this._authInfo = {uid, token};
@@ -195,6 +194,7 @@ class MyWebSocket {
 
 }
 
-var MyWebSocketInstance = new MyWebSocket();
-window.MyWebSocketInstance = MyWebSocketInstance;
-export default MyWebSocketInstance;
+
+var SocketManagerInstance = new SocketManager();
+window.SocketManagerInstance = SocketManagerInstance;
+export default SocketManagerInstance;

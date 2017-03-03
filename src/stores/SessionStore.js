@@ -8,7 +8,7 @@ export default RebixFlux.createStore({
 
     initialState: (function () {
         var initialState = {
-            sessionList:[]
+            sessionList: []
         };
         var json = localStorage.getItem(LOCAL_STORAGE_KEY);
         if (json) {
