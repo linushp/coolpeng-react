@@ -18,9 +18,9 @@ export default RebixFlux.createStore({
     })(),
 
 
-    'onGetSessionList': function (state, {payload, status}) {
+    'onGetMySessions': function (state, {payload, status}) {
         if (status === 'success') {
-
+            debugger;
         }
         return state;
     }

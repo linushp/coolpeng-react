@@ -19,7 +19,7 @@
     "rc-menu": "^5.0.9",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "react-rebixflux": "^0.0.9",
+    "react-rebixflux": "0.0.12",
     "react-router": "^3.0.2",
     "rebix-utils": "^0.0.8",
     "reconnectingwebsocket": "^1.0.0"

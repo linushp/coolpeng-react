@@ -174,17 +174,17 @@ function createWebpackConfig(jsFile, htmlFile, mainFileName) {
             contentBase: './',
             historyApiFallback: true,
             proxy: {
-                '/cloud/*': {
-                     //target: 'http://www.coolpeng.cn',
-                    target: 'http://127.0.0.1:10086',
-                    secure: false,
-                    changeOrigin: true
-                },
-                '/robot/index': {
-                    target: 'http://op.juhe.cn',
-                    secure: false,
-                    changeOrigin: true
-                }
+                // '/cloud/*': {
+                //      //target: 'http://www.coolpeng.cn',
+                //     target: 'http://127.0.0.1:10086',
+                //     secure: false,
+                //     changeOrigin: true
+                // },
+                // '/robot/index': {
+                //     target: 'http://op.juhe.cn',
+                //     secure: false,
+                //     changeOrigin: true
+                // }
             }
         }
     };
