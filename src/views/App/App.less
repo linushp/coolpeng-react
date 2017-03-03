@@ -1,4 +1,4 @@
-html, body, #root, .AppComponent {
+html, body, #root, .AppComponent,.AppBody{
   width: 100%;
   height: 100%;
   padding: 0;
@@ -7,20 +7,78 @@ html, body, #root, .AppComponent {
 }
 
 
-.AppComponent{
+@HEADER_HEIGHT: 60px;
 
+.AppComponent{
+  .fadeBg();
 }
 
+.fadeBg(){
+  background: fade(#FFFFFF,100);
+}
 
 .AppHeader{
-  height: 60px;
+  .fadeBg();
+  height: @HEADER_HEIGHT;
   width: 100%;
   position: fixed;
   top: 0px;
   box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14),0 1px 10px 0 rgba(0,0,0,0.12),0 2px 4px -1px rgba(0,0,0,0.2);
 }
 
+.AppHeaderLeft{
+  float: left;
+  line-height: 40px;
+  margin-left: 20px;
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.AppHeaderRight{
+  float: right;
+  margin-right: 20px;
+  margin-top: 10px;
+  width: 400px;
+
+  .nickname{
+    float: right;
+    line-height: 40px;
+    margin-right: 20px;
+    font-size: 14px;
+    color: fade(#000000,58);
+  }
+
+  .UserAvatar{
+    float: right;
+  }
+}
+
+
+
 
 .AppBody{
+  display: flex;
+  flex-direction: column;
+}
 
+.AppBodyHeaderHeight{
+  height: @HEADER_HEIGHT;
+  flex: 0 0 auto;
+}
+
+.AppBodyContent{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex: 1 1 auto;
+}
+
+
+.AppBodyChildren{
+  flex: 1 1 auto;
+}
+
+.AppNav{
+  width: 60px;
+  border-right: 1px solid fade(#CCCCCC,30);
 }

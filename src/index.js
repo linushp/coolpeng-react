@@ -7,6 +7,8 @@ import ChattingPage from './views/Page_Chat/ChattingPage';
 import AppMainWindow from './views/App/AppComponent';
 import LoginPage from './views/Page_Login/LoginPage';
 import NotFoundPage from './views/NotFoundPage';
+import getRandomNumString from './functions/getRandomNumString';
+import "./components/common.less";
 
 onDomReady(function () {
 
@@ -21,8 +23,12 @@ onDomReady(function () {
         }
     }
 
+    var num = getRandomNumString(1, 16, 4);
+
     var domRoot = document.getElementById('root');
     domRoot.className = 'rootShow';
+    domRoot.style.backgroundImage = `url("http://image.coolpeng.cn/avatar/00backwall/B-${num}.jpg")`;
+    domRoot.style.backgroundSize = 'cover';
 
     ReactDOM.render(
         <Router history={hashHistory}>

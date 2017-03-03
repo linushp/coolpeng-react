@@ -4,7 +4,7 @@ import RebixUtils from 'rebix-utils';
 const createPureComponent = RebixFlux.createPureComponent;
 const PureRenderComponent = RebixFlux.PureRenderComponent;
 
-class ChattingPage extends PureRenderComponent{
+class SessionList extends PureRenderComponent{
     constructor(props) {
         super(props);
         this.state = {
@@ -14,13 +14,13 @@ class ChattingPage extends PureRenderComponent{
 
     render(){
         return (
-            <div className="ChattingPage">
+            <div className="SessionList">
 
             </div>
         )
     }
 }
 
-export default RebixFlux.connect(ChattingPage,function(store, props, context, connectState, that){
+export default RebixFlux.connect(SessionList,function(store, props, context, connectState, that){
 
 });

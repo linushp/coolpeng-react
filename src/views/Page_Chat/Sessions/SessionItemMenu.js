@@ -4,7 +4,8 @@ import RebixUtils from 'rebix-utils';
 const createPureComponent = RebixFlux.createPureComponent;
 const PureRenderComponent = RebixFlux.PureRenderComponent;
 
-class ChattingPage extends PureRenderComponent{
+var KEY_DELETE_SESSION = 'delete';
+class SessionItemMenu extends PureRenderComponent{
     constructor(props) {
         super(props);
         this.state = {
@@ -14,13 +15,15 @@ class ChattingPage extends PureRenderComponent{
 
     render(){
         return (
-            <div className="ChattingPage">
+            <div className="SessionItemMenu">
 
             </div>
         )
     }
 }
 
-export default RebixFlux.connect(ChattingPage,function(store, props, context, connectState, that){
+export default RebixFlux.connect(SessionItemMenu,function(store, props, context, connectState, that){
+    return {
 
+    }
 });

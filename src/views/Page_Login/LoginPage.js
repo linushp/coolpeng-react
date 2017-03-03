@@ -7,6 +7,7 @@ import getRandomNumString from '../../functions/getRandomNumString';
 import getFormValues from '../../functions/getFormValues';
 import SocketManager from '../../api/socket/SocketManager';
 import LoginActions from '../../actions/LoginActions';
+import AvatarUtils from '../../utils/AvatarUtils';
 import './LoginPage.less';
 
 
@@ -33,7 +34,7 @@ var UserRegister = RebixFlux.createPureComponent(function (props) {
 
 var num = getRandomNumString(1, 16, 4);
 var style = {
-    'backgroundImage': `url("http://image.coolpeng.cn/avatar/00backwall/B-${num}.jpg")`
+    //'backgroundImage': `url("http://image.coolpeng.cn/avatar/00backwall/B-${num}.jpg")`
 };
 
 class LoginPage extends RebixFlux.PureRenderComponent {
@@ -64,6 +65,7 @@ class LoginPage extends RebixFlux.PureRenderComponent {
     handleRegSubmit = (e)=> {
         var values = getFormValues(e.target, ['email', 'nickname', 'password']);
         values['password'] = encodePassword(values['password']);
+        values['avatar'] = AvatarUtils.getRandomAvatarURLFull();
         LoginActions.addUserAccount(values).then(function (result) {
             if (result === 'email_exist') {
                 alert("此邮箱已存在,不能注册")

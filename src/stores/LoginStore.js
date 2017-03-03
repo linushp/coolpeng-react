@@ -10,7 +10,8 @@ const UserInfoRecord = immutable.Record({
     'id': null,
     'token': null,
     'email': null,
-    'nickname': null
+    'nickname': null,
+    'avatar': null
 });
 
 function getInitialState() {

@@ -11,8 +11,8 @@ export function getUserCountByEmail(email) {
 }
 
 
-export function createUserAccount({email, nickname, password}) {
-    return MyWebSocket.sendSQLQuery("createUserAccount", [email, nickname, password]).then((response)=> {
+export function createUserAccount({email, nickname, password,avatar}) {
+    return MyWebSocket.sendSQLQuery("createUserAccount", [email, nickname, password, avatar]).then((response)=> {
         var insertId = response.result.insertId;
         return insertId;
     });
@@ -31,9 +31,14 @@ export function updateUserToken(token, email, password) {
 }
 
 export function deleteUserToken(id, token) {
-    return MyWebSocket.sendMsg("deleteUserToken", [id, token]);
+    return MyWebSocket.sendSQLQuery("deleteUserToken", [id, token]);
 }
 
 
+export function getUserByUidInList(uidList){
+    return MyWebSocket.sendSQLQuery("getUserByUidInList", [uidList]);
+}
+
+window.getUserByUidInList = getUserByUidInList;
 window.createUserAccount = createUserAccount;
 window.getUserByEmailAndPassword = getUserByEmailAndPassword;

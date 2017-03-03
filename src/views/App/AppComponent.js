@@ -3,6 +3,8 @@ import RebixFlux from 'react-rebixflux';
 import BigStore from '../../stores/BigStore';
 import './App.less';
 import AppHeader from './AppHeader';
+import AppNav from './AppNav';
+
 
 class AppComponent extends RebixFlux.PureRenderComponent {
     render() {
@@ -10,7 +12,13 @@ class AppComponent extends RebixFlux.PureRenderComponent {
             <div className="AppComponent">
                 <AppHeader />
                 <div className="AppBody">
-                    {this.props.children}
+                    <div className="AppBodyHeaderHeight"></div>
+                    <div className="AppBodyContent">
+                        <AppNav />
+                        <div className="AppBodyChildren">
+                            {this.props.children}
+                        </div>
+                    </div>
                 </div>
             </div>
         );

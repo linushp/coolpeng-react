@@ -1,0 +1,27 @@
+@import "../_variables";
+@import "../_mixins";
+
+.rc-menu {
+  color: @color-light-text-secondary;
+  background-color: @color-bg-menu;
+  border-radius: 0px;
+}
+
+.rc-menu-vertical {
+  min-width: 213px;
+  padding: 9px 0;
+  border: none;
+  box-shadow: rgba(0,0,0,.12) 0 0 8px, rgba(0,0,0,.24) 0 8px 8px;
+
+  .rc-menu-item {
+    line-height: 48px;
+    padding: 0 20px;
+    cursor: pointer;
+    font-size: 15px;
+    color: fade(#000000,54);
+  }
+
+  .rc-menu-item-active {
+    background-color: @color-bg-menu-hover;
+  }
+}

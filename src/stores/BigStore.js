@@ -6,7 +6,7 @@ import SessionStore from './SessionStore';
 
 
 export default RebixFlux.createMergedStore({
-    LoginStore: LoginStore,
-    SessionStore: SessionStore,
-    MessageStore: MessageStore
+    loginState: LoginStore,
+    sessionState: SessionStore,
+    messageState: MessageStore
 });
