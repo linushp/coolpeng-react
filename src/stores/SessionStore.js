@@ -1,12 +1,13 @@
 import RebixFlux from 'react-rebixflux';
+import RebixUtils from 'rebix-utils';
+const keys = RebixUtils.keys;
+const forEach = RebixUtils.forEach;
 import immutable from 'immutable';
-
-var LOCAL_STORAGE_KEY = "SessionStore";
 
 
 //定义Record可以免去大量get set 方法的使用
 const SessionStoreRecord = immutable.Record({
-    'sessions': immutable.fromJS([]),
+    'sessions': new immutable.List([]),
     'isLoadingSessions': false
 });
 
@@ -20,12 +21,7 @@ const SessionRecord = immutable.Record({
 });
 
 function getInitialState() {
-    var initialState = {};
-    var json = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (json) {
-        initialState = JSON.parse(json);
-    }
-    return new SessionStoreRecord(initialState);
+    return new SessionStoreRecord();
 }
 
 
@@ -35,7 +31,15 @@ export default RebixFlux.createStore({
 
     initialState: getInitialState(),
 
-    'onGetMySessions': function (state, {payload, status}) {
+    'onGetMySessions': function (state, {status, payload}) {
+        if (status === 'success') {
+            var sessionsState = state.get('sessions');
+            forEach(payload || [], function (painSession) {
+                var sessionRecord = new SessionRecord(painSession);
+                sessionsState = sessionsState.push(sessionRecord);
+            });
+            state = state.set('sessions', sessionsState);
+        }
         state = state.set('isLoadingSessions', status === 'pending');
         return state;
     }

@@ -36,4 +36,4 @@ export default RebixFlux.connect(AppComponent, BigStore, function (bigStore, pro
     return {
         userInfo: bigStore.loginState
     };
-});
+},{componentName:'AppComponent'});

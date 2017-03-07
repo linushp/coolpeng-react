@@ -3,8 +3,6 @@ import getUniqueId from '../../utils/getUniqueId';
 import ReconnectingWebSocket from 'reconnectingwebsocket';
 
 
-
-
 const _logSocketFrames = () => localStorage.getItem('dev$$logSocketFrames') === 'true';
 const _logSocketPing = () => localStorage.getItem('dev$$logSocketPing') === 'true';
 window._dev = window._dev || {};
@@ -24,7 +22,20 @@ function noop() {
 }
 
 
-var PROMISE_CALLBACK_CACHE = {};
+var PROMISE_RESOLVER_CACHE = {};
+function savePromiseResolver(requestId, promiseResolver) {
+    PROMISE_RESOLVER_CACHE[requestId] = promiseResolver;
+}
+
+function getPromiseResolver(requestId) {
+    return PROMISE_RESOLVER_CACHE[requestId];
+}
+
+function deletePromiseResolver(requestId) {
+    PROMISE_RESOLVER_CACHE[requestId] = null;
+    delete PROMISE_RESOLVER_CACHE[requestId];
+}
+
 
 class SocketManager {
 
@@ -39,7 +50,7 @@ class SocketManager {
         });
     }
 
-    sendMsg({msgId,sessionId,toUid,fromUid,content}) {
+    sendMsg({msgId, sessionId, toUid, fromUid, content}) {
         this._sendSocketFrame({
             "action": 'msg',
             "message": {
@@ -66,7 +77,7 @@ class SocketManager {
         });
 
         return new Promise(function (resolve, reject) {
-            PROMISE_CALLBACK_CACHE[requestId] = {resolve: resolve, reject: reject};
+            savePromiseResolver(requestId, {resolve: resolve, reject: reject, requestTime: new Date().getTime()});
         });
     }
 
@@ -75,12 +86,24 @@ class SocketManager {
         this._resetState();
     }
 
-    _sendSocketFrame(socketFrame) {
+    _sendSocketFrame(socketFrame, reTryTimes) {
         var that = this;
         var ws = that._ws;
-        var dataString = JSON.stringify(socketFrame);
-        ws.send(dataString);
-        tryLogSocket(socketFrame);
+        if (!ws || ws.readyState===0) {
+            reTryTimes = reTryTimes || 0;
+            if (reTryTimes > 60) {
+                console.error("socket一直没有准备好，不再尝试发送请求");
+                return;
+            }
+            setTimeout(function () {
+                that._sendSocketFrame(socketFrame, reTryTimes + 1);
+            }, 1000);
+        } else {
+            console.log('WebSocket',ws);
+            var dataString = JSON.stringify(socketFrame);
+            ws.send(dataString);
+            tryLogSocket(socketFrame);
+        }
     }
 
 
@@ -130,6 +153,7 @@ class SocketManager {
     _startPing() {
         this._interval = setInterval(() => {
             this.sendPing();
+            this._rejectTimeoutRequest();
         }, 60 * 1000);
     }
 
@@ -153,6 +177,27 @@ class SocketManager {
     };
 
 
+    _rejectTimeoutRequest = ()=> {
+        var promises = PROMISE_RESOLVER_CACHE;
+
+        var requestIdList = Object.keys(promises);
+        for (var i = 0; i < requestIdList.length; i++) {
+            var requestId = requestIdList[i];
+            var resolver = promises[requestId];
+
+            if (resolver) {
+                var requestTime = resolver.requestTime;
+                if (requestTime + 1000 * 60 < new Date().getTime()) {
+                    var reject = resolver.reject;
+                    reject('request time out');
+                    deletePromiseResolver(requestId);
+                }
+            }
+
+        }
+    };
+
+
     _onMessage = (response0)=> {
         var that = this;
 
@@ -164,7 +209,7 @@ class SocketManager {
         if (responseType === 'sql') {
 
             var requestId = responseData.reqId;
-            var promiseResolve = PROMISE_CALLBACK_CACHE[requestId];
+            var promiseResolve = getPromiseResolver(requestId);
             if (promiseResolve) {
 
                 if (responseData['errCode'] !== 0) {
@@ -173,8 +218,7 @@ class SocketManager {
                     promiseResolve.resolve(responseData);
                 }
 
-                PROMISE_CALLBACK_CACHE[requestId] = null;
-                delete PROMISE_CALLBACK_CACHE[requestId];
+                deletePromiseResolver(requestId);
             }
 
         } else if (responseType === 'msg') {

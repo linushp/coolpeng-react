@@ -20,6 +20,21 @@ const LastMsg = createPureComponent(function(props){
     );
 });
 
+function getSessionLogo(session,userAccount) {
+    debugger;
+    if(!userAccount){
+        return '';
+    }
+    return userAccount.avatar;
+}
+
+function getSessionName(session,userAccount) {
+    if(!userAccount){
+        return '';
+    }
+    return userAccount.nickname;
+}
+
 class SessionItem extends PureRenderComponent{
     constructor(props) {
         super(props);
@@ -29,11 +44,14 @@ class SessionItem extends PureRenderComponent{
     }
 
     render(){
+        var {session,userAccount} = this.props;
+        var sessionLogo = getSessionLogo(session,userAccount);
+        var sessionName = getSessionName(session,userAccount);
         return (
             <div className="SessionItem">
-                <UserAvatar className="session-logo" avatar="" />
+                <UserAvatar className="session-logo" avatar={sessionLogo} />
                 <div className="session-info">
-                    <div className="sessionName"></div>
+                    <div className="sessionName">{sessionName}</div>
                     <LastMsgTime />
                     <LastMsg />
                 </div>
