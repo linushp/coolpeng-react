@@ -36,7 +36,7 @@ function getSessionName(session, userAccount) {
     return userAccount.nickname;
 }
 
-class SessionItem extends PureRenderComponent {
+export default class SessionItem extends PureRenderComponent {
     constructor(props) {
         super(props);
         this.state = {};
@@ -69,10 +69,3 @@ class SessionItem extends PureRenderComponent {
         )
     }
 }
-
-export default RebixFlux.connect(SessionItem, function (store, props, context, connectState, that) {
-    var selSessionId = getDeepValue(store, 'sessionState.selSessionId');
-    return {
-        selSessionId: ('' + selSessionId)
-    }
-});

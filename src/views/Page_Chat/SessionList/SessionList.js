@@ -40,7 +40,7 @@ class SessionList extends PureRenderComponent {
 
     render() {
         var that = this;
-        var {sessions, userAccounts} = this.props;
+        var {selSessionId,sessions, userAccounts} = this.props;
         return (
             <div className="SessionList">
                 <CreateSession onClick={that.handleCreateSession} />
@@ -50,7 +50,7 @@ class SessionList extends PureRenderComponent {
                         var to_sid = session.get('to_sid');
                         var id = session.get('id');
                         var userAccount = userAccounts.get('' + to_sid);
-                        return <SessionItem key={id} session={session} userAccount={userAccount}/>
+                        return <SessionItem key={id} session={session} userAccount={userAccount} selSessionId={selSessionId} />
                     })
                 }
             </div>
@@ -61,7 +61,9 @@ class SessionList extends PureRenderComponent {
 export default RebixFlux.connect(SessionList, function (bigStore, props, context, connectState, that) {
     var sessions = getDeepValue(bigStore, 'sessionState.sessions');
     var userAccounts = getDeepValue(bigStore, 'userAccountState');
+    var selSessionId = getDeepValue(bigStore, 'sessionState.selSessionId');
     return {
+        selSessionId:selSessionId,
         sessions: sessions,
         userAccounts: userAccounts
     };
