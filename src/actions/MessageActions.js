@@ -6,5 +6,6 @@ import {getMessageListBySessionId,deleteMessageById} from '../api/MessageApi';
 
 export default RebixFlux.createActions("message", {
 
-    
+
+
 });
