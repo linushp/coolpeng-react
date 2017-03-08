@@ -1,0 +1,53 @@
+
+.dlg-fullscreen {
+  background-color: transparent !important;
+  .dialog-entity {
+    width: 100%;
+    height: 100%;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    overflow-y: auto;
+    .dlg-title {
+      font-size: 34px;
+      font-weight: bold;
+      //color: @-deprecated-color-text-default;
+      line-height: 1;
+    }
+
+    .fs-btn-close {
+      position: absolute;
+      top: 48px;
+      right: 48px;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      //color: @-deprecated-color-text-note;
+      font-size: 13px;
+      text-align: center;
+      cursor: pointer;
+      .icon-global-button-action-esc {
+        display: block;
+        margin: 15px auto 1px;
+      }
+      &:hover {
+        //color: @-deprecated-color-text-secondary;
+        //background-color: @-deprecated-color-bg-gray;
+        .icon-global-button-action-esc {
+          //.icon-global-button-action-esc-hover();
+        }
+      }
+      &:active {
+        //color: @color-white;
+        //background-color: @-deprecated-color-bg-green;
+        .icon-global-button-action-esc {
+          //.icon-global-button-action-esc-active();
+        }
+      }
+    }
+
+    .footer {
+      display: none;
+    }
+  }
+}

@@ -10,6 +10,7 @@ import SessionItem from './SessionItem';
 import './SessionList.less';
 
 const CreateSession = createPureComponent(function(props){
+    console.log('CreateSession');
     return (
         <div className="SessionItem CreateSession" onClick={()=>{props.onClick}}>
             <div className="SessionLogo">

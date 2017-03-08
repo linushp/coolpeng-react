@@ -1,0 +1,104 @@
+//@import "../../../less/_variables.less";
+//@import "../../../less/_mixins";
+//@import (reference) '../../../less/eim-sprites.less';
+//@import (reference) '../../../less/eim-deprecated.less';
+
+.dialog-mask {
+  position: fixed;
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  z-index: 200;
+  left: 0;
+  top: 0;
+
+
+  .dialog-entity {
+    position: relative;
+    width: 650px;
+    height: 526px;
+    overflow: hidden;
+    border-radius: 2px;
+    box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.12), 0px 8px 8px 0px rgba(0,0,0,0.24);
+    box-sizing: border-box;
+
+    -webkit-font-smoothing: antialiased;
+    .btn_close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+
+      &:hover {
+
+      }
+    }
+
+
+    > .header {
+      .title {
+        //font-family: 'Helvetica Neue Medium';
+        font-size: 20px;
+        line-height: 53px;
+        &.setting {
+          background-size: 100% auto;
+          padding-left: 27px;
+        }
+      }
+      .session_title {
+        color: #fff;
+        font-size: 22px;
+        line-height: 32px;
+      }
+      .session_desc {
+        display: none;
+        font-size: 12px;
+        color: #797d7f;
+        line-height: 20px;
+      }
+    }
+
+    > .footer {
+
+      .footer-content {
+        float: right;
+      }
+    }
+  }
+}
+
+
+
+// dialog进入/退出动画
+.dialog-animator {
+  pointer-events: none;
+  .dialog-mask {
+    transition-property: background-color;
+    transition-duration: 200ms;
+    transition-delay: 200ms;
+    background-color:fade(#ffffff,0);
+  }
+  .dialog-entity {
+    transition-property: margin-top, opacity;
+    transition-duration: 300ms;
+    margin-top: 100px;
+    opacity: 0;
+  }
+}
+
+.dialog-animator.active {
+  .dialog-mask {
+    transition-delay: 0ms;
+    background-color:fade(#ffffff,94);
+    //background-color: @-deprecated-color-bg-dlg-mask-gray;
+  }
+  pointer-events: auto;
+  .dialog-entity {
+    margin-top: 0;
+    opacity: 1;
+  }
+}
