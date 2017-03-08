@@ -7,8 +7,10 @@ const createPureComponent = RebixFlux.createPureComponent;
 const PureRenderComponent = RebixFlux.PureRenderComponent;
 import SessionActions from '../../actions/SessionActions';
 import UserAccountActions from '../../actions/UserAccountActions';
-import SessionList from './Sessions/SessionList';
-import MessageList from './Message/MessageList';
+import SessionList from './SessionList/SessionList';
+import MessageList from './MessageList/MessageList';
+import MessageInput from './MessageInput/MessageInput';
+import './ChattingPage.less';
 
 class ChattingPage extends PureRenderComponent {
     constructor(props) {
@@ -55,13 +57,16 @@ class ChattingPage extends PureRenderComponent {
         return (
             <div className="ChattingPage">
                 <SessionList />
-                <MessageList />
+                <div className="MessagePanel">
+                    <MessageList />
+                    <MessageInput />
+                </div>
             </div>
         )
     }
 }
 
 export default RebixFlux.connect(ChattingPage, function (store, props, context, connectState, that) {
-   console.log('ChattingPage',store);
+   //console.log('ChattingPage',store);
     return {}
 },{componentName:'ChattingPage'});

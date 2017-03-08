@@ -18,7 +18,9 @@ html, body, #root, .AppComponent,.AppBody{
 }
 
 .AppHeader{
-  .fadeBg();
+  //.fadeBg();
+  background: #665F7B;
+  color: fade(#FFFFFF,58);
   height: @HEADER_HEIGHT;
   width: 100%;
   position: fixed;
@@ -45,7 +47,7 @@ html, body, #root, .AppComponent,.AppBody{
     line-height: 40px;
     margin-right: 20px;
     font-size: 14px;
-    color: fade(#000000,58);
+    color: fade(#FFFFFF,58);
   }
 
   .UserAvatar{
@@ -76,6 +78,8 @@ html, body, #root, .AppComponent,.AppBody{
 
 .AppBodyChildren{
   flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .AppNav{

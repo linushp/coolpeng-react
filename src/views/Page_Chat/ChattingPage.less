@@ -1,0 +1,28 @@
+@import "_variables.less";
+
+.ChattingPage {
+
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+
+  .SessionList {
+    width: @SESSION_ITEM_WIDTH;
+    flex: 0 0 auto;
+  }
+
+  .MessagePanel {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .MessageList {
+    flex: 1 1 auto;
+  }
+
+  .MessageInput {
+    flex: 0 0 auto;
+  }
+
+}

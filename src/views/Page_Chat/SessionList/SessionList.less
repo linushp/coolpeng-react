@@ -1,0 +1,78 @@
+@import "../_variables.less";
+
+@SESSION_ITEM_PADDING:12px;
+
+.SessionLogoPos(){
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -20px;
+  margin-top: -20px;
+}
+
+.SessionList {
+
+  border-right: 1px solid hsla(0,0%,80%,.3);
+
+  .SessionItem {
+
+    .UserSelectNoneFunc();
+
+    cursor: pointer;
+    height: @SESSION_ITEM_HEIGHT;
+    width: @SESSION_ITEM_WIDTH;
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid #F7F7F7;
+
+    &:hover{
+      background-color: #F7F7F7;
+    }
+
+    &.isSelectedItem{
+      background-color: #E7E7E7;
+    }
+  }
+
+  .SessionLogo {
+    border-radius: 100px;
+    float: left;
+    height: @SESSION_ITEM_HEIGHT;
+    width: 60px;
+    flex: 0 0 auto;
+    position: relative;
+    .session-logo{
+      .SessionLogoPos();
+    }
+  }
+
+  .SessionInfo {
+    float: left;
+    padding: @SESSION_ITEM_PADDING 0;
+    width: @SESSION_ITEM_WIDTH -60px;
+    flex: 1 1 auto;
+  }
+
+
+  .CreateSessionAvatar{
+    width: 40px;
+    height: 40px;
+    background: #f55d00;
+    border-radius: 100px;
+    .SessionLogoPos();
+  }
+
+  .CreateSessionChar{
+    color: #FFFFFF;
+    line-height: 40px;
+    text-align: center;
+    font-size: 20px;
+  }
+
+  .CreateSessionText{
+    font-size: 14px;
+    line-height: @SESSION_ITEM_HEIGHT - (2 * @SESSION_ITEM_PADDING);
+  }
+
+
+}
