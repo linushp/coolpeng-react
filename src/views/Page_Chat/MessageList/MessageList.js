@@ -5,6 +5,15 @@ const createPureComponent = RebixFlux.createPureComponent;
 const PureRenderComponent = RebixFlux.PureRenderComponent;
 import './MessageList.less';
 
+
+const MessageItem = createPureComponent(function(props){
+    return (
+        <div className="MessageItem">
+        </div>
+    );
+});
+
+
 class MessageList extends PureRenderComponent{
     constructor(props) {
         super(props);
@@ -14,9 +23,14 @@ class MessageList extends PureRenderComponent{
     }
 
     render(){
+        var {messageList} = this.props;
         return (
             <div className="MessageList">
-
+                {
+                    messageList.map(function(msg){
+                        return <MessageItem message={msg} />
+                    })
+                }
             </div>
         )
     }
@@ -24,6 +38,6 @@ class MessageList extends PureRenderComponent{
 
 export default RebixFlux.connect(MessageList,function(store, props, context, connectState, that){
     return {
-
+        messageList:null
     };
 });
