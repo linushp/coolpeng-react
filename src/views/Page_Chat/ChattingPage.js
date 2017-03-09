@@ -12,7 +12,7 @@ import MessageList from './MessageList/MessageList';
 import MessageInput from './MessageInput/MessageInput';
 import './ChattingPage.less';
 
-class ChattingPage extends PureRenderComponent {
+export default class ChattingPage extends PureRenderComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -66,7 +66,7 @@ class ChattingPage extends PureRenderComponent {
     }
 }
 
-export default RebixFlux.connect(ChattingPage, function (store, props, context, connectState, that) {
-   //console.log('ChattingPage',store);
-    return {}
-},{componentName:'ChattingPage'});
+//export default RebixFlux.connect(ChattingPage, function (store, props, context, connectState, that) {
+//   //console.log('ChattingPage',store);
+//    return {}
+//},{componentName:'ChattingPage'});

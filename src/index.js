@@ -7,7 +7,7 @@ import ChattingPage from './views/Page_Chat/ChattingPage';
 import AppMainWindow from './views/App/AppComponent';
 import LoginPage from './views/Page_Login/LoginPage';
 import NotFoundPage from './views/NotFoundPage';
-import getRandomNumString from './functions/getRandomNumString';
+import getRandomNumString from './utils/functions/getRandomNumString';
 import "./components/common.less";
 
 onDomReady(function () {

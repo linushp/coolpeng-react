@@ -53,7 +53,7 @@ export default class SessionItem extends PureRenderComponent {
         var {session,userAccount,selSessionId} = that.props;
         var sessionLogo = getSessionLogo(session, userAccount);
         var sessionName = getSessionName(session, userAccount);
-        var sessionId = ('' + session.get('id'));
+        var sessionId = session.get('id');
         var isSelectedItem = (selSessionId === sessionId) ? 'isSelectedItem' : '';
         return (
             <div className={`SessionItem ${isSelectedItem}`} onClick={that.handleSessionSelect}>

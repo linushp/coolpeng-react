@@ -1,3 +1,4 @@
+import RebixFlux from 'react-rebixflux';
 import SocketSqlManager from './SocketSqlManager';
 import getUniqueId from '../../utils/getUniqueId';
 import ReconnectingWebSocket from 'reconnectingwebsocket';
@@ -222,7 +223,7 @@ class SocketManager {
             }
 
         } else if (responseType === 'msg') {
-
+            RebixFlux.dispatchCommand('receiveMessage',responseData);
         }
 
     };
