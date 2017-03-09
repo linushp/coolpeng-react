@@ -1,10 +1,11 @@
 import RebixFlux from 'react-rebixflux';
 import immutable from 'immutable';
-
+import LoginStore from '../stores/LoginStore';
+import SessionStore from '../stores/SessionStore';
 
 function getInitialState() {
     return immutable.fromJS({
-        /* key   : "S"+SessionId   */
+        /* key   : "S"+sessionId   */
         /* value : messageList */
     });
 }
@@ -26,7 +27,8 @@ function getMessageList(state, sessionId) {
 const MessageRecord = immutable.Record({
     id: null,
     msg_id: null, //前端产生的msg id
-    content: null, /*MessageContentRecord*/
+    msg_type: null, //text,image,code
+    msg_content: null,
     time: null,
     f_uid: null,
     f_avatar: null,
@@ -35,13 +37,25 @@ const MessageRecord = immutable.Record({
     status: 'sending' //sending 发送中 , sent 已发送
 });
 
-/**
- * 消息内容
- */
-const MessageContentRecord = immutable.Record({
-    type: 'text', //text,image,code
-    data: null
-});
+function findMessageIndex(messageList, msg_id) {
+    return messageList.findIndex(function (messageRecord) {
+        return messageRecord.get('msg_id') === msg_id;
+    })
+}
+
+function saveOrUpdateMessage(state, sessionId, sendContent) {
+    var sendContentRecord = new MessageRecord(sendContent);
+    var messageList = getMessageList(state, "S" + sessionId);
+    var msg_id = sendContent.msg_id;
+    var msgIndex = findMessageIndex(messageList, msg_id);
+    if (msgIndex === -1) {
+        messageList = messageList.push(sendContentRecord);
+    } else {
+        messageList = messageList.set(msgIndex, sendContentRecord);
+    }
+    state = state.set("S" + sessionId, messageList);
+    return state;
+}
 
 export default RebixFlux.createStore({
     forAction: "message",
@@ -49,18 +63,27 @@ export default RebixFlux.createStore({
 
     onSendMessage: function (state, {status, payload}) {
         if (status === 'success') {
-            var {sessionId,message} = payload;
-            message.content = new MessageContentRecord(message.content);
-            var messageList = getMessageList(state, "S" + sessionId);
-            messageList = messageList.push(new MessageRecord(message));
-            state = state.set("S" + sessionId, messageList);
+            var {sessionId,sendContent} = payload;
+            state = saveOrUpdateMessage(state, sessionId, sendContent)
         }
         return state;
     },
 
     //接收到消息
     onCmdReceiveMessage: function (state, {staus,payload}) {
-        //debugger;
+        var myUid = LoginStore.getUid();
+        var {fromUid,sessionId,content} = payload;
+        var sendContent = content;
+        sendContent.status = 'sent';
+
+        var mySessionId = sessionId;
+        //如果是别人发的
+        if (fromUid !== myUid) {
+            mySessionId = SessionStore.getSessionBySidNdType(fromUid,SESSION_TYPE_P2P);
+        }
+
+        state = saveOrUpdateMessage(state, mySessionId, sendContent);
+        return state;
     }
 
 });

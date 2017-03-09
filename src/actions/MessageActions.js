@@ -20,7 +20,7 @@ function toUidMap(arr) {
 export default RebixFlux.createActions("message", {
 
 
-    sendMessage: function ({session_type,id,to_sid}, msgContent) {
+    sendMessage: function ({session_type,id,to_sid}, content) {
 
         var serverTimeNow = ServerTimeUtils.getServerTimeNow();
         var sessionId = id;
@@ -28,28 +28,31 @@ export default RebixFlux.createActions("message", {
         var myUserInfo = LoginStore.getUserInfo();
         var msgId = getUniqueId();
 
+        var sendContent = {
+            msg_id: msgId, //前端产生的msg id
+            msg_type:'text',
+            msg_content: content,
+            time: serverTimeNow,
+            f_uid: myUid,
+            f_avatar: myUserInfo.avatar,
+            f_nickname: myUserInfo.nickname,
+            session_id: sessionId,
+            status: 'sending' //sending 发送中 , sent 已发送
+        };
         if (SESSION_TYPE_P2P === session_type) {
             SocketManager.sendMsg({
                 msgId: msgId,
+                sessionType:SESSION_TYPE_P2P,
                 sessionId: sessionId,
                 toUid: toUidMap([myUid, to_sid]),
                 fromUid: myUid,
-                content: msgContent
+                content: sendContent
             });
         }
 
         return {
             sessionId: sessionId,
-            message: {
-                msg_id: msgId, //前端产生的msg id
-                content: msgContent,
-                time: serverTimeNow,
-                f_uid: myUid,
-                f_avatar: myUserInfo.avatar,
-                f_nickname: myUserInfo.nickname,
-                session_id: sessionId,
-                status: 'sending' //sending 发送中 , sent 已发送
-            }
+            sendContent: sendContent
         }
     }
 
