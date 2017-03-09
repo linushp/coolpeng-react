@@ -24,7 +24,7 @@ function onReceiveUserAccountArrayResult(state, {status, payload}) {
         forEach(result, function (painUserAccount) {
             var uid = painUserAccount.id;
             var userAccountRecord = new UserAccountRecord(painUserAccount);
-            state = state.set('' + uid, userAccountRecord);
+            state = state.set('U' + uid, userAccountRecord);
         });
     }
     return state;

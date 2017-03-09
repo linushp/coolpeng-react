@@ -9,7 +9,7 @@ function joinField(fields) {
 
 var user_select_fields = ['id', 'email', 'nickname', 'avatar'];
 var user_insert_fields = ['email', 'nickname', 'password', 'avatar'];
-var session_insert_fields = ['uid', 'session_type', 'to_sid', 'session_name', 'last_time'];
+var session_insert_fields = ['uid', 'session_type', 'session_id','to_sid', 'session_name', 'last_time'];
 var publicChart_insert_fields = ['topic', 'desc', 'avatar'];
 
 module.exports = {

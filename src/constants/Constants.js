@@ -1,6 +1,7 @@
 
 export const SESSION_TYPE_P2P   = 1;
 export const SESSION_TYPE_GROUP = 2;
+export const SESSION_TYPE_PUBLIC = 3;
 
 
 export const MSG_TYPE_TEXT  = 'text';

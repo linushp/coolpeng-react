@@ -1,6 +1,6 @@
 @import "../_variables.less";
 
-@SESSION_ITEM_PADDING:12px;
+@SESSION_ITEM_PADDING:15px;
 
 .SessionLogoPos(){
   position: absolute;
@@ -51,6 +51,7 @@
     padding: @SESSION_ITEM_PADDING 0;
     width: @SESSION_ITEM_WIDTH -60px;
     flex: 1 1 auto;
+    position: relative;
   }
 
 
@@ -74,5 +75,24 @@
     line-height: @SESSION_ITEM_HEIGHT - (2 * @SESSION_ITEM_PADDING);
   }
 
+  .LastMsg{
+    font-size: 13px;
+    color: #7D7692;
+    margin-top: 5px;
+    width: 210px;
+    overflow: hidden;
+    white-space:nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .LastMsgTime{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 12px;
+    font-weight: normal;
+    color: #7D7692;
+    font-family: 'SimSun';
+  }
 
 }

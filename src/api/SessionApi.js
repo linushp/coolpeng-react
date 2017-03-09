@@ -15,25 +15,23 @@ export function getMySessions(uid) {
 
 export function updateSessionLastTime(sessionId) {
     var last_time = ServerTimeUtils.getServerTimeNow();
-
-    return MyWebSocket.sendSQLQuery("updateSessionLastTime", [last_time,sessionId]).then((response)=> {
+    return MyWebSocket.sendSQLQuery("updateSessionLastTime", [last_time, sessionId]).then((response)=> {
         return response.result.changedRows;
     });
 }
 
 
-export function createSession({uid, session_type, to_sid, session_name, last_time}) {
-    return MyWebSocket.sendSQLQuery("createSession", [uid, session_type, to_sid, session_name, last_time]).then((response)=> {
+export function createSession({uid, session_type,session_id, to_sid, session_name, last_time}) {
+    return MyWebSocket.sendSQLQuery("createSession", [uid, session_type, session_id, to_sid, session_name, last_time]).then((response)=> {
         return response.result;
     });
 }
 
-export function deleteSession(sessionId,uid) {
-    return MyWebSocket.sendSQLQuery("deleteSession", [sessionId,uid]).then((response)=> {
+export function deleteSession(sessionId, uid) {
+    return MyWebSocket.sendSQLQuery("deleteSession", [sessionId, uid]).then((response)=> {
         return response.result;
     });
 }
-
 
 
 window.createSession = createSession;

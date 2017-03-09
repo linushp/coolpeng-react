@@ -14,10 +14,12 @@ const SessionStoreRecord = immutable.Record({
 });
 
 const SessionRecord = immutable.Record({
-    'id': null, //SessionId 这就是
+    //'id': null, //这个id个垃圾.
     'uid': null,
-    'session_type': null, // 1 代表p2p消息 . 2 代表群组消息.
+    'session_id': null, //这才是真正的session_id ; P2P: 38_39 ,PUBLIC: P3 ,GROUP : G4
+    'session_type': null, // 1 代表p2p消息 . 2 代表群组消息. 3代表公共会话
     'session_name': null,
+    'session_avatar': null, // p2p会话没有此属性.
     'to_sid': null,
     'last_time': null
 });
@@ -38,7 +40,7 @@ export default RebixFlux.createStore({
             var sessionsState = state.get('sessions');
             var sessionsMap = state.get('sessionsMap');
             forEach(payload || [], function (painSession) {
-                var sessionId = painSession.id;
+                var sessionId = painSession.session_id;
                 var sessionRecord = new SessionRecord(painSession);
                 sessionsState = sessionsState.push(sessionRecord);
                 sessionsMap = sessionsMap.set(sessionId, sessionRecord);

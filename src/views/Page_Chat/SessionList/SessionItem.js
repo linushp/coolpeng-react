@@ -6,32 +6,40 @@ const PureRenderComponent = RebixFlux.PureRenderComponent;
 const getDeepValue = RebixUtils.getDeepValue;
 import UserAvatar from '../../../components/UserAvatar/UserAvatar';
 import SessionActions from '../../../actions/SessionActions';
+var formatDatePretty = RebixUtils.formatDatePretty;
+var ServerTimeUtils = RebixUtils.ServerTimeUtils;
+
 
 
 const LastMsgTime = createPureComponent(function (props) {
+    var {lastMsg} = props;
+    var nowTime = ServerTimeUtils.getServerTimeNow();
     return (
         <div className="LastMsgTime">
+            {lastMsg && formatDatePretty(lastMsg.time,nowTime)}
         </div>
     );
 });
 
 const LastMsg = createPureComponent(function (props) {
+    var {lastMsg} = props;
     return (
         <div className="LastMsg">
+            {lastMsg && lastMsg.msg_content}
         </div>
     );
 });
 
 function getSessionLogo(session, userAccount) {
     if (!userAccount) {
-        return '';
+        return session.session_avatar;
     }
     return userAccount.avatar;
 }
 
 function getSessionName(session, userAccount) {
     if (!userAccount) {
-        return '';
+        return session.session_name;
     }
     return userAccount.nickname;
 }
@@ -50,10 +58,10 @@ export default class SessionItem extends PureRenderComponent {
 
     render() {
         var that = this;
-        var {session,userAccount,selSessionId} = that.props;
+        var {session,userAccount,selSessionId,lastMsg} = that.props;
         var sessionLogo = getSessionLogo(session, userAccount);
         var sessionName = getSessionName(session, userAccount);
-        var sessionId = session.get('id');
+        var sessionId = session.get('session_id');
         var isSelectedItem = (selSessionId === sessionId) ? 'isSelectedItem' : '';
         return (
             <div className={`SessionItem ${isSelectedItem}`} onClick={that.handleSessionSelect}>
@@ -62,8 +70,8 @@ export default class SessionItem extends PureRenderComponent {
                 </div>
                 <div className="SessionInfo">
                     <div className="sessionName">{sessionName}</div>
-                    <LastMsgTime />
-                    <LastMsg />
+                    <LastMsgTime lastMsg={lastMsg}/>
+                    <LastMsg lastMsg={lastMsg} />
                 </div>
             </div>
         )

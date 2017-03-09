@@ -61,6 +61,7 @@ export default RebixFlux.createStore({
     forAction: "message",
     initialState: getInitialState(),
 
+    //发送消息
     onSendMessage: function (state, {status, payload}) {
         if (status === 'success') {
             var {sessionId,sendContent} = payload;
@@ -75,14 +76,7 @@ export default RebixFlux.createStore({
         var {fromUid,sessionId,content} = payload;
         var sendContent = content;
         sendContent.status = 'sent';
-
-        var mySessionId = sessionId;
-        //如果是别人发的
-        if (fromUid !== myUid) {
-            mySessionId = SessionStore.getSessionBySidNdType(fromUid,SESSION_TYPE_P2P);
-        }
-
-        state = saveOrUpdateMessage(state, mySessionId, sendContent);
+        state = saveOrUpdateMessage(state, sessionId, sendContent);
         return state;
     }
 

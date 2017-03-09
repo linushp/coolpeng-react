@@ -18,8 +18,8 @@ class MessageInput extends PureRenderComponent {
         var MessageTextInput = this.refs['MessageTextInput'];
         var value = MessageTextInput.value;
         MessageActions.sendMessage(selSession, {
-            type: 'text', //text,image,code
-            data: value
+            msg_type: 'text', //text,image,code
+            msg_content: value
         });
     };
 

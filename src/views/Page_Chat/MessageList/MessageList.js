@@ -5,15 +5,27 @@ const createPureComponent = RebixFlux.createPureComponent;
 const PureRenderComponent = RebixFlux.PureRenderComponent;
 const getDeepValue = RebixUtils.getDeepValue;
 
+import TextMessageContent from './MessageContent/TextMessageContent'
+import ImageMessageContent from './MessageContent/ImageMessageContent'
+import CodeMessageContent from './MessageContent/CodeMessageContent'
+
 import './MessageList.less';
+
+
+var MessageItemMap = {
+    'text':TextMessageContent,
+    'image':ImageMessageContent,
+    'code':CodeMessageContent
+};
 
 
 const MessageItem = createPureComponent(function(props){
     var {message} = props;
-    var messageJson = JSON.stringify(message);
+    var {msg_type} = message;
+    var RenderMessageContent = MessageItemMap[msg_type] || TextMessageContent;
     return (
         <div className="MessageItem">
-            {messageJson}
+            <RenderMessageContent message={message}/>
         </div>
     );
 });
