@@ -54,7 +54,6 @@ class MessageList extends PureRenderComponent{
     constructor(props) {
         super(props);
         this.state = {};
-        this.domId = getUniqueId("MessageList");
     }
 
     renderMessageList(){
@@ -97,7 +96,6 @@ class MessageList extends PureRenderComponent{
 
     render(){
         var that = this;
-        var domId = that.domId;
         return (
             <div className="MessageList">
                 {that.renderMessageList()}
