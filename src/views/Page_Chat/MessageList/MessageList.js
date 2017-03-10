@@ -36,11 +36,13 @@ const MessageItemUserInfo = createPureComponent(function(props){
 });
 
 const MessageItem = createPureComponent(function (props) {
-    var {message,isDisplayUserInfo} = props;
-    var {msg_type} = message;
+    var {message,isDisplayUserInfo,loginUid} = props;
+    var {msg_type,f_uid} = message;
+    var isMySendMsg = (f_uid===loginUid);
+    var clazzName = isMySendMsg ? 'me':'';
     var RenderMessageContent = MessageItemMap[msg_type] || TextMessageContent;
     return (
-        <div className="MessageItem">
+        <div className={`MessageItem ${clazzName}`}>
             {isDisplayUserInfo ? <MessageItemUserInfo message={message}/> : null}
             <div className="MessageItemContent">
                 <RenderMessageContent message={message}/>
@@ -58,7 +60,7 @@ class MessageList extends PureRenderComponent{
     }
 
     renderMessageList(){
-        var {messageList} = this.props;
+        var {messageList,loginUid} = this.props;
         if(!messageList){
             return null;
         }
@@ -90,7 +92,7 @@ class MessageList extends PureRenderComponent{
             lastFromUid = f_uid;
             count++;
 
-            return <MessageItem message={msg} key={msg_id} isDisplayUserInfo={isDisplayUserInfo}/>
+            return <MessageItem message={msg} key={msg_id} isDisplayUserInfo={isDisplayUserInfo} loginUid={loginUid}/>
         });
 
     }
@@ -123,8 +125,14 @@ export default RebixFlux.connect(MessageList,function(bigStore, props, context, 
 
     var selSessionId = getDeepValue(bigStore, 'sessionState.selSessionId');
     var messageList = getDeepValue(bigStore,'messageState.S'+selSessionId);
+
+    var loginState = getDeepValue(bigStore,'loginState');
+    var loginUid = getDeepValue(bigStore,'loginState.id');
+
     return {
         selSessionId:selSessionId,
-        messageList:messageList
+        messageList:messageList,
+        loginUserInfo:loginState,
+        loginUid:loginUid
     };
 });
