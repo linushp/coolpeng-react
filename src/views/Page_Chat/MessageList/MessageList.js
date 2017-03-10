@@ -35,9 +35,16 @@ const MessageItemUserInfo = createPureComponent(function(props){
     );
 });
 
+
+const MessageItemSending = createPureComponent(function(props){
+    return (
+        <img src="/static/v2/images/25x4Rho.gif" className="sendingIcon" />
+    );
+});
+
 const MessageItem = createPureComponent(function (props) {
     var {message,isDisplayUserInfo,loginUid} = props;
-    var {msg_type,f_uid} = message;
+    var {msg_type,f_uid,status} = message;
     var isMySendMsg = (f_uid===loginUid);
     var clazzName = isMySendMsg ? 'me':'';
     var RenderMessageContent = MessageItemMap[msg_type] || TextMessageContent;
@@ -47,6 +54,7 @@ const MessageItem = createPureComponent(function (props) {
             <div className="MessageItemContent">
                 <RenderMessageContent message={message}/>
             </div>
+            {status === 'sending' ? <MessageItemSending/> : null}
             <div className="clear"></div>
         </div>
     );

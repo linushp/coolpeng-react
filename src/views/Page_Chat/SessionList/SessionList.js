@@ -45,7 +45,7 @@ class SessionList extends PureRenderComponent {
 
     render() {
         var that = this;
-        var {selSessionId,sessions, userAccounts,messageState} = this.props;
+        var {selSessionId,sessions, userAccounts,messageState,timestamp} = this.props;
         return (
             <div className="SessionList">
                 <CreateSession onClick={that.handleCreateSession}/>
@@ -62,6 +62,7 @@ class SessionList extends PureRenderComponent {
                         }
                         var lastMsg = getLastMsg(messageState,session_id);
                         return <SessionItem key={id||session_id}
+                                            timestamp={timestamp}
                                             session={session}
                                             lastMsg = {lastMsg}
                                             userAccount={userAccount}
@@ -78,10 +79,12 @@ export default RebixFlux.connect(SessionList, function (bigStore, props, context
     var userAccounts = getDeepValue(bigStore, 'userAccountState');
     var selSessionId = getDeepValue(bigStore, 'sessionState.selSessionId');
     var messageState = getDeepValue(bigStore,'messageState');
+    var timestamp = props.timestamp;
     return {
         selSessionId: selSessionId,
         sessions: sessions,
         userAccounts: userAccounts,
-        messageState:messageState
+        messageState:messageState,
+        timestamp:timestamp
     };
 });

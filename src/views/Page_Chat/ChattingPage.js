@@ -16,8 +16,10 @@ export default class ChattingPage extends PureRenderComponent {
     constructor(props) {
         super(props);
         this.state = {
-            isLoaded: false
+            isLoaded: false,
+            timestamp:new Date().getTime()
         };
+        this.setIntervalHandler = 0;
     }
 
     componentDidMount() {
@@ -46,20 +48,33 @@ export default class ChattingPage extends PureRenderComponent {
             }
 
         });
+
+
+        this.setIntervalHandler = setInterval(function(){
+            that.setState({timestamp:new Date().getTime()});
+        },1000 * 60);
     }
 
+    componentWillUnmount() {
+        if (this.setIntervalHandler) {
+            clearInterval(this.setIntervalHandler);
+            this.setIntervalHandler = 0;
+        }
+    }
+
+
     render() {
-        var {isLoaded} = this.state;
+        var {isLoaded,timestamp} = this.state;
         if (!isLoaded) {
             return <div>loading....</div>
         }
 
         return (
             <div className="ChattingPage">
-                <SessionList />
+                <SessionList timestamp={timestamp} />
                 <div className="MessagePanel">
-                    <MessageList />
-                    <MessageInput />
+                    <MessageList timestamp={timestamp} />
+                    <MessageInput timestamp={timestamp} />
                 </div>
             </div>
         )

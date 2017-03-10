@@ -21,7 +21,6 @@ export default class TextMessageItem extends PureRenderComponent{
         return (
             <div className="TextMessageItem">
                 {msg_content}
-                {status==='sending'?'sending':null}
             </div>
         )
     }

@@ -14,7 +14,7 @@ import {scrollMessageListToBottom} from '../ChattingPageUtils';
 
 
 const LastMsgTime = createPureComponent(function (props) {
-    var {lastMsg} = props;
+    var {lastMsg,timestamp} = props;
     var nowTime = ServerTimeUtils.getServerTimeNow();
     return (
         <div className="LastMsgTime">
@@ -62,7 +62,7 @@ export default class SessionItem extends PureRenderComponent {
 
     render() {
         var that = this;
-        var {session,userAccount,selSessionId,lastMsg} = that.props;
+        var {session,userAccount,selSessionId,lastMsg,timestamp} = that.props;
         var sessionLogo = getSessionLogo(session, userAccount);
         var sessionName = getSessionName(session, userAccount);
         var sessionId = session.get('session_id');
@@ -74,7 +74,7 @@ export default class SessionItem extends PureRenderComponent {
                 </div>
                 <div className="SessionInfo">
                     <div className="sessionName">{sessionName}</div>
-                    <LastMsgTime lastMsg={lastMsg}/>
+                    <LastMsgTime lastMsg={lastMsg} timestamp={timestamp}/>
                     <LastMsg lastMsg={lastMsg} />
                 </div>
             </div>
