@@ -24,7 +24,7 @@ var MessageItemMap = {
 
 
 const MessageItemUserInfo = createPureComponent(function(props){
-    var {message} = props;
+    var {message,timestamp} = props;
     var {f_uid,f_avatar,f_nickname,time} = message;
     return (
         <div className="MessageItemUserInfo">
@@ -44,14 +44,14 @@ const MessageItemSending = createPureComponent(function(props){
 });
 
 const MessageItem = createPureComponent(function (props) {
-    var {message,isDisplayUserInfo,loginUid} = props;
+    var {message,isDisplayUserInfo,loginUid,timestamp} = props;
     var {msg_type,f_uid,status} = message;
     var isMySendMsg = (f_uid===loginUid);
     var clazzName = isMySendMsg ? 'me':'';
     var RenderMessageContent = MessageItemMap[msg_type] || TextMessageContent;
     return (
         <div className={`MessageItem ${clazzName}`}>
-            {isDisplayUserInfo ? <MessageItemUserInfo message={message}/> : null}
+            {isDisplayUserInfo ? <MessageItemUserInfo message={message} timestamp={timestamp}/> : null}
             <div className="MessageItemContent">
                 <RenderMessageContent message={message}/>
             </div>
@@ -69,7 +69,7 @@ class MessageList extends PureRenderComponent{
     }
 
     renderMessageList(){
-        var {messageList,loginUid} = this.props;
+        var {messageList,loginUid,timestamp} = this.props;
         if(!messageList){
             return null;
         }
@@ -101,7 +101,7 @@ class MessageList extends PureRenderComponent{
             lastFromUid = f_uid;
             count++;
 
-            return <MessageItem message={msg} key={msg_id} isDisplayUserInfo={isDisplayUserInfo} loginUid={loginUid}/>
+            return <MessageItem message={msg} timestamp={timestamp} key={msg_id} isDisplayUserInfo={isDisplayUserInfo} loginUid={loginUid}/>
         });
 
     }
@@ -138,10 +138,13 @@ export default RebixFlux.connect(MessageList,function(bigStore, props, context, 
     var loginState = getDeepValue(bigStore,'loginState');
     var loginUid = getDeepValue(bigStore,'loginState.id');
 
+    var timestamp = props.timestamp;
+
     return {
         selSessionId:selSessionId,
         messageList:messageList,
         loginUserInfo:loginState,
-        loginUid:loginUid
+        loginUid:loginUid,
+        timestamp:timestamp
     };
 });
