@@ -10,6 +10,7 @@ import TextMessageContent from './MessageContent/TextMessageContent'
 import ImageMessageContent from './MessageContent/ImageMessageContent'
 import CodeMessageContent from './MessageContent/CodeMessageContent';
 import getUniqueId from '../../../utils/getUniqueId';
+import {scrollMessageListToBottomIfNowBottom} from '../ChattingPageUtils';
 
 import './MessageList.less';
 
@@ -94,11 +95,25 @@ class MessageList extends PureRenderComponent{
 
     }
 
+
+    //接收到消息
+    onCmdReceiveMessage = ({responseType,sessionId}, status)=> {
+        if (responseType !== 'msg' || status !== 'success') {
+            return;
+        }
+        var {selSessionId} = this.props;
+        if (selSessionId === sessionId) {
+            scrollMessageListToBottomIfNowBottom();
+        }
+    };
+
     render(){
         var that = this;
         return (
             <div className="MessageList">
-                {that.renderMessageList()}
+                <div className="MessageListContent">
+                    {that.renderMessageList()}
+                </div>
             </div>
         )
     }

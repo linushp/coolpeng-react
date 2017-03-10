@@ -15,3 +15,9 @@ function _scrollMessageListToBottom(count) {
 export function scrollMessageListToBottom(){
     _scrollMessageListToBottom(10);
 }
+
+
+//如果现在就在聊天窗口底部,才会滚动到更低部
+export function scrollMessageListToBottomIfNowBottom(){
+
+}

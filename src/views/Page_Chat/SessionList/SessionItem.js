@@ -9,6 +9,8 @@ import SessionActions from '../../../actions/SessionActions';
 var formatDatePretty = RebixUtils.formatDatePretty;
 var ServerTimeUtils = RebixUtils.ServerTimeUtils;
 
+import {scrollMessageListToBottom} from '../ChattingPageUtils';
+
 
 
 const LastMsgTime = createPureComponent(function (props) {
@@ -53,7 +55,9 @@ export default class SessionItem extends PureRenderComponent {
     handleSessionSelect = ()=> {
         var that = this;
         var {session} = that.props;
-        SessionActions.selectSession(session);
+        SessionActions.selectSession(session).then(function(){
+            scrollMessageListToBottom();
+        });
     };
 
     render() {
