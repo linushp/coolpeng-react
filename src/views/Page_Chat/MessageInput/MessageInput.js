@@ -6,6 +6,7 @@ const PureRenderComponent = RebixFlux.PureRenderComponent;
 const getDeepValue = RebixUtils.getDeepValue;
 import './MessageInput.less';
 import MessageActions from '../../../actions/MessageActions';
+import {scrollMessageListToBottom} from '../ChattingPageUtils';
 
 class MessageInput extends PureRenderComponent {
     constructor(props) {
@@ -21,6 +22,8 @@ class MessageInput extends PureRenderComponent {
             msg_type: 'text', //text,image,code
             msg_content: value
         });
+        //发送消息后,滚动到最底部
+        scrollMessageListToBottom();
     };
 
     render() {

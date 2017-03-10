@@ -8,7 +8,8 @@ const formatDatePretty = RebixUtils.formatDatePretty;
 import UserAvatar from '../../../components/UserAvatar/UserAvatar';
 import TextMessageContent from './MessageContent/TextMessageContent'
 import ImageMessageContent from './MessageContent/ImageMessageContent'
-import CodeMessageContent from './MessageContent/CodeMessageContent'
+import CodeMessageContent from './MessageContent/CodeMessageContent';
+import getUniqueId from '../../../utils/getUniqueId';
 
 import './MessageList.less';
 
@@ -43,6 +44,7 @@ const MessageItem = createPureComponent(function (props) {
             <div className="MessageItemContent">
                 <RenderMessageContent message={message}/>
             </div>
+            <div className="clear"></div>
         </div>
     );
 });
@@ -51,9 +53,8 @@ const MessageItem = createPureComponent(function (props) {
 class MessageList extends PureRenderComponent{
     constructor(props) {
         super(props);
-        this.state = {
-
-        };
+        this.state = {};
+        this.domId = getUniqueId("MessageList");
     }
 
     renderMessageList(){
@@ -96,6 +97,7 @@ class MessageList extends PureRenderComponent{
 
     render(){
         var that = this;
+        var domId = that.domId;
         return (
             <div className="MessageList">
                 {that.renderMessageList()}

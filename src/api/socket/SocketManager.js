@@ -100,7 +100,7 @@ class SocketManager {
                 that._sendSocketFrame(socketFrame, reTryTimes + 1);
             }, 1000);
         } else {
-            console.log('WebSocket',ws);
+            //console.log('WebSocket',ws);
             var dataString = JSON.stringify(socketFrame);
             ws.send(dataString);
             tryLogSocket(socketFrame);
