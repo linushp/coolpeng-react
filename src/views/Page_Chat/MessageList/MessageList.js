@@ -4,7 +4,8 @@ import RebixUtils from 'rebix-utils';
 const createPureComponent = RebixFlux.createPureComponent;
 const PureRenderComponent = RebixFlux.PureRenderComponent;
 const getDeepValue = RebixUtils.getDeepValue;
-
+const formatDatePretty = RebixUtils.formatDatePretty;
+import UserAvatar from '../../../components/UserAvatar/UserAvatar';
 import TextMessageContent from './MessageContent/TextMessageContent'
 import ImageMessageContent from './MessageContent/ImageMessageContent'
 import CodeMessageContent from './MessageContent/CodeMessageContent'
@@ -19,13 +20,29 @@ var MessageItemMap = {
 };
 
 
-const MessageItem = createPureComponent(function(props){
+const MessageItemUserInfo = createPureComponent(function(props){
     var {message} = props;
+    var {f_uid,f_avatar,f_nickname,time} = message;
+    return (
+        <div className="MessageItemUserInfo">
+            <UserAvatar avatar={f_avatar} size={40} className="MessageItemAvatar" />
+            <div className="MessageItemNickname">{f_nickname}</div>
+            <div className="MessageItemTime">{formatDatePretty(time)}</div>
+            <div className="clear"></div>
+        </div>
+    );
+});
+
+const MessageItem = createPureComponent(function (props) {
+    var {message,isDisplayUserInfo} = props;
     var {msg_type} = message;
     var RenderMessageContent = MessageItemMap[msg_type] || TextMessageContent;
     return (
         <div className="MessageItem">
-            <RenderMessageContent message={message}/>
+            {isDisplayUserInfo ? <MessageItemUserInfo message={message}/> : null}
+            <div className="MessageItemContent">
+                <RenderMessageContent message={message}/>
+            </div>
         </div>
     );
 });
@@ -39,17 +56,49 @@ class MessageList extends PureRenderComponent{
         };
     }
 
-    render(){
+    renderMessageList(){
         var {messageList} = this.props;
+        if(!messageList){
+            return null;
+        }
+
+
+        var lastFromUid = null;
+        var lastMsgTime = null;
+        var count = 0;
+        return messageList.map(function(msg){
+            var msg_id = msg.msg_id || msg.id;
+            var f_uid = msg.f_uid;
+            var time = msg.time;
+            var isDisplayUserInfo = false;
+
+            if (count >= 10) {
+                isDisplayUserInfo = true;
+                count = 0;
+            }
+
+            if (f_uid !== lastFromUid) {
+                isDisplayUserInfo = true;
+            }
+
+            if(lastMsgTime && time && (time - lastMsgTime > 1000 * 60 *10)){
+                isDisplayUserInfo = true;
+            }
+
+            lastMsgTime = time;
+            lastFromUid = f_uid;
+            count++;
+
+            return <MessageItem message={msg} key={msg_id} isDisplayUserInfo={isDisplayUserInfo}/>
+        });
+
+    }
+
+    render(){
+        var that = this;
         return (
             <div className="MessageList">
-                {
-                    messageList &&
-                    messageList.map(function(msg){
-                        var msg_id = msg.msg_id || msg.id;
-                        return <MessageItem message={msg} key={msg_id}/>
-                    })
-                }
+                {that.renderMessageList()}
             </div>
         )
     }

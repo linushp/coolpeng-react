@@ -1,4 +1,41 @@
 
+@MessageItemAvatarPadding:50px;
+
 .MessageList{
+
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+
+
+  .MessageItem{
+    position: relative;
+    margin-top: 10px;
+  }
+
+  .MessageItemUserInfo{
+
+  }
+
+  .MessageItemAvatar{
+    position: absolute;
+    top: 0;
+    left: 10px;
+  }
+
+  .MessageItemNickname{
+    margin-left: @MessageItemAvatarPadding;
+    float: left;
+  }
+
+  .MessageItemTime{
+    margin-left: 10px;
+    float: left;
+  }
+
+  .MessageItemContent{
+    margin-left: @MessageItemAvatarPadding;
+  }
+
 
 }

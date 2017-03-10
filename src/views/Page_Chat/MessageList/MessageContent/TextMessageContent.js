@@ -17,10 +17,11 @@ export default class TextMessageItem extends PureRenderComponent{
 
     render(){
         var {message} = this.props;
-        var {msg_content} = message;
+        var {msg_content,status} = message;
         return (
             <div className="TextMessageItem">
                 {msg_content}
+                {status==='sending'?'sending':null}
             </div>
         )
     }
