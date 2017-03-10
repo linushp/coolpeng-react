@@ -10,6 +10,7 @@ import TextMessageContent from './MessageContent/TextMessageContent'
 import ImageMessageContent from './MessageContent/ImageMessageContent'
 import CodeMessageContent from './MessageContent/CodeMessageContent';
 import getUniqueId from '../../../utils/getUniqueId';
+import getStaticUrl from '../../../utils/getStaticUrl';
 import {scrollMessageListToBottomIfNowBottom} from '../ChattingPageUtils';
 
 import './MessageList.less';
@@ -38,7 +39,7 @@ const MessageItemUserInfo = createPureComponent(function(props){
 
 const MessageItemSending = createPureComponent(function(props){
     return (
-        <img src="/static/v2/images/25x4Rho.gif" className="sendingIcon" />
+        <img src={getStaticUrl("/static/v2/images/25x4Rho.gif")} className="sendingIcon" />
     );
 });
 
