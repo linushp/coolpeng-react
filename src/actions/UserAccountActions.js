@@ -7,13 +7,12 @@ export default RebixFlux.createActions("user_account", {
 
     getUserByUidInList: function (uidArray) {
         return getUserByUidInList(uidArray);
-    },
-
-
-    getOnLineUserList: function () {
-        return getOnLineUidList().then(function(uidArray){
-            return getUserByUidInList(uidArray);
-        });
     }
+
+    //getOnLineUserList: function () {
+    //    return getOnLineUidList().then(function(uidArray){
+    //        return getUserByUidInList(uidArray);
+    //    });
+    //}
 
 });

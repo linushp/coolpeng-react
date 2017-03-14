@@ -21,7 +21,7 @@ function getInitialState() {
 }
 
 
-function onReceiveUserAccountArrayResult(state, status, payload,isOnline) {
+function onReceiveUserAccountArrayResult(state, status, payload, isOnline) {
     if (status === 'success') {
         var result = payload || [];
         forEach(result, function (painUserAccount) {
@@ -40,8 +40,8 @@ export default RebixFlux.createStore({
     'initialState': getInitialState(),
     'onGetUserByUidInList': function (state, {status, payload}) {
         return onReceiveUserAccountArrayResult(state, status, payload, false);
-    },
-    'onGetOnLineUserList': function (state, {status, payload}) {
-        return onReceiveUserAccountArrayResult(state, status, payload, true);
     }
+    //'onGetOnLineUserList': function (state, {status, payload}) {
+    //    return onReceiveUserAccountArrayResult(state, status, payload, true);
+    //}
 });
