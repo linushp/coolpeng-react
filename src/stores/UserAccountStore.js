@@ -11,18 +11,22 @@ const UserAccountRecord = immutable.Record({
     'token': null,
     'email': null,
     'nickname': null,
-    'avatar': null
+    'avatar': null,
+    'isOnline': false,
+    'lastLoginTime': 0
 });
 
 function getInitialState() {
     return new immutable.Map({});
 }
 
-function onReceiveUserAccountArrayResult(state, {status, payload}) {
+
+function onReceiveUserAccountArrayResult(state, status, payload,isOnline) {
     if (status === 'success') {
         var result = payload || [];
         forEach(result, function (painUserAccount) {
             var uid = painUserAccount.id;
+            painUserAccount.isOnline = isOnline;
             var userAccountRecord = new UserAccountRecord(painUserAccount);
             state = state.set('U' + uid, userAccountRecord);
         });
@@ -30,8 +34,14 @@ function onReceiveUserAccountArrayResult(state, {status, payload}) {
     return state;
 }
 
+
 export default RebixFlux.createStore({
-    forAction: "user_account",
-    initialState: getInitialState(),
-    'onGetUserByUidInList': onReceiveUserAccountArrayResult
+    'forAction': "user_account",
+    'initialState': getInitialState(),
+    'onGetUserByUidInList': function (state, {status, payload}) {
+        return onReceiveUserAccountArrayResult(state, status, payload, false);
+    },
+    'onGetOnLineUserList': function (state, {status, payload}) {
+        return onReceiveUserAccountArrayResult(state, status, payload, true);
+    }
 });

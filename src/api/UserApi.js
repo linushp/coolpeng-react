@@ -31,7 +31,14 @@ export function getUserByEmailAndPassword(email, password) {
 }
 
 export function updateUserToken(token, email, password) {
-    return MyWebSocket.sendSQLQuery("updateUserToken", [token, email, password]).then(function (response) {
+    var last_login_time = ServerTimeUtils.getServerTimeNow();
+    return MyWebSocket.sendSQLQuery("updateUserToken", [token, last_login_time, email, password]).then(function (response) {
+        return response.result.changedRows;
+    });
+}
+
+export function updateLastLoginTime(last_login_time,uid) {
+    return MyWebSocket.sendSQLQuery("updateLastLoginTime", [last_login_time,uid]).then(function (response) {
         return response.result.changedRows;
     });
 }
@@ -47,6 +54,10 @@ export function getUserByUidInList(uidList){
     return MyWebSocket.sendSQLQuery("getUserByUidInList", [uidList]).then(function (response) {
         return response.result;
     });
+}
+
+export function getOnLineUidList(){
+    return MyWebSocket.sendCmdQuery('getOnLineUidList',[]);
 }
 
 window.getUserByUidInList = getUserByUidInList;

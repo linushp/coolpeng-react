@@ -3,7 +3,13 @@ import RebixUtils from 'rebix-utils';
 import createToken from '../utils/createToken';
 import LoginStore from '../stores/LoginStore';
 
-import {createUserAccount,getUserCountByEmail,getUserByEmailAndPassword,updateUserToken,deleteUserToken} from '../api/UserApi';
+import {
+    createUserAccount,
+    getUserCountByEmail,
+    getUserByEmailAndPassword,
+    updateUserToken,
+    deleteUserToken
+} from '../api/UserApi';
 
 export default RebixFlux.createActions("login", {
 

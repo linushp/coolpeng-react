@@ -7,7 +7,7 @@ function joinField(fields) {
 }
 
 
-var user_select_fields = ['id', 'email', 'nickname', 'avatar'];
+var user_select_fields = ['id', 'email', 'nickname', 'avatar','last_login_time'];
 var user_insert_fields = ['email', 'nickname', 'password', 'avatar'];
 var session_insert_fields = ['uid', 'session_type', 'session_id','to_sid', 'session_name', 'last_time'];
 var publicChart_insert_fields = ['topic', 'desc', 'avatar'];
@@ -20,7 +20,8 @@ module.exports = {
     "getUserByEmailAndPassword": ["select " + joinField(user_select_fields) + " from u_user where `email` = ? and `password`= ?"],
     "getUserByUidInList": ["select " + joinField(user_select_fields) + " from u_user where `id` in (?)  "],
     "createUserAccount": ["insert into u_user(" + joinField(user_insert_fields) + ") values(?,?,?,?)"],
-    "updateUserToken": ['update u_user set `token` = ? where `email` = ? and `password`= ? '],
+    "updateLastLoginTime": ['update u_user set `last_login_time` = ? where `id` = ? '],
+    "updateUserToken": ['update u_user set `token` = ? , `last_login_time` = ?  where `email` = ? and `password`= ? '],
     "deleteUserToken": ["update u_user set `token` = '' where `id` = ? and `token`= ? ", 'AUTO_TOKEN'],
 
     /*SessionApi*/

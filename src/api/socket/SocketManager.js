@@ -64,6 +64,22 @@ class SocketManager {
         });
     }
 
+    sendCmdQuery(cmdName,cmdParams){
+        var that = this;
+        var requestId = getUniqueId();
+        that._sendSocketFrame({
+            "action": 'cmd',
+            "message": {
+                cmdName: cmdName,
+                cmdParams: cmdParams
+            }
+        });
+
+        return new Promise(function (resolve, reject) {
+            savePromiseResolver(requestId, {resolve: resolve, reject: reject, requestTime: new Date().getTime()});
+        });
+    }
+
     sendSQLQuery(sqlId, params) {
         var that = this;
         var requestId = getUniqueId();
@@ -207,7 +223,7 @@ class SocketManager {
         tryLogSocket(responseData);
 
         var responseType = responseData.responseType;
-        if (responseType === 'sql') {
+        if (responseType === 'sql' || responseType ==='cmd') {
 
             var requestId = responseData.reqId;
             var promiseResolve = getPromiseResolver(requestId);
