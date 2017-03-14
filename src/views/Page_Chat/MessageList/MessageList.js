@@ -17,18 +17,18 @@ import './MessageList.less';
 
 
 var MessageItemMap = {
-    'text':TextMessageContent,
-    'image':ImageMessageContent,
-    'code':CodeMessageContent
+    'text': TextMessageContent,
+    'image': ImageMessageContent,
+    'code': CodeMessageContent
 };
 
 
-const MessageItemUserInfo = createPureComponent(function(props){
+const MessageItemUserInfo = createPureComponent(function (props) {
     var {message,timestamp} = props;
     var {f_uid,f_avatar,f_nickname,time} = message;
     return (
         <div className="MessageItemUserInfo">
-            <UserAvatar avatar={f_avatar} size={40} className="MessageItemAvatar" />
+            <UserAvatar avatar={f_avatar} size={40} className="MessageItemAvatar"/>
             <div className="MessageItemNickname">{f_nickname}</div>
             <div className="MessageItemTime">{formatDatePretty(time)}</div>
             <div className="clear"></div>
@@ -37,17 +37,17 @@ const MessageItemUserInfo = createPureComponent(function(props){
 });
 
 
-const MessageItemSending = createPureComponent(function(props){
+const MessageItemSending = createPureComponent(function (props) {
     return (
-        <img src={getStaticUrl("/static/v2/images/25x4Rho.gif")} className="sendingIcon" />
+        <img src={getStaticUrl("/static/v2/images/25x4Rho.gif")} className="sendingIcon"/>
     );
 });
 
 const MessageItem = createPureComponent(function (props) {
     var {message,isDisplayUserInfo,loginUid,timestamp} = props;
     var {msg_type,f_uid,status} = message;
-    var isMySendMsg = (f_uid===loginUid);
-    var clazzName = isMySendMsg ? 'me':'';
+    var isMySendMsg = (f_uid === loginUid);
+    var clazzName = isMySendMsg ? 'me' : '';
     var RenderMessageContent = MessageItemMap[msg_type] || TextMessageContent;
     return (
         <div className={`MessageItem ${clazzName}`}>
@@ -62,15 +62,15 @@ const MessageItem = createPureComponent(function (props) {
 });
 
 
-class MessageList extends PureRenderComponent{
+class MessageList extends PureRenderComponent {
     constructor(props) {
         super(props);
         this.state = {};
     }
 
-    renderMessageList(){
+    renderMessageList() {
         var {messageList,loginUid,timestamp} = this.props;
-        if(!messageList){
+        if (!messageList) {
             return null;
         }
 
@@ -78,7 +78,7 @@ class MessageList extends PureRenderComponent{
         var lastFromUid = null;
         var lastMsgTime = null;
         var count = 0;
-        return messageList.map(function(msg){
+        return messageList.map(function (msg) {
             var msg_id = msg.msg_id || msg.id;
             var f_uid = msg.f_uid;
             var time = msg.time;
@@ -93,7 +93,7 @@ class MessageList extends PureRenderComponent{
                 isDisplayUserInfo = true;
             }
 
-            if(lastMsgTime && time && (time - lastMsgTime > 1000 * 60 *10)){
+            if (lastMsgTime && time && (time - lastMsgTime > 1000 * 60 * 10)) {
                 isDisplayUserInfo = true;
             }
 
@@ -101,7 +101,8 @@ class MessageList extends PureRenderComponent{
             lastFromUid = f_uid;
             count++;
 
-            return <MessageItem message={msg} timestamp={timestamp} key={msg_id} isDisplayUserInfo={isDisplayUserInfo} loginUid={loginUid}/>
+            return <MessageItem message={msg} timestamp={timestamp} key={msg_id} isDisplayUserInfo={isDisplayUserInfo}
+                                loginUid={loginUid}/>
         });
 
     }
@@ -118,7 +119,7 @@ class MessageList extends PureRenderComponent{
         }
     };
 
-    render(){
+    render() {
         var that = this;
         return (
             <div className="MessageList">
@@ -130,21 +131,24 @@ class MessageList extends PureRenderComponent{
     }
 }
 
-export default RebixFlux.connect(MessageList,function(bigStore, props, context, connectState, that){
+const MessageList1 = RebixFlux.connect(MessageList, function (bigStore, props, context, connectState, that) {
 
     var selSessionId = getDeepValue(bigStore, 'sessionState.selSessionId');
-    var messageList = getDeepValue(bigStore,'messageState.S'+selSessionId);
+    var messageList = getDeepValue(bigStore, 'messageState.S' + selSessionId);
 
-    var loginState = getDeepValue(bigStore,'loginState');
-    var loginUid = getDeepValue(bigStore,'loginState.id');
+    var loginState = getDeepValue(bigStore, 'loginState');
+    var loginUid = getDeepValue(bigStore, 'loginState.id');
 
     var timestamp = props.timestamp;
 
     return {
-        selSessionId:selSessionId,
-        messageList:messageList,
-        loginUserInfo:loginState,
-        loginUid:loginUid,
-        timestamp:timestamp
+        selSessionId: selSessionId,
+        messageList: messageList,
+        loginUserInfo: loginState,
+        loginUid: loginUid,
+        timestamp: timestamp
     };
+
 });
+
+export default MessageList1;
