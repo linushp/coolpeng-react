@@ -1,7 +1,15 @@
 
+
+@MODEL_DIALOG_HEIGHT : 60px;
+
 .dlg-modelDialog {
   .footer {
     display: none;
+  }
+
+  .dlg-header{
+    height: @MODEL_DIALOG_HEIGHT;
+    background-color: #7D7692;
   }
 
   .dialog-entity {
@@ -12,19 +20,41 @@
     .dlg-title {
       font-size: 30px;
       font-weight: 400;
-      //color: @-deprecated-color-text-default;
       line-height: 1;
     }
-    .btn_close {
+
+    .dlg-header-title{
+      color: #FFFFFF;
+      height: @MODEL_DIALOG_HEIGHT;
+      line-height: @MODEL_DIALOG_HEIGHT;
+      margin-left: 60px;
+    }
+
+    .dlg-btn-close {
       position: absolute;
-      top: 10px;
-      right: 20px;
+      top: 12px;
+      left: 16px;
       cursor: pointer;
-      opacity: 0.4;
+      opacity: 1;
       z-index: 1000;
+      width: 36px;
+      height: 36px;
+      color: #FFFFFF;
+      text-align: center;
+      line-height: 30px;
+      border-radius: 100px;
+
       &:hover {
         opacity: 1;
+        background-color: rgba(255, 255, 255, 0.3);
       }
+    }
+
+    .dlg-btn-close-icon{
+      width: 36px;
+      height: 36px;
+      background: url("./images/ic_delete_white_36px.png");
+      background-size: cover;
     }
   }
 }

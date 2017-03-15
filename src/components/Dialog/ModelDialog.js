@@ -11,9 +11,21 @@ export default class ModelDialog extends Dialog {
 
     onCloseClick = () => this.close();
 
+    getDialogTitle() {
+        return "";
+    }
+
     renderHeader() {
+        var title = this.getDialogTitle(this);
         return (
-            <div className="ficon_delete btn_close" onClick={this.onCloseClick}></div>
+            <div className="dlg-header">
+                <div className="dlg-btn-close" onClick={this.onCloseClick}>
+                    <div className="dlg-btn-close-icon"></div>
+                </div>
+                <div className="dlg-header-title">
+                    {title}
+                </div>
+            </div>
         );
     }
 

@@ -69,7 +69,6 @@ class MessageInput extends PureRenderComponent {
 
 export default RebixFlux.connect(MessageInput, function (bigStore, props, context, connectState, that) {
     var sessionsMap = getDeepValue(bigStore, 'sessionState.sessionsMap');
-    var userAccounts = getDeepValue(bigStore, 'userAccountState');
     var selSessionId = getDeepValue(bigStore, 'sessionState.selSessionId');
     var selSession = sessionsMap.get(selSessionId);
 

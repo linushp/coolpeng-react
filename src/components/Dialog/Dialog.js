@@ -4,9 +4,6 @@ import RebixUtils from 'rebix-utils';
 const classNames = RebixUtils.classNames;
 import RenderToBody from '../RenderToBody';
 import Animator from '../AnimatorInAndOut';
-//import {showAlert, removeAllAlerts} from '../popups/alert';
-//import EnumKeyCode from '../../utils/enums/EnumKeyCode';
-//import warning from '../../utils/warning';
 
 import './dialog.less';
 
@@ -57,7 +54,7 @@ export default class Dialog extends React.Component {
         if (__DEV__) {
             if (!ClosableComponent.propTypes || !ClosableComponent.propTypes.onClose) {
                 const _name = ClosableComponent.displayName || ClosableComponent.name || 'anonymous';
-                //warning(`Dialog.openDialog 传入的Component必须接受"onClose"属性, 但是Component(${_name})并没有显示指定 propTypes.onClose, 请确保正确使用!`);
+                console.error(`Dialog.openDialog 传入的Component必须接受"onClose"属性, 但是Component(${_name})并没有显示指定 propTypes.onClose, 请确保正确使用!`);
             }
         }
 
@@ -99,11 +96,12 @@ export default class Dialog extends React.Component {
     }
 
     renderHeader(){
-        return <div className={this.props.hiddenHeader?"header hidden":"header"}>
-            <div className="eim-deprecated btn_close AutoFocusInput" onClick={this.close.bind(this)}></div>
-            <div className="title"><span className="eim-deprecated icon"></span>{this.renderHeaderTitle()}</div>
-            <div className={this.props.desc?"session_desc":"hidden"}>{this.props.desc}</div>
-        </div>;
+        return (
+            <div className={this.props.hiddenHeader?"header hidden":"header"}>
+                <div className="btn_close" onClick={this.close.bind(this)}></div>
+                <div className="title"><span className="icon"></span>{this.renderHeaderTitle()}</div>
+                <div className={this.props.desc?"session_desc":"hidden"}>{this.props.desc}</div>
+            </div>);
     }
 
     renderCancelLabel() {
@@ -152,15 +150,14 @@ export default class Dialog extends React.Component {
     }
 
     render(){
-
-
-
         return (
             <RenderToBody>
                 <Animator className={`dialog-animator`}>
                     {!!this.state.show && (
-                        <span ref="mask-node" className={classNames("dialog-mask",this.props.name,this.props.className,this.className)} onClick={this.onMaskClick}>
-                            <div className="ActionArea dialog-entity">
+                        <span ref="mask-node"
+                              className={classNames("dialog-mask",this.props.name,this.props.className,this.className)}
+                              onClick={this.onMaskClick}>
+                            <div className="dialog-entity">
                                 {this.renderHeader()}
                                 <div className="content">
                                     {this.renderContent()}

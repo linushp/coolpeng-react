@@ -19,6 +19,7 @@ module.exports = {
     "getUserByEmail": ["select " + joinField(user_select_fields) + " from u_user where email = ?"],
     "getUserByEmailAndPassword": ["select " + joinField(user_select_fields) + " from u_user where `email` = ? and `password`= ?"],
     "getUserByUidInList": ["select " + joinField(user_select_fields) + " from u_user where `id` in (?)  "],
+    "getUserListByTimeDescLimit": ["select " + joinField(user_select_fields) + " from u_user order by `last_login_time` desc limit ?,? "],
     "createUserAccount": ["insert into u_user(" + joinField(user_insert_fields) + ") values(?,?,?,?)"],
     "updateLastLoginTime": ['update u_user set `last_login_time` = ? where `id` = ? '],
     "updateUserToken": ['update u_user set `token` = ? , `last_login_time` = ?  where `email` = ? and `password`= ? '],

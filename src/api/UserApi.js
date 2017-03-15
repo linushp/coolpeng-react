@@ -56,6 +56,12 @@ export function getUserByUidInList(uidList){
     });
 }
 
+export function getUserListByTimeDescLimit(startNum,maxCount){
+    return MyWebSocket.sendSQLQuery("getUserListByTimeDescLimit", [startNum,maxCount]).then(function (response) {
+        return response.result;
+    });
+}
+
 export function getOnLineUidList(){
     return MyWebSocket.sendCmdQuery('getOnLineUidList',[]);
 }
