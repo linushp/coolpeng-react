@@ -1,6 +1,6 @@
 
-
-@MODEL_DIALOG_HEIGHT : 60px;
+@MODEL_DIALOG_ENTITY_HEIGHT: 600px;
+@MODEL_DIALOG_HEADER_HEIGHT: 60px;
 
 .dlg-modelDialog {
   .footer {
@@ -8,14 +8,14 @@
   }
 
   .dlg-header{
-    height: @MODEL_DIALOG_HEIGHT;
+    height: @MODEL_DIALOG_HEADER_HEIGHT;
     background-color: #7D7692;
   }
 
   .dialog-entity {
     position: relative;
     width: 380px;
-    height: 600px;
+    height: @MODEL_DIALOG_ENTITY_HEIGHT;
     overflow: hidden;
     .dlg-title {
       font-size: 30px;
@@ -25,8 +25,8 @@
 
     .dlg-header-title{
       color: #FFFFFF;
-      height: @MODEL_DIALOG_HEIGHT;
-      line-height: @MODEL_DIALOG_HEIGHT;
+      height: @MODEL_DIALOG_HEADER_HEIGHT;
+      line-height: @MODEL_DIALOG_HEADER_HEIGHT;
       margin-left: 60px;
     }
 
@@ -48,6 +48,10 @@
         opacity: 1;
         background-color: rgba(255, 255, 255, 0.3);
       }
+    }
+
+    .dialog-content{
+      height: @MODEL_DIALOG_ENTITY_HEIGHT - @MODEL_DIALOG_HEADER_HEIGHT;
     }
 
     .dlg-btn-close-icon{

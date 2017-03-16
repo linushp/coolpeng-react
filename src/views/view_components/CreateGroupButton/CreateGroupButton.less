@@ -1,0 +1,55 @@
+.createGroupButtonWrapper{
+
+  height: 90px;
+  background-color: #FAFAFA;
+  flex-shrink: 0;
+  flex-grow: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .createButton{
+    width: 48px;
+    height: 48px;
+    background-color: #FF7043;
+    border-radius: 1000px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    &:hover{
+      background-color: #E0623A;
+    }
+
+    &.loading{
+      cursor: default;
+    }
+
+  }
+
+  .ic_right_white{
+    width: 22px;
+    height: 22px;
+    background: url("./images/ic_right_white_22px.png");
+    background-size: cover;
+  }
+
+
+  .ic_loading{
+    width: 30px;
+    height: 30px;
+    background: url("./images/ic_cached.png");
+    background-size: cover;
+    animation:circle 0.8s infinite linear;/*匀速 循环*/
+  }
+
+
+  @keyframes circle{
+    0%{ transform:rotate(0deg); }
+    100%{ transform:rotate(360deg); }
+  }
+
+
+}

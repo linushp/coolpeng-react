@@ -159,7 +159,7 @@ export default class Dialog extends React.Component {
                               onClick={this.onMaskClick}>
                             <div className="dialog-entity">
                                 {this.renderHeader()}
-                                <div className="content">
+                                <div className="dialog-content">
                                     {this.renderContent()}
                                 </div>
                                 <div className={this.props.hiddenFooter?"footer hidden":"footer"}>

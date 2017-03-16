@@ -16,16 +16,26 @@ export default class UserItem extends PureRenderComponent {
         this.state = {};
     }
 
+
+    onClick = (e1, e2)=> {
+        var {onClick,userInfo} = this.props;
+        if (onClick) {
+            onClick(e1, e2, userInfo);
+        }
+    };
+
     render() {
-        var {userInfo} = this.props;
+        var {userInfo,ExtendInfoComponent,ExtendAvatarComponent} = this.props;
         var {avatar,nickname} = userInfo;
         return (
-            <div className="VC_UserItem">
+            <div className="VC_UserItem" onClick={this.onClick}>
                 <div className="VC_UserAvatar">
                     <UserAvatar avatar={avatar} size={40}/>
+                    {ExtendAvatarComponent ? <ExtendAvatarComponent userInfo={userInfo}/> : null}
                 </div>
                 <div className="VC_UserInfo">
-                    {nickname}
+                    <div className="VC_nickname">{nickname}</div>
+                    {ExtendInfoComponent ? <ExtendInfoComponent userInfo={userInfo}/> : null}
                 </div>
                 <div className="clear"></div>
             </div>
