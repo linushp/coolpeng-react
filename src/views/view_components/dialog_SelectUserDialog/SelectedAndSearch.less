@@ -1,0 +1,58 @@
+
+.VC_SelectedUserItem {
+
+  float: left;
+  position: relative;
+  height: 26px;
+  background: #E8E8E8;
+  border-radius: 100px;
+  padding-right: 30px;
+  margin-right: 15px;
+  margin-bottom: 7px;
+
+  .comp-UserAvatar {
+    width: 26px;
+    height: 26px;
+    float: left;
+    font-size: 12px;
+    line-height: 26px;
+  }
+
+  .nickname {
+    line-height: 26px;
+    font-size: 14px;
+    color: fade(#000, 78);
+    margin-left: 10px;
+    float: left;
+    max-width: 60px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .remove {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    cursor: pointer;
+    border-radius: 100px;
+    background: url("/static/v2/images/ic_delete_black_36px.png");
+    width: 16px;
+    height: 16px;
+    background-size: cover;
+
+    &:hover {
+      background-color: #F7F7F7;
+    }
+
+    .removeIcon {
+      display: block;
+      background: url("/static/v2/images/ic_delete_black_36px.png");
+      width: 16px;
+      height: 16px;
+      background-size: cover;
+    }
+
+  }
+
+}

@@ -17,7 +17,7 @@ const UserAvatar = createPureComponent(function (props) {
     }
 
     return (
-        <div className={`UserAvatar ${className || ''}`} style={sizeStyle} {...otherProps}>
+        <div className={`comp-UserAvatar ${className || ''}`} style={sizeStyle} {...otherProps}>
             <img src={avatar} style={sizeStyle}/>
         </div>
     );
