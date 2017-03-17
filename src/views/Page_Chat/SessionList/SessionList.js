@@ -45,7 +45,7 @@ class SessionList extends PureRenderComponent {
     handleCreateSession = ()=> {
         UserAccountActions.getTopUserListByTimeDesc();
         SelectUserDialog.openDialog({
-            isMultiSelect:true,
+            isMultiSelect:false,
             onClickItem: function (e1, e2, userInfo, userList, closeDialog) {
                 //closeDialog();
             },

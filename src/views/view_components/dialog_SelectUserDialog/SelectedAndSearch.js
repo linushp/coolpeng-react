@@ -72,6 +72,10 @@ export default class SelectedAndSearch extends PureRenderComponent {
 
     onSearcherFocus = ()=> {
         this.setState({isSearchFocus: true});
+        setTimeout(()=>{
+            var SearchBox2 = this.refs['SearchBox2'];
+            SearchBox2.makeInputFocus();
+        },20);
     };
 
     toggleSearchFocus = (isSearchFocus)=> {
@@ -105,7 +109,8 @@ export default class SelectedAndSearch extends PureRenderComponent {
 
                 {
                     (isShowGSearchBox) ?
-                        <SearchBox2 searchText={searchText}
+                        <SearchBox2 ref="SearchBox2"
+                                    searchText={searchText}
                                     setSearchText={setSearchText}
                                     onDeleteEmpty={that.handleDeleteLastSelected}
                                     toggleSearchFocus={that.toggleSearchFocus} /> :
