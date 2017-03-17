@@ -142,14 +142,17 @@ class SelectUserModelDialog extends ModelDialog {
     onClickItem = (e1, e2, userInfo, userList)=> {
         var {onClickItem} = this.props;
         var that = this;
-        onClickItem(e1, e2, userInfo, userList, function () {
+        onClickItem({e1, e2, userInfo, userList}, function () {
             that.close();
         });
     };
 
     onMultiSelectFinished = (selectedUidList)=> {
-        var onMultiSelectFinished = this.props.onMultiSelectFinished;
-        onMultiSelectFinished && onMultiSelectFinished(selectedUidList);
+        var that = this;
+        var onMultiSelectFinished = that.props.onMultiSelectFinished;
+        onMultiSelectFinished && onMultiSelectFinished({selectedUidList}, function () {
+            that.close();
+        });
     };
 
     renderContent() {
