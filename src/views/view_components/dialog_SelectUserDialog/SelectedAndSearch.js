@@ -4,6 +4,8 @@ import RebixUtils from 'rebix-utils';
 const createPureComponent = RebixFlux.createPureComponent;
 const PureRenderComponent = RebixFlux.PureRenderComponent;
 const getDeepValue = RebixUtils.getDeepValue;
+const hideStyle = RebixUtils.hideStyle;
+const showStyle = RebixUtils.showStyle;
 import './SelectedAndSearch.less';
 
 import SearchBox from '../../../components/SearchBox/SearchBox';
@@ -73,12 +75,12 @@ export default class SelectedAndSearch extends PureRenderComponent {
 
         var {selectedItemsCount,selectedItems} = renderSelectedItems(that, userList, rejectFilter, selectedUidMap);
         var isSelectedEmpty = selectedItemsCount === 0;
-        var isShowGSearchBox = (isSearchFocus || !isSelectedEmpty);
+        var isShowGSearchBox = (isSearchFocus || !isSelectedEmpty || searchText);
 
         //多选
         return (
-            <div className="SelectedAndSearch" ref="SelectedAndSearch">
-                <div className="selectItemList">
+            <div className="VC_SelectedAndSearch" ref="SelectedAndSearch">
+                <div className="VC_selectItemList" style={hideStyle(isSelectedEmpty)}>
                     {selectedItems}
                     <div className="clear"></div>
                 </div>

@@ -24,16 +24,18 @@ export default class SearchBox2 extends PureRenderComponent {
         toggleSearchFocus(false);
     };
 
-    onKeyDown=()=> {
+    onKeyDown=(e)=> {
 
     };
 
     quitGlobalSearch = ()=> {
-
+        var setSearchText = this.props.setSearchText;
+        setSearchText("");
     };
 
     onClearSearchText = ()=> {
-
+        var setSearchText = this.props.setSearchText;
+        setSearchText("");
     };
 
     render() {
