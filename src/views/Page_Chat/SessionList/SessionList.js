@@ -48,6 +48,9 @@ class SessionList extends PureRenderComponent {
             isMultiSelect:true,
             onClickItem: function (e1, e2, userInfo, userList, closeDialog) {
                 //closeDialog();
+            },
+            onMultiSelectFinished:function(){
+                debugger;
             }
         });
     };

@@ -20,13 +20,31 @@ export default class SearchBox2 extends PureRenderComponent {
     };
 
     onBlurSearchInput = ()=> {
-        var toggleSearchFocus= this.props.toggleSearchFocus;
+        var toggleSearchFocus = this.props.toggleSearchFocus;
         toggleSearchFocus(false);
     };
 
-    onKeyDown=(e)=> {
-
+    onKeyDown = (e)=> {
+        var {keyCode} = e;
+        var that = this;
+        var {searchText,onDeleteEmpty,toggleSearchFocus} = that.props;
+        if (keyCode === 8) {//退格键
+            if (searchText.length === 0) {
+                onDeleteEmpty && onDeleteEmpty();
+                toggleSearchFocus(true);
+                this.makeInputFocus();
+            }
+        }
     };
+
+
+    makeInputFocus = ()=> {
+        setTimeout(()=> {
+            var searchInput = this.refs['searchInput'];
+            searchInput.focus();
+        }, 10);
+    };
+
 
     quitGlobalSearch = ()=> {
         var setSearchText = this.props.setSearchText;

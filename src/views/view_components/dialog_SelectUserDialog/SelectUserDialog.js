@@ -26,8 +26,9 @@ class SelectUserDialog extends PureRenderComponent {
         super(props);
         this.state = {
             selectedUidMap: immutable.fromJS({}),
+            selectedUidList: immutable.fromJS([]),
             isLoading: false,
-            searchText:''
+            searchText: ''
         };
     }
 
@@ -41,26 +42,38 @@ class SelectUserDialog extends PureRenderComponent {
         //多选
         if (isMultiSelect) {
             var uid = userInfo.id;
-            this.toggleSelectedUidMap(uid,true);
+            this.toggleSelectedUidMap(uid, true);
         }
     };
 
-    setSearchText =(searchText)=>{
-        this.setState({searchText:searchText});
+    setSearchText = (searchText)=> {
+        this.setState({searchText: searchText});
     };
 
     toggleSelectedUidMap = (uid, isSelected)=> {
+
         var selectedUidMap = this.state.selectedUidMap;
         selectedUidMap = selectedUidMap.set('U' + uid, isSelected);
-        this.setState({selectedUidMap: selectedUidMap});
+        var selectedUidList = this.state.selectedUidList;
+
+        if (isSelected) {
+            selectedUidList = selectedUidList.push(uid);
+        } else {
+            selectedUidList = selectedUidList.filterNot(function (testUid) {
+                return testUid === uid;
+            });
+        }
+
+        this.setState({selectedUidMap: selectedUidMap, selectedUidList: selectedUidList});
     };
 
 
-    onSelectFinished = ()=> {
-
+    onMultiSelectFinished = ()=> {
+        var selectedUidList = this.state.selectedUidList;
+        this.props.onMultiSelectFinished(selectedUidList);
     };
 
-    filterUserList =(userInfo, {selectedUidMap})=>{
+    filterUserList = (userInfo, {selectedUidMap})=> {
         var that = this;
         var {searchText} = that.state;
 
@@ -68,10 +81,10 @@ class SelectUserDialog extends PureRenderComponent {
         if (searchText) {
             searchText = searchText.toLowerCase();
             var nickname = (userInfo.nickname || '').toLowerCase();
-            isNameMatch = nickname.indexOf(searchText)>=0;
+            isNameMatch = nickname.indexOf(searchText) >= 0;
         }
 
-        var isFilter = filterBySelectedUidMap(userInfo,{selectedUidMap}) ;
+        var isFilter = filterBySelectedUidMap(userInfo, {selectedUidMap});
         var isOK = isFilter && isNameMatch;
         return isOK;
     };
@@ -79,14 +92,15 @@ class SelectUserDialog extends PureRenderComponent {
     render() {
         var that = this;
         var {userAccountTopList,isMultiSelect} = that.props;
-        var {selectedUidMap,isLoading,searchText} = that.state;
-        var isShowCreateButton = isMultiSelect && (selectedUidMap.size > 0);
+        var {selectedUidMap,isLoading,searchText,selectedUidList} = that.state;
+        var isShowCreateButton = isMultiSelect && (selectedUidList.size > 0);
 
         return (
             <div className="SelectUserDialog">
 
                 <SelectedAndSearch userList={userAccountTopList}
                                    selectedUidMap={selectedUidMap}
+                                   selectedUidList={selectedUidList}
                                    searchText={searchText}
                                    setSearchText={that.setSearchText}
                                    toggleSelectedUidMap={that.toggleSelectedUidMap}
@@ -101,7 +115,7 @@ class SelectUserDialog extends PureRenderComponent {
                           ExtendInfoComponent={null}
                           ExtendAvatarComponent={null}/>
 
-                <CreateGroupButton onClick={that.onSelectFinished}
+                <CreateGroupButton onClick={that.onMultiSelectFinished}
                                    isShow={isShowCreateButton}
                                    isLoading={isLoading}/>
 
@@ -133,19 +147,27 @@ class SelectUserModelDialog extends ModelDialog {
         });
     };
 
+    onMultiSelectFinished = (selectedUidList)=> {
+        var onMultiSelectFinished = this.props.onMultiSelectFinished;
+        onMultiSelectFinished && onMultiSelectFinished(selectedUidList);
+    };
+
     renderContent() {
         var {isMultiSelect} = this.props;
-        return <SelectUserDialogConnected onClickItem={this.onClickItem} isMultiSelect={isMultiSelect}/>
+        return <SelectUserDialogConnected isMultiSelect={isMultiSelect}
+                                          onClickItem={this.onClickItem}
+                                          onMultiSelectFinished={this.onMultiSelectFinished}/>
     }
 }
 
 
 export default {
-    openDialog: function ({onClickItem,isMultiSelect}) {
+    openDialog: function ({dialogTitle,isMultiSelect,onClickItem,onMultiSelectFinished}) {
         ModelDialog.openDialog(SelectUserModelDialog, {
-            dialogTitle: '新建会话',
+            dialogTitle: dialogTitle || '标题',
+            onMultiSelectFinished: onMultiSelectFinished,
             onClickItem: onClickItem,
-            isMultiSelect: isMultiSelect
+            isMultiSelect: isMultiSelect || false
         });
     }
 };

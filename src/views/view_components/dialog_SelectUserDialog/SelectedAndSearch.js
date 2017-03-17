@@ -6,6 +6,8 @@ const PureRenderComponent = RebixFlux.PureRenderComponent;
 const getDeepValue = RebixUtils.getDeepValue;
 const hideStyle = RebixUtils.hideStyle;
 const showStyle = RebixUtils.showStyle;
+const forEach = RebixUtils.forEach;
+const map = RebixUtils.map;
 import './SelectedAndSearch.less';
 
 import SearchBox from '../../../components/SearchBox/SearchBox';
@@ -26,20 +28,29 @@ const SelectedUserItem = createPureComponent(function (props) {
     );
 });
 
-function renderSelectedItems(that, userList, rejectFilter, selectedUidMap) {
-    var selectedItemsCount = 0;
-    var selectedItems = userList.map(function (u) {
-        if (rejectFilter(u, {selectedUidMap: selectedUidMap})) {
-            return;
-        }
-        selectedItemsCount++;
-        var uid = u.id;
-        return <SelectedUserItem key={uid} userInfo={u} onRemove={that.onRemoveSelectedItem}/>
+
+function toUserInfoMap(userList){
+    var map = {};
+
+    forEach(userList,function(userInfo){
+        var uid = userInfo.id;
+        map['U' + uid] = userInfo;
+    });
+
+    return map;
+}
+
+function renderSelectedItems(that, userList, selectedUidList) {
+
+    var userInfoMap = toUserInfoMap(userList);
+    var selectedItems = map(selectedUidList,function(uid){
+        var userInfo = userInfoMap['U'+uid];
+        return <SelectedUserItem key={uid} userInfo={userInfo} onRemove={that.onRemoveSelectedItem}/>
     });
 
     return {
         selectedItems: selectedItems,
-        selectedItemsCount: selectedItemsCount
+        selectedItemsCount: selectedUidList.size
     };
 }
 
@@ -67,13 +78,20 @@ export default class SelectedAndSearch extends PureRenderComponent {
         this.setState({isSearchFocus: isSearchFocus});
     };
 
+    //删除掉最后一个选中的
+    handleDeleteLastSelected = ()=> {
+        var {selectedUidList,toggleSelectedUidMap} = this.props;
+        var lastUid = selectedUidList.last();
+        toggleSelectedUidMap(lastUid,false);
+    };
+
     render() {
 
         var that = this;
         var {isSearchFocus} = that.state;
-        var {userList,selectedUidMap,isMultiSelect,rejectFilter,placeholder,searchText,setSearchText} = this.props;
+        var {userList,selectedUidMap,selectedUidList,isMultiSelect,rejectFilter,placeholder,searchText,setSearchText} = this.props;
 
-        var {selectedItemsCount,selectedItems} = renderSelectedItems(that, userList, rejectFilter, selectedUidMap);
+        var {selectedItemsCount,selectedItems} = renderSelectedItems(that, userList, selectedUidList);
         var isSelectedEmpty = selectedItemsCount === 0;
         var isShowGSearchBox = (isSearchFocus || !isSelectedEmpty || searchText);
 
@@ -87,7 +105,10 @@ export default class SelectedAndSearch extends PureRenderComponent {
 
                 {
                     (isShowGSearchBox) ?
-                        <SearchBox2 searchText={searchText} setSearchText={setSearchText} toggleSearchFocus={that.toggleSearchFocus}/> :
+                        <SearchBox2 searchText={searchText}
+                                    setSearchText={setSearchText}
+                                    onDeleteEmpty={that.handleDeleteLastSelected}
+                                    toggleSearchFocus={that.toggleSearchFocus} /> :
                         <div className="recent-search">
                             <SearchBox placeholder={placeholder} onFocus={that.onSearcherFocus}/>
                         </div>
